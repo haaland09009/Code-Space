@@ -356,14 +356,14 @@
                                                             </div>
 
                                                             <div class="col">
-                                                            <textarea name="" id="replyContent" cols="10" rows="4"
+                                                            <textarea name="" th:id="'replyContent_' + ${comment.id}" cols="10" rows="4"
                                                                   class="form-control" ></textarea>
                                                             </div>
                                                         </div>
 
                                                         <div class="row mt-3">
                                                             <div class="col text-end">
-                                                                <button class="btn btn-primary px-3" onclick="commentReq()"
+                                                                <button class="btn btn-primary px-3" th:onclick="replyReq([[${comment.id}]])"
                                                                         th:if="${session.userDTO != null}">댓글 쓰기</button>
                                                                 <button class="btn btn-primary px-3 disabled"
                                                                         th:if="${session.userDTO == null}">댓글 쓰기</button>
@@ -584,6 +584,10 @@
    /*]]>*/
 
    /*<![CDATA[*/
+       let sessionUser = [[${session.userDTO}]];
+   /*]]>*/
+
+   /*<![CDATA[*/
         let selectedCommentId = null;
    /*]]>*/
 
@@ -746,7 +750,7 @@ const alertLikeCheckModal = () => {
                  output += '</a>';
                  output += '</li>';
                  output += '<li>';
-                output += '<a class="dropdown-item" onclick="deleteCommentPage(' + comments[i].id + ')">';
+                 output += '<a class="dropdown-item" onclick="deleteCommentPage(' + comments[i].id + ')">';
                  output += '<i class="bi bi-trash3"></i>';
                  output += '<span class="ms-2">' +  "삭제하기" + '</span>';
 
@@ -763,10 +767,46 @@ const alertLikeCheckModal = () => {
                  output += '</div>';
 
                  output += '<div class="row mt-3">';
-                 output += '<div class="col commentFont ms-1 mb-1 text-secondary">' + "댓글 작성" + '</div>';
+                 output += '<div class="col commentFont ms-1 mb-1 text-secondary" onclick="toggleReplyInputBox(' + comments[i].id + ')" id="toggleReplyButton_' + comments[i].id + '" style="cursor: pointer;">' + "댓글 작성" + '</div>';
                  output += '</div>';
 
+                 <!-- 답글 작성 -->
+                 output += '<div class="row" id="toggleReplyInputBox_' + comments[i].id + '" style="display: none;">';
+                 output += '<div class="col">';
+
+                 output += '<div class="row mt-3">';
+                 output += '<div class="col-1 ms-1">';
+                 if (sessionUser == null) {
+                    output += '<img class="rounded-circle" style="width: 40px; height: 40px;" src="/img/user.jpg">';
+                 } else if (sessionUser != null && sessionUser.fileAttached == 0) {
+                    output += '<img class="rounded-circle" style="width: 40px; height: 40px;" src="/img/user.jpg">';
+                 } else if (sessionUser != null && sessionUser.fileAttached == 1) {
+                    output += ' <img class="rounded-circle" style="width: 40px; height: 40px;" src="/upload/' + sessionUser.storedFileName + '">';
+                 }
+                 output += '</div>';
+                 output += '<div class="col">';
+                 output += '<textarea name="" id="replyContent_' + comments[i].id + '" cols="10" rows="4" class="form-control" >' + '</textarea>';
+                 output += '</div>';
+                 output += '</div>';
+
+                 output += '<div class="row mt-3">';
+                 output += '<div class="col text-end">';
+                 if (sessionUser == null) {
+                    output += '<button class="btn btn-primary px-3 disabled">' + "댓글 쓰기" + '</button>';
+                 } else {
+                     output += '<button class="btn btn-primary px-3" onclick="replyReq('+ comments[i].id +')">' + "댓글 쓰기" + '</button>';
+                 }
+                 output += '</div>';
+                 output += '</div>';
+
+                 output += '<div class="row mt-2 mb-3">' + '</div>';
+                 output += '</div>';
+                 output += '</div>';
+                 <!-- 답글 작성 -->
+
+                 <!-- 댓글 사이 경계선 -->
                  output += '<div class="border-bottom mt-1 mb-3"></div>';
+                 <!-- 댓글 사이 경계선 -->
                  output += '</div>';
                  output += '</div>';
              }
