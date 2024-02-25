@@ -1,0 +1,69 @@
+ a {
+    text-decoration: none;
+    color: #333;
+ }
+
+ .form-control:focus {
+     border-color: #dc3545; /* 테두리 색상을 변경 */
+     box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25); /* 선택적으로 테두리의 두께와 함께 그림자도 추가 */
+ }
+
+  .form-select:focus {
+      border-color: #dc3545; /* 테두리 색상을 변경 */
+      box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25); /* 선택적으로 테두리의 두께와 함께 그림자도 추가 */
+  }
+
+
+ .orangeButton{
+      background: #ff6f0f;
+      font-weight: bold;
+      color: white;
+}
+.orangeButton:hover{
+      background: #FF812C;
+      font-weight: bold;
+      color: white;
+}
+ .orangeButton:active{
+      background: #FF812C;
+      font-weight: bold;
+      color: white;
+}
+
+.orangeOutLineButton {
+    color: #ff6f0f;
+    background-color: transparent;
+    background-image: none;
+    border: 1px solid #ff6f0f;
+    font-weight: bold;
+}
+
+.orangeOutLineButton:hover {
+    color: #ff6f0f;
+    background-color: transparent;
+    background-image: none;
+    border: 1px solid #ff6f0f;
+    font-weight: bold;
+}
+
+.overflow {
+  white-space: nowrap; /* 텍스트를 한 줄로 표시 */
+  overflow: hidden; /* 넘친 텍스트를 숨김 */
+  text-overflow: ellipsis; /* 넘친 텍스트를 "..."으로 표시 */
+}
+
+body {
+  font-family: 'Pretendard';
+}
+
+.alarmBell:hover {
+    color: #ff6f0f!important;
+}
+
+.likeFont {
+    font-size: 14px;
+}
+
+.commentFont {
+    font-size: 14px;
+}

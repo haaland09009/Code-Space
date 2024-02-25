@@ -1,0 +1,19 @@
+package com.yyi.projectStudy.repository;
+
+import com.yyi.projectStudy.entity.ProjectPositionCategoryLinkEntity;
+import com.yyi.projectStudy.entity.ProjectStudyCategoryLinkEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.Optional;
+
+public interface ProjectPositionCategoryLinkRepository extends JpaRepository<ProjectPositionCategoryLinkEntity, Long> {
+    Optional<ProjectPositionCategoryLinkEntity> findByProjectEntity_Id(Long id);
+
+    // 포지션 수정
+    @Modifying
+    @Query("UPDATE ProjectPositionCategoryLinkEntity p SET p.positionCategoryEntity.id = :positionId WHERE p.projectEntity.id = :projectId")
+    void updatePosition(@Param("positionId") Long positionId, @Param("projectId") Long projectId);
+}
