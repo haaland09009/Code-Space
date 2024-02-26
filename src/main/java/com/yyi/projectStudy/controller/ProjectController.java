@@ -56,7 +56,9 @@ public class ProjectController {
                         @ModelAttribute ProjectTechCategoryLinkDTO
                                 projectTechCategoryLinkDTO) {
         // 내용 enter 처리
-        String content = projectDTO.getContent().replace("\n", "<br>");
+        String content = projectDTO.getContent().replaceAll("\\n", "<br>");
+        projectDTO.setContent(content);
+        //
         Long savedId = projectService.save(projectDTO);
 
         ProjectDTO dto = projectService.findById(savedId);
@@ -80,6 +82,8 @@ public class ProjectController {
         List<ProjectDTO> projectDTOList = projectService.findAll();
 
         for (ProjectDTO projectDTO : projectDTOList) {
+            String content = projectDTO.getContent().replace("<br>", "\\n");
+            projectDTO.setContent(content);
             projectDTO.setCommentCount(projectCommentService.count(projectDTO.getId()));
             // 나중에 리스트로 변경
             projectDTO.setTechList(projectService.findTechCategory(projectDTO.getId()).getName());
@@ -104,6 +108,10 @@ public class ProjectController {
 
         projectService.updateReadCount(id);
         ProjectDTO projectDTO = projectService.findById(id);
+        // enter 처리
+        String content = projectDTO.getContent().replace("<br>", "\r\n");
+        projectDTO.setContent(content);
+        //
         model.addAttribute("project", projectDTO);
 
         // 프로젝트 / 스터디 여부 조회

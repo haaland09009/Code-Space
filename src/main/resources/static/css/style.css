@@ -3,15 +3,15 @@
     color: #333;
  }
 
- .form-control:focus {
-     border-color: #dc3545; /* 테두리 색상을 변경 */
-     box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25); /* 선택적으로 테두리의 두께와 함께 그림자도 추가 */
- }
+.form-control:focus {
+    border-color: #000000;
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25);
+}
 
-  .form-select:focus {
-      border-color: #dc3545; /* 테두리 색상을 변경 */
-      box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25); /* 선택적으로 테두리의 두께와 함께 그림자도 추가 */
-  }
+.form-select:focus {
+    border-color: #000000;
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25);
+}
 
 
  .orangeButton{
@@ -66,4 +66,19 @@ body {
 
 .commentFont {
     font-size: 14px;
+}
+
+.mainButton {
+    background-color: #334155;
+    color: white;
+}
+
+.mainButton:hover {
+    background-color: #1e293b;
+    color: white;
+}
+
+.mainButton:active {
+    background-color: #1e293b;
+    color: white;
 }

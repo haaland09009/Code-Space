@@ -19,15 +19,21 @@
 
 
     <div class="row">
-<!--        <div class="col-2">-->
-<!--            <div th:include="common/sidemenu :: sidemenu"></div>-->
-<!--        </div>-->
+        <div class="col-2">
+            <div th:include="common/sidemenu :: sidemenu"></div>
+        </div>
 
-        <div class="col">
+        <div class="col bg-light">
 
             <div class="row mt-3 mb-4"></div>
             <div class="row">
                 <div class="col ms-5">
+
+                    <div class="row">
+                        <div class="col fs-4 fw-semibold">
+                            프로젝트 / 스터디 찾기
+                        </div>
+                    </div>
 
                     <div class="row mt-4">
                         <div class="col ms-2 bg-white rounded border border-1 px-3" style="min-height: 300px">
@@ -83,11 +89,11 @@
                                         <div class="col text-end me-1 mt-4">
                                             <div class="row">
                                                 <div class="col">
-<!--                                                    <button class="btn btn-sm" style="background-color: #dee2e6;">-->
-<!--                                                        <i class="bi bi-star"></i>-->
-<!--                                                        <span class="ms-1">스크랩</span>-->
-<!--                                                        <span class="ms-1">0</span>-->
-<!--                                                    </button>-->
+                                                    <button class="btn btn-sm" style="background-color: #dee2e6;">
+                                                        <i class="bi bi-star"></i>
+                                                        <span class="ms-1">스크랩</span>
+                                                        <span class="ms-1">0</span>
+                                                    </button>
                                                 </div>
                                                 <!--                                                th:if="${session.userDTO != null-->
                                                 <!--                                                and session.userDTO.id == project.userId}"-->
@@ -239,9 +245,9 @@
 
                                     <div class="row mt-3">
                                         <div class="col text-end">
-                                            <button class="btn mainButton px-3" onclick="commentReq()"
+                                            <button class="btn btn-primary px-3" onclick="commentReq()"
                                                     th:if="${session.userDTO != null}">댓글 쓰기</button>
-                                            <button class="btn mainButton px-3 disabled"
+                                            <button class="btn btn-primary px-3 disabled"
                                                     th:if="${session.userDTO == null}">댓글 쓰기</button>
                                         </div>
                                     </div>
@@ -326,48 +332,48 @@
                                                 </div>
                                                 <!-- 댓글 내용 정보 -->
 
-<!--                                                <div class="row mt-3" style="cursor: pointer;">-->
-<!--                                                    <div class="col commentFont ms-1 mb-1 text-secondary"-->
-<!--                                                         th:onclick="toggleReplyInputBox([[${comment.id}]])"-->
-<!--                                                         th:id="'toggleReplyButton_' + ${comment.id}">-->
-<!--                                                        댓글 작성-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
+                                                <div class="row mt-3" style="cursor: pointer;">
+                                                    <div class="col commentFont ms-1 mb-1 text-secondary"
+                                                         th:onclick="toggleReplyInputBox([[${comment.id}]])"
+                                                         th:id="'toggleReplyButton_' + ${comment.id}">
+                                                        댓글 작성
+                                                    </div>
+                                                </div>
 
 
                                                 <!-- 댓글 -->
                                                 <!-- 답글 입력 폼 -->
-<!--                                                <div class="row" th:id="'toggleReplyInputBox_' + ${comment.id}" style="display: none;">-->
-<!--                                                    <div class="col">-->
-<!--                                                        <div class="row mt-3">-->
-<!--                                                            <div class="col-1 ms-1">-->
-<!--                                                                <img class="rounded-circle" style="width: 40px; height: 40px;"-->
-<!--                                                                     src="/img/user.jpg" th:if="${session.userDTO == null}">-->
-<!--                                                                <img class="rounded-circle" style="width: 40px; height: 40px;"-->
-<!--                                                                     src="/img/user.jpg" th:if="${session.userDTO != null && session.userDTO.fileAttached == 0}">-->
-<!--                                                                <img class="rounded-circle" style="width: 40px; height: 40px;"-->
-<!--                                                                     th:src="@{|/upload/${session.userDTO.storedFileName}|}" th:if="${session.userDTO != null && session.userDTO.fileAttached == 1}">-->
-<!--                                                            </div>-->
+                                                <div class="row" th:id="'toggleReplyInputBox_' + ${comment.id}" style="display: none;">
+                                                    <div class="col">
+                                                        <div class="row mt-3">
+                                                            <div class="col-1 ms-1">
+                                                                <img class="rounded-circle" style="width: 40px; height: 40px;"
+                                                                     src="/img/user.jpg" th:if="${session.userDTO == null}">
+                                                                <img class="rounded-circle" style="width: 40px; height: 40px;"
+                                                                     src="/img/user.jpg" th:if="${session.userDTO != null && session.userDTO.fileAttached == 0}">
+                                                                <img class="rounded-circle" style="width: 40px; height: 40px;"
+                                                                     th:src="@{|/upload/${session.userDTO.storedFileName}|}" th:if="${session.userDTO != null && session.userDTO.fileAttached == 1}">
+                                                            </div>
 
-<!--                                                            <div class="col">-->
-<!--                                                            <textarea name="" th:id="'replyContent_' + ${comment.id}" cols="10" rows="4"-->
-<!--                                                                  class="form-control" ></textarea>-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
+                                                            <div class="col">
+                                                            <textarea name="" th:id="'replyContent_' + ${comment.id}" cols="10" rows="4"
+                                                                  class="form-control" ></textarea>
+                                                            </div>
+                                                        </div>
 
-<!--                                                        <div class="row mt-3">-->
-<!--                                                            <div class="col text-end">-->
-<!--                                                                <button class="btn btn-primary px-3" th:onclick="replyReq([[${comment.id}]])"-->
-<!--                                                                        th:if="${session.userDTO != null}">댓글 쓰기</button>-->
-<!--                                                                <button class="btn btn-primary px-3 disabled"-->
-<!--                                                                        th:if="${session.userDTO == null}">댓글 쓰기</button>-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
-<!--                                                        <div class="row mt-2 mb-3"></div>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
+                                                        <div class="row mt-3">
+                                                            <div class="col text-end">
+                                                                <button class="btn btn-primary px-3" th:onclick="replyReq([[${comment.id}]])"
+                                                                        th:if="${session.userDTO != null}">댓글 쓰기</button>
+                                                                <button class="btn btn-primary px-3 disabled"
+                                                                        th:if="${session.userDTO == null}">댓글 쓰기</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2 mb-3"></div>
+                                                    </div>
+                                                </div>
                                                 <!-- 답글 입력 폼 -->
-                                                <div class="row mt-2 mb-2"></div>
+
                                                 <div class="border-bottom mt-1 mb-3"></div>
 
                                             </div>
@@ -393,35 +399,8 @@
                         </div>
                         <div class="col-4">
                             <div class="row">
-                                <div class="col-9 ms-5 bg-light" style="min-height: 300px">
-                                    <div class="row mt-5">
-                                        <div class="col d-flex justify-content-center">
-                                           <img src="/img/user.jpg" class="rounded-circle" style="width: 140px; height: 140px;"
-                                                th:if="${writerInfo.fileAttached == 0}">
-                                           <img th:src="@{|/upload/${writerInfo.storedFileName}|}" class="rounded-circle" style="width: 140px; height: 140px;"
-                                                th:if="${writerInfo.fileAttached == 1}">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mt-3">
-                                        <div class="col fw-semibold fs-5 d-flex justify-content-center" th:text="${writerInfo.nickname}"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-9 ms-5 d-grid ps-0 pe-0">
-                                    <button class="btn mt-3 mainButton p-2" style="font-size: 18px">채팅하기</button>
-                                    <button class="btn mt-2 btn-outline-dark p-2">
-                                        <i class="bi bi-bookmark"></i>
-                                        <span style="font-size: 18px">스크랩</span>
-                                    </button>
-                                </div>
-                            </div>
-
-
-                            <div class="row mt-4">
                                 <div class="col-9 ms-5 bg-white rounded border border-1" style="min-height: 300px">
+
                                     <div class="row mt-2">
                                         <div class="col ms-2">
 
@@ -503,8 +482,8 @@
             </div>
 
             <div class="modal-footer">
-                <input type="button" class="btn btn-outline-dark fw-semibold" value="확인" onclick="deleteBoard()">
-                <button type="button" class="btn mainButton" data-bs-dismiss="modal">취소</button>
+                <input type="button" class="btn btn-primary" value="확인" onclick="deleteBoard()">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
 
         </div>
@@ -532,8 +511,8 @@
             </div>
 
             <div class="modal-footer">
-                <input type="button" class="btn btn-outline-dark fw-semibold" value="확인" onclick="deleteComment()">
-                <button type="button" class="btn mainButton" data-bs-dismiss="modal">취소</button>
+                <input type="button" class="btn btn-primary" value="확인" onclick="deleteComment()">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
 
         </div>
@@ -602,10 +581,6 @@
 
     /*<![CDATA[*/
        let sessionId = [[${session.userDTO != null ? session.userDTO.id : 0}]];
-   /*]]>*/
-
-   /*<![CDATA[*/
-       let sessionUser = [[${session.userDTO}]];
    /*]]>*/
 
    /*<![CDATA[*/
@@ -771,7 +746,7 @@ const alertLikeCheckModal = () => {
                  output += '</a>';
                  output += '</li>';
                  output += '<li>';
-                 output += '<a class="dropdown-item" onclick="deleteCommentPage(' + comments[i].id + ')">';
+                output += '<a class="dropdown-item" onclick="deleteCommentPage(' + comments[i].id + ')">';
                  output += '<i class="bi bi-trash3"></i>';
                  output += '<span class="ms-2">' +  "삭제하기" + '</span>';
 
@@ -787,49 +762,11 @@ const alertLikeCheckModal = () => {
                  output += '<div class="col ms-1">' + comments[i].content + '</div>';
                  output += '</div>';
 
-<!--                 output += '<div class="row mt-3">';-->
-<!--                 output += '<div class="col commentFont ms-1 mb-1 text-secondary" onclick="toggleReplyInputBox(' + comments[i].id + ')" id="toggleReplyButton_' + comments[i].id + '" style="cursor: pointer;">' + "댓글 작성" + '</div>';-->
-<!--                 output += '</div>';-->
+                 output += '<div class="row mt-3">';
+                 output += '<div class="col commentFont ms-1 mb-1 text-secondary">' + "댓글 작성" + '</div>';
+                 output += '</div>';
 
-                 <!-- 답글 작성 -->
-<!--                 output += '<div class="row" id="toggleReplyInputBox_' + comments[i].id + '" style="display: none;">';-->
-<!--                 output += '<div class="col">';-->
-
-<!--                 output += '<div class="row mt-3">';-->
-<!--                 output += '<div class="col-1 ms-1">';-->
-<!--                 if (sessionUser == null) {-->
-<!--                    output += '<img class="rounded-circle" style="width: 40px; height: 40px;" src="/img/user.jpg">';-->
-<!--                 } else if (sessionUser != null && sessionUser.fileAttached == 0) {-->
-<!--                    output += '<img class="rounded-circle" style="width: 40px; height: 40px;" src="/img/user.jpg">';-->
-<!--                 } else if (sessionUser != null && sessionUser.fileAttached == 1) {-->
-<!--                    output += ' <img class="rounded-circle" style="width: 40px; height: 40px;" src="/upload/' + sessionUser.storedFileName + '">';-->
-<!--                 }-->
-<!--                 output += '</div>';-->
-<!--                 output += '<div class="col">';-->
-<!--                 output += '<textarea name="" id="replyContent_' + comments[i].id + '" cols="10" rows="4" class="form-control" >' + '</textarea>';-->
-<!--                 output += '</div>';-->
-<!--                 output += '</div>';-->
-
-<!--                 output += '<div class="row mt-3">';-->
-<!--                 output += '<div class="col text-end">';-->
-<!--                 if (sessionUser == null) {-->
-<!--                    output += '<button class="btn mainButton px-3 disabled">' + "댓글 쓰기" + '</button>';-->
-<!--                 } else {-->
-<!--                     output += '<button class="btn btn-primary px-3" onclick="replyReq('+ comments[i].id +')">' + "댓글 쓰기" + '</button>';-->
-<!--                 }-->
-<!--                 output += '</div>';-->
-<!--                 output += '</div>';-->
-
-<!--                 output += '<div class="row mt-2 mb-3">' + '</div>';-->
-<!--                 output += '</div>';-->
-<!--                 output += '</div>';-->
-                 <!-- 답글 작성 -->
-
-                 output += '<div class="row mt-2 mb-2">' + '</div>';
-
-                 <!-- 댓글 사이 경계선 -->
                  output += '<div class="border-bottom mt-1 mb-3"></div>';
-                 <!-- 댓글 사이 경계선 -->
                  output += '</div>';
                  output += '</div>';
              }
@@ -1103,17 +1040,17 @@ const alertLikeCheckModal = () => {
 
 
  // 답글 작성 폼 열고 닫기
-<!-- const toggleReplyInputBox = (id) => {-->
-<!--    const replyBox = document.getElementById("toggleReplyInputBox_" + id);-->
-<!--    const replyButton = document.getElementById("toggleReplyButton_" + id);-->
-<!--    if (replyBox.style.display == 'none') {-->
-<!--        replyBox.style.display = 'block';-->
-<!--        replyButton.innerText = '댓글 취소';-->
-<!--    } else {-->
-<!--       replyBox.style.display = 'none';-->
-<!--       replyButton.innerText = '댓글 작성';-->
-<!--    }-->
-<!-- }-->
+ const toggleReplyInputBox = (id) => {
+    const replyBox = document.getElementById("toggleReplyInputBox_" + id);
+    const replyButton = document.getElementById("toggleReplyButton_" + id);
+    if (replyBox.style.display == 'none') {
+        replyBox.style.display = 'block';
+        replyButton.innerText = '댓글 취소';
+    } else {
+       replyBox.style.display = 'none';
+       replyButton.innerText = '댓글 작성';
+    }
+ }
 
 window.addEventListener("DOMContentLoaded", function(){
     getNotificationList();

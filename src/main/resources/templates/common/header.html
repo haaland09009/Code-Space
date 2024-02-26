@@ -18,10 +18,20 @@
     <div class="row">
         <div class="col-8">
             <div class="row">
-                <div class="col">
+                <div class="col-3">
                     <a href="/">
                         <img src="/img/temporary_logo.png" class="mt-2" style="cursor: pointer; height: 50px;">
                     </a>
+                </div>
+                <div class="col mt-1">
+                    <div class="row mt-3 fw-semibold">
+                        <div class="col">
+                            <a href="/qna" id="qnaLink">개발자 Q&A</a>
+                            <a href="/project" class="ms-4" id="projectLink">프로젝트 / 스터디 찾기</a>
+                            <a class="ms-4" id="noticeLink"> 공지사항</a>
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
@@ -34,10 +44,10 @@
                 </div>
                 <div class="col text-start" th:if="${session.userDTO != null}">
                     <div class="row">
-                        <div class="col mt-1">
+                        <div class="col">
                             <i class="bi bi-bookmark fs-4 ms-4 text-secondary"></i>
                         </div>
-                        <div class="col mt-1">
+                        <div class="col">
                             <i class="bi bi-bell alarmBell fs-4 ms-2 text-secondary" style="cursor:pointer;"
                             id="dropAlarmButton" data-bs-toggle="dropdown" aria-expanded="false"></i>
                             <div class="dropdown-menu row bg-light Small shadow" aria-labelledby="dropAlarmButton" style="width: 450px">
@@ -86,7 +96,7 @@
                                 </div>
                             </div>
                          </div>
-                        <div class="col mt-1 me-3">
+                        <div class="col me-3">
                             <img class="rounded-circle" style="width: 35px; height: 35px; cursor: pointer;"
                                  src="/img/user.jpg" th:if="${session.userDTO.fileAttached == 0}"
                             id="dropButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -164,15 +174,15 @@
 <!--                    <span class="me-1" onclick="logout()" style="cursor: pointer;">로그아웃</span>-->
                 </div>
                 <div class="col text-start" th:if="${session.userDTO == null}">
-                    <button class="btn orangeButton" onclick="loginPage()">로그인</button>
-                    <button class="btn btn-secondary" onclick="joinPage()">회원가입</button>
+                    <button class="btn btn-outline-dark fw-semibold" onclick="loginPage()">로그인</button>
+                    <button class="btn mainButton" onclick="joinPage()">회원가입</button>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <div class="border-bottom mt-3"></div>
+    <div class="border-bottom mt-2"></div>
 
 </div>
 <script th:inline="javascript">
@@ -180,6 +190,8 @@
     /*<![CDATA[*/
      let sessionId = [[${session.userDTO != null ? session.userDTO.id : 0}]];
  /*]]>*/
+
+
 
   const getNotificationList = () => {
         $.ajax({

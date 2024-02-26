@@ -71,4 +71,27 @@
 
 
 
-
+//const tabClick = (menu) => {
+//
+//    // 모든 탭을 회색으로 초기화
+//    document.getElementById('qnaLink').classList.remove("text-black");
+//    document.getElementById('projectLink').classList.remove("text-black");
+//    document.getElementById('noticeLink').classList.remove("text-black");
+//
+//    // 클릭한 탭의 글씨를 검은색으로 변경
+//    document.getElementById(menu).classList.add("text-black");
+//  }
+//
+//    // 각 탭에 대한 클릭 이벤트 리스너 추가
+//    document.getElementById('qnaLink').addEventListener('click', function () {
+//        tabClick('qnaLink');
+//    });
+//
+//    document.getElementById('projectLink').addEventListener('click', function () {
+//        tabClick('projectLink');
+//    });
+//
+//    document.getElementById('noticeLink').addEventListener('click', function () {
+//        tabClick('noticeLink');
+//    });
+//
