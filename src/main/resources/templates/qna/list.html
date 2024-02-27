@@ -154,86 +154,95 @@
                         <!---------------->
                     </div>
                     <!---------------->
+                    <!-- 게시글 목록 -->
+                    <div class="row">
+                        <div class="col-11 border-top border-1"></div>
+                    </div>
+                    <div class="row" th:each="qna: ${qnaList}">
+                        <div class="col-11 border-bottom border-1"
+                             style="min-height: 180px">
 
+                            <div class="row mt-2">
+                                <div class="col ms-2">
+
+                                    <div class="row mt-1">
+                                        <div class="col">
+                                    <span>
+                                        <img class="rounded-circle" style="width: 20px; height: 20px;"
+                                             src="/img/user.jpg" th:if="${qna.fileAttached == 0}">
+                                        <img class="rounded-circle" style="width: 20px; height: 20px;"
+                                             th:src="@{|/upload/${qna.storedFileName}|}" th:if="${qna.fileAttached == 1}">
+                                    </span>
+
+                                            <span class="ms-1 fw-semibold" th:text="${qna.writer}"></span>
+                                            <span class="ms-1">·</span>
+                                            <!--                                                    <span class="ms-1 text-secondary" th:text="*{#temporals.format(project.regDate, 'yyyy-MM-dd HH:mm:ss')}"></span>-->
+                                            <span class="ms-1 text-secondary date-element" th:text="${qna.regDate}"></span>
+                                            <span class="ms-1">·</span>
+                                            <span class="ms-1 text-secondary">조회</span>
+                                            <span class="text-secondary" th:text="${qna.readCount}"></span>
+
+                                        </div>
+                                        <div class="col-6  text-end">
+<!--                                            <i class="bi bi-star text-secondary"></i>-->
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                        <a th:href="@{|/qna/${qna.id}|}">
+                                            <div class="col fw-semibold fs-5" th:text="${qna.title}">
+
+                                            </div>
+                                        </a>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                        <a th:href="@{|/qna/${qna.id}|}">
+                                            <div class="col overflow-list" th:utext="${qna.content}"
+                                            style="">
+
+                                            </div>
+                                        </a>
+                                    </div>
+
+                                    <div class="row mt-3 mb-2">
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <button class="btn btn-sm cateButton"
+                                                    th:if="${qna.categoryName == '기술'}">
+                                                        <i class="bi bi-pencil text-success fw-semibold"></i>
+                                                        <span class="ms-1" th:text="${qna.categoryName}"></span>
+                                                    </button>
+                                                    <button class="btn btn-sm cateButton"
+                                                            th:if="${qna.categoryName == '커리어'}">
+                                                        <i class="bi bi-bag fw-semibold" style="color: #712cf9;"></i>
+                                                        <span class="ms-1" th:text="${qna.categoryName}"></span>
+                                                    </button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col text-end">
+                                           <span class="fw-semibold"> 답변 <span>0</span></span>
+                                            <span class="ms-1"> 댓글 <span>0</span></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <!-- 게시글 목록 -->
+                    <div class="row mt-5 mb-5"></div>
                 </div>
             </div>
         </div>
         <!---------------->
         <div class="col">
             <div class="row mt-3 mb-3"></div>
-            <!-- 게시글 목록 -->
-<!--            <div class="row mt-2 mb-4" th:each="project: ${projectList}">-->
-<!--                <div class="col rounded border border-1 bg-white"-->
-<!--                     style="min-height: 180px">-->
-
-<!--                    <div class="row mt-2">-->
-<!--                        <div class="col ms-2">-->
-
-<!--                            <div class="row mt-1">-->
-<!--                                <div class="col">-->
-<!--                                    <span>-->
-<!--                                        <img class="rounded-circle" style="width: 20px; height: 20px;"-->
-<!--                                             src="/img/user.jpg" th:if="${project.fileAttached == 0}">-->
-<!--                                        <img class="rounded-circle" style="width: 20px; height: 20px;"-->
-<!--                                             th:src="@{|/upload/${project.storedFileName}|}" th:if="${project.fileAttached == 1}">-->
-<!--                                    </span>-->
-
-<!--                                    <span class="ms-1 fw-semibold" th:text="${project.writer}"></span>-->
-<!--                                    <span class="ms-1">·</span>-->
-<!--                                    &lt;!&ndash;                                                    <span class="ms-1 text-secondary" th:text="*{#temporals.format(project.regDate, 'yyyy-MM-dd HH:mm:ss')}"></span>&ndash;&gt;-->
-<!--                                    <span class="ms-1 text-secondary date-element" th:text="${project.regDate}"></span>-->
-<!--                                    <span class="ms-1">·</span>-->
-<!--                                    <span class="ms-1 text-secondary">조회</span>-->
-<!--                                    <span class="text-secondary" th:text="${project.readCount}"></span>-->
-
-<!--                                </div>-->
-<!--                                <div class="col-6  text-end">-->
-<!--                                    <i class="bi bi-star text-secondary"></i>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
-<!--                            <div class="row mt-3">-->
-<!--                                <a th:href="@{|/project/${project.id}|}">-->
-<!--                                    <div class="col fw-semibold fs-5" th:text="${project.title}">-->
-
-<!--                                    </div>-->
-<!--                                </a>-->
-<!--                            </div>-->
-
-<!--                            <div class="row mt-3">-->
-<!--                                <a th:href="@{|/project/${project.id}|}">-->
-<!--                                    <div class="col" th:text="${project.content}">-->
-
-<!--                                    </div>-->
-<!--                                </a>-->
-<!--                            </div>-->
-
-<!--                            <div class="row mt-3 mb-1">-->
-<!--                                <div class="col">-->
-<!--                                    <div class="row">-->
-<!--                                        <div class="col">-->
-<!--                                            &lt;!&ndash; 나중에 리스트로 변경 &ndash;&gt;-->
-<!--                                            <input type="button" class="btn btn-sm btn-secondary" th:value="${project.techList}">-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="col text-end">-->
-<!--                                    <i class="bi bi-chat-left-dots"></i>-->
-<!--                                    <span th:text="${project.commentCount}"></span>-->
-<!--                                    <i class="bi bi-hand-thumbs-up ms-1"></i>-->
-<!--                                    <span>0</span>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
-<!--                        </div>-->
-<!--                    </div>-->
-
-
-<!--                </div>-->
-<!--            </div>-->
-            <!-- 게시글 목록 -->
-
-
 
         </div>
     </div>
@@ -297,6 +306,12 @@
 
 window.addEventListener("DOMContentLoaded", function(){
     getNotificationList();
+    const dateElements = document.querySelectorAll('.date-element');
+    dateElements.forEach(function (element) {
+       const dateString = element.textContent;
+       const formattedDate = formatDateTime(dateString);
+       element.textContent = formattedDate;
+   });
 
 });
 

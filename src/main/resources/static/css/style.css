@@ -52,6 +52,12 @@
   text-overflow: ellipsis; /* 넘친 텍스트를 "..."으로 표시 */
 }
 
+.overflow-list {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
 body {
   font-family: 'Pretendard';
 }
@@ -81,4 +87,10 @@ body {
 .mainButton:active {
     background-color: #1e293b;
     color: white;
+}
+
+.cateButton {
+    background-color: #f1f5f9;
+    font-weight: bold;
+    pointer-events: none;
 }
