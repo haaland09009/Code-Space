@@ -7,11 +7,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProjectTechCategoryLinkRepository extends JpaRepository<ProjectTechCategoryLinkEntity, Long> {
     // !!! 나중에 리스트 형태로 수정해야함.
-    Optional<ProjectTechCategoryLinkEntity> findByProjectEntity_Id(Long id);
+//    Optional<ProjectTechCategoryLinkEntity> findByProjectEntity_Id(Long id);
+    List<ProjectTechCategoryLinkEntity> findByProjectEntity_Id(Long id);
 
     // 기술스택 수정
     @Modifying

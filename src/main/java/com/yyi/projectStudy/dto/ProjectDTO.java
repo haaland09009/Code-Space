@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,8 +29,8 @@ public class ProjectDTO {
     private int fileAttached;
     private String storedFileName;
     private Long commentCount;
-//    private List<String> techList;
-    private String techList;
+    private List<String> techList = new ArrayList<>();
+//    private String techList;
 
     public static ProjectDTO toProjectDTO(ProjectEntity projectEntity) {
         ProjectDTO projectDTO = new ProjectDTO();

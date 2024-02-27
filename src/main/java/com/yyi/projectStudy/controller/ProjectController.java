@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.unbescape.html.HtmlEscape;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -53,8 +54,7 @@ public class ProjectController {
                                 projectStudyCategoryLinkDTO,
                         @ModelAttribute ProjectPositionCategoryLinkDTO
                                 projectPositionCategoryLinkDTO,
-                        @ModelAttribute ProjectTechCategoryLinkDTO
-                                projectTechCategoryLinkDTO) {
+                        @RequestParam(name = "techId", required = false) List<ProjectTechCategoryLinkDTO> proTechDToList) {
         // 내용 enter 처리
         String content = projectDTO.getContent().replaceAll("\\n", "<br>");
         projectDTO.setContent(content);
@@ -68,13 +68,46 @@ public class ProjectController {
         // 프로젝트 - 진행기간 T
         projectService.saveProjectPeriod(dto, projectPeriodCategoryLinkDTO);
         // 프로젝트 - 기술스택 T
-        projectService.saveProjectTech(dto, projectTechCategoryLinkDTO);
+        projectService.saveProjectTech(dto, proTechDToList);
         // 프로젝트 - 스터디 T
         projectService.saveProjectStudy(dto, projectStudyCategoryLinkDTO);
 
 
         return "redirect:/project/" + savedId;
     }
+
+
+
+//    @PostMapping("/write")
+//    public String write(@ModelAttribute ProjectDTO projectDTO,
+//                        @ModelAttribute ProjectPeriodCategoryLinkDTO
+//                                projectPeriodCategoryLinkDTO,
+//                        @ModelAttribute ProjectStudyCategoryLinkDTO
+//                                projectStudyCategoryLinkDTO,
+//                        @ModelAttribute ProjectPositionCategoryLinkDTO
+//                                projectPositionCategoryLinkDTO,
+//                        @ModelAttribute ProjectTechCategoryLinkDTO
+//                                projectTechCategoryLinkDTO) {
+//        // 내용 enter 처리
+//        String content = projectDTO.getContent().replaceAll("\\n", "<br>");
+//        projectDTO.setContent(content);
+//        //
+//        Long savedId = projectService.save(projectDTO);
+//
+//        ProjectDTO dto = projectService.findById(savedId);
+//
+//        // 프로젝트 - 포지션 T
+//        projectService.saveProjectPosition(dto, projectPositionCategoryLinkDTO);
+//        // 프로젝트 - 진행기간 T
+//        projectService.saveProjectPeriod(dto, projectPeriodCategoryLinkDTO);
+//        // 프로젝트 - 기술스택 T
+//        projectService.saveProjectTech(dto, projectTechCategoryLinkDTO);
+//        // 프로젝트 - 스터디 T
+//        projectService.saveProjectStudy(dto, projectStudyCategoryLinkDTO);
+//
+//
+//        return "redirect:/project/" + savedId;
+//    }
 
     // 게시글 리스트
     @GetMapping("")
@@ -86,7 +119,13 @@ public class ProjectController {
             projectDTO.setContent(content);
             projectDTO.setCommentCount(projectCommentService.count(projectDTO.getId()));
             // 나중에 리스트로 변경
-            projectDTO.setTechList(projectService.findTechCategory(projectDTO.getId()).getName());
+//            projectDTO.setTechList(projectService.findTechCategory(projectDTO.getId()).getName());
+            List<TechCategoryDTO> techCategoryDTOList = projectService.findTechCategory(projectDTO.getId());
+            List<String> techList = new ArrayList<>();
+            for (TechCategoryDTO techCategoryDTO : techCategoryDTOList) {
+                techList.add(techCategoryDTO.getName());
+            }
+            projectDTO.setTechList(techList);
         }
         model.addAttribute("projectList", projectDTOList);
 
@@ -112,6 +151,14 @@ public class ProjectController {
         String content = projectDTO.getContent().replace("<br>", "\r\n");
         projectDTO.setContent(content);
         //
+
+//        List<TechCategoryDTO> techCategoryList = projectService.findTechCategory(projectDTO.getId());
+//        List<String> techList = new ArrayList<>();
+//        for (TechCategoryDTO techCategoryDTO : techCategoryList) {
+//            techList.add(techCategoryDTO.getName());
+//        }
+
+//        projectDTO.setTechList(projectService.findTechCategory(projectDTO.getId()).getName());
         model.addAttribute("project", projectDTO);
 
         // 프로젝트 / 스터디 여부 조회
@@ -123,8 +170,8 @@ public class ProjectController {
         model.addAttribute("positionCategory", positionCategoryDTO);
 
         // 기술스택 조회
-        TechCategoryDTO techCategoryDTO = projectService.findTechCategory(id);
-        model.addAttribute("techCategory", techCategoryDTO);
+        List<TechCategoryDTO> techCategoryDTOList = projectService.findTechCategory(id);
+        model.addAttribute("techCategoryList", techCategoryDTOList);
 
         // 진행기간 조회
         PeriodCategoryDTO periodCategoryDTO = projectService.findPeriodCategory(id);
@@ -187,8 +234,12 @@ public class ProjectController {
         model.addAttribute("selectedPositionId", positionCategoryDTO.getId());
 
         // 기술스택 조회
-        TechCategoryDTO techCategoryDTO = projectService.findTechCategory(id);
-        model.addAttribute("selectedTechId", techCategoryDTO.getId());
+        List<TechCategoryDTO> techCategoryDTOList = projectService.findTechCategory(id);
+        List<Long> selectedTechIdList = new ArrayList<>();
+        for (TechCategoryDTO techCategoryDTO : techCategoryDTOList) {
+            selectedTechIdList.add(techCategoryDTO.getId());
+        }
+        model.addAttribute("selectedTechIdList", selectedTechIdList);
 
         // 진행기간 조회
         PeriodCategoryDTO periodCategoryDTO = projectService.findPeriodCategory(id);
@@ -225,8 +276,8 @@ public class ProjectController {
         model.addAttribute("projectStudyCategory", projectStudyCategoryDTO);
 
         // 기술스택
-        TechCategoryDTO techCategoryDTO = projectService.updateTech(projectDTO, projectTechCategoryLinkDTO);
-        model.addAttribute("techCategory", techCategoryDTO);
+//        TechCategoryDTO techCategoryDTO = projectService.updateTech(projectDTO, projectTechCategoryLinkDTO);
+//        model.addAttribute("techCategory", techCategoryDTO);
 
         // 진행기간 조회
         PeriodCategoryDTO periodCategoryDTO = projectService.updatePeriod(projectDTO, projectPeriodCategoryLinkDTO);

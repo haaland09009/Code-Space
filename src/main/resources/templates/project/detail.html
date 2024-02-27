@@ -38,6 +38,31 @@
                                     <div class="row mt-2 mb-2"></div>
                                     <!-- 제목 -->
                                     <div class="row">
+                                        <div class="col">
+                                            <button class="btn btn-sm cateButton" th:each="tech: ${techCategoryList}">
+                                                <span th:if="${tech.name == 'Java'}" class="text-danger">•</span>
+                                                <span th:if="${tech.name == 'Spring'}" class="text-success">•</span>
+                                                <span th:if="${tech.name == 'C'}" style="color: #007aff;">•</span>
+                                                <span th:if="${tech.name == 'Python'}" class="text-primary">•</span>
+                                                <span th:if="${tech.name == 'React'}" style="color: #84ffff;">•</span>
+                                                <span th:if="${tech.name == 'Vue'}" style="color: #4caf50;">•</span>
+                                                <span th:if="${tech.name == 'NodeJS'}" style="color: #9c27b0;">•</span>
+                                                <span th:if="${tech.name == 'Swift'}" style="color: #b71c1c;">•</span>
+                                                <span th:if="${tech.name == 'Kotlin'}" style="color: #712cf9;">•</span>
+                                                <span th:if="${tech.name == 'Git'}">•</span>
+                                                <span th:if="${tech.name == 'AWS'}">•</span>
+                                                <span th:if="${tech.name == 'Flutter'}">•</span>
+                                                <span th:if="${tech.name == 'Docker'}">•</span>
+                                                <span th:if="${tech.name == 'JavaScript'}" style="color: #712cf9;">•</span>
+                                                <span th:if="${tech.name == 'TypeScript'}" class="text-primary">•</span>
+                                                <span th:if="${tech.name == 'Django'}">•</span>
+                                                <span th:if="${tech.name == 'PHP'}" class="text-secondary">•</span>
+                                                <span th:if="${tech.name == 'SQL'}" style="color: #ff6f0f">•</span>
+                                                <span class="ms-1" th:text="${tech.name}"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
                                         <div class="col fs-4 fw-semibold" th:text="${project.title}">
 
                                         </div>
@@ -149,8 +174,8 @@
                                                 <div class="col-4 text-secondary">
                                                     기술 스택
                                                 </div>
-                                                <div class="col fw-semibold" th:text="${techCategory.name}">
-
+                                                <div class="col fw-semibold">
+<!--                                                    th:text="${techCategory.name}"-->
                                                 </div>
                                             </div>
 
@@ -203,7 +228,7 @@
 
                                     <!-- 내용 -->
                                     <div class="row">
-                                        <div class="col" th:utext="${project.content}"></div>
+                                        <div class="col boardContent" th:utext="${project.content}"></div>
                                     </div>
 
                                     <!-- 내용 -->
@@ -321,7 +346,7 @@
 
                                                 <!-- 댓글 내용 정보 -->
                                                 <div class="row mt-3">
-                                                    <div class="col ms-1" th:text="${comment.content}">
+                                                    <div class="col ms-1 boardContent" th:text="${comment.content}">
                                                     </div>
                                                 </div>
                                                 <!-- 댓글 내용 정보 -->
@@ -784,7 +809,7 @@ const alertLikeCheckModal = () => {
                  output += '</div>';
                  output += '</div>';
                  output += '<div class="row mt-3">';
-                 output += '<div class="col ms-1">' + comments[i].content + '</div>';
+                 output += '<div class="col ms-1 boardContent">' + comments[i].content + '</div>';
                  output += '</div>';
 
 <!--                 output += '<div class="row mt-3">';-->

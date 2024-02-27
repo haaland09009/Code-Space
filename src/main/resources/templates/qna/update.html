@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+</head>
+<style>
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+<body>
+<div class="container-fluid">
+    <div th:include="common/header :: header"></div>
+
+    <div class="row mt-3 mb-4"></div>
+    <div class="row">
+        <div class="col ms-5 rounded rounded-1 border">
+            <div class="row mt-3 mb-3"></div>
+
+            <div class="row">
+                <div class="col"></div>
+                <div class="col-11">
+                    <form action="/qna/update" method="post" onsubmit="return updateQna();">
+                        <input type="hidden" name="id" th:value="${qna.id}">
+                        <div class="row">
+                            <div class="col ms-1 fw-semibold">
+                                토픽
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col">
+                                <select class="form-select py-2" name="topicId" id="topicBox" style="text-indent: 6px;">
+                                    <option selected disabled hidden value="">토픽을 선택해주세요.</option>
+                                    <option th:each="topic : ${topicList}"
+                                            th:value="${topic.id}" th:text="${topic.name}"
+                                            th:selected="${topic.id == selectedTopic.id}"></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col fw-semibold ms-1">
+                                제목
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col">
+                                <input type="text" class="form-control py-2" placeholder="제목을 입력해주세요." style="text-indent: 6px;"
+                                       name="title" id="title" th:value="${qna.title}">
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col fw-semibold ms-1">
+                                태그 (필수 입력)
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col">
+                                <input type="text" class="form-control py-2" placeholder="태그를 입력해주세요." style="text-indent: 6px;">
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col">
+                                <textarea name="content" id="content" cols="30" rows="15" class="form-control"
+                                th:utext="${qna.content}"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col text-end">
+                                <a href="/qna" class="btn btn-outline-dark">취소</a>
+                                <button class="btn ms-1 mainButton">등록</button>
+                            </div>
+                        </div>
+                    </form>
+
+
+                </div>
+                <div class="col"></div>
+            </div>
+
+
+
+            <div class="row mt-3 mb-3"></div>
+
+
+
+        </div>
+        <div class="col-4 ms-4">
+            <div class="row">
+                <div class="col-9 bg-light">
+                    <div class="row mt-2 mb-2"></div>
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-10">
+                            <div class="row">
+                                <div class="col">
+                                    제목은 궁금한 것을 구체적으로 담아 질문 형태로 작성하세요. 💡
+                                </div>
+                            </div>
+
+                            <div class="row mt-1">
+                                <div class="col">
+                                    • 좋은 제목 예시: next.js 폴더나 컴포넌트 구조는 보통 어떻게 짜시나요?
+                                </div>
+                            </div>
+
+                            <div class="row mt-1">
+                                <div class="col">
+                                    • 나쁜 제목 예시: 현재 개발을 공부하는 취준생입니다.
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                    <div class="row mt-2 mb-2"></div>
+
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+    <div class="row mt-3 mb-3"></div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+      let sessionId = [[${session.userDTO != null ? session.userDTO.id : 0}]];
+  /*]]>*/
+
+  const updateQna = () => {
+
+    const topic = document.querySelector("#topicBox");
+    const title = document.querySelector("#title");
+    const content = document.querySelector("#content");
+
+    if (topic.value == "") {
+        alert("토픽을 선택해주세요.");
+        topic.focus();
+        return false;
+    }
+    if (title.value.trim() == "") {
+        alert("제목을 입력하세요.");
+        title.focus();
+        return false;
+    }
+    if (content.value.trim() == "") {
+        alert("내용을 입력하세요.");
+        content.focus();
+        return false;
+    }
+    return true;
+
+    // 해시 태그 미입력 방지 추가해야함..
+  }
+
+
+
+
+
+  const getNotificationList = () => {
+        $.ajax({
+         type: "get",
+         url: "/notification/findAll/" + sessionId,
+         success: function(res) {
+            let output = "";
+             if (res.length == 0) {
+                output += '<div class="text-center mb-3"> 읽지 않은 알림이 존재하지 않습니다. </div>';
+            } else {
+              for (let i in res) {
+                output += '<a href="' + res[i].notUrl + '">';
+                output += '<div class="row mt-2">';
+                output += '<div class="col ms-3">';
+
+                output += '<div class="row">';
+                output += '<div class="col-1">';
+                if (res[i].fileAttached == 0) {
+                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
+                } else if (res[i].fileAttached == 1) {
+                    output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
+                }
+                output += '</div>';
+                output += '<div class="col ms-2 fw-semibold">' + res[i].sender + '</div>';
+                output += '<div class="col text-end text-secondary me-1">' + formatDateTime(res[i].occurDate) + '</div>';
+                output += '</div>';
+
+                output += '<div class="row">';
+                output += '<div class="col-1">';
+                output += '</div>';
+                output += '<div class="col ms-2">' + res[i].sentence + '</div>';
+                output += '</div>';
+
+                output += '<div class="border-bottom mt-2">' + '</div>';
+
+                output += '</div>';
+                output += '</div>';
+                output += '</a>';
+                }
+            }
+            document.getElementById('notification-list').innerHTML = output;
+         },
+         error: function(err) {
+             return;
+         }
+     });
+  }
+
+
+window.addEventListener("DOMContentLoaded", function(){
+    getNotificationList();
+
+});
+</script>
+</body>
+</html>

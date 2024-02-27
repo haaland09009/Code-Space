@@ -64,7 +64,7 @@
 
                                                 <div class="row mt-2">
                                                     <div class="col">
-                                                        <select class="form-select" multiple id="techBox" name="techId[]">
+                                                        <select class="form-select" multiple id="techBox" name="techId">
                                                             <option selected disabled hidden value="">프로젝트 사용 스택</option>
                                                             <option th:each="option : ${techCategoryList}"
                                                                     th:value="${option.id}" th:text="${option.name}"></option>

@@ -77,9 +77,13 @@ public class QnaController {
         // 게시글 정보
         QnaDTO qnaDTO = qnaService.findById(id);
         String content = qnaDTO.getContent();
-        content = content.replaceAll("<br>", "\r\n");
+//        content = content.replaceAll("<br>", "\r\n");
+        content = content.replaceAll("<br>", "\n");
         qnaDTO.setContent(content);
         model.addAttribute("qna", qnaDTO);
+
+        // 조회수 증가
+        qnaService.updateReadCount(id);
         return "qna/detail";
     }
 
@@ -89,6 +93,47 @@ public class QnaController {
     public String deleteById(@PathVariable("id") Long id) {
         qnaService.deleteById(id);
         return "redirect:/qna";
+    }
+
+    // 게시글 수정 폼
+    @GetMapping("/update/{id}")
+    public String updateForm(@PathVariable("id") Long id, Model model, HttpSession session) {
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+        if (sessionUser == null) {
+            return "redirect:/user/loginPage";
+        } else {
+            // 모든 토픽 조회
+            List<TopicDTO> topicDTOList =  qnaService.findAllTopic();
+            model.addAttribute("topicList", topicDTOList);
+
+            QnaDTO qnaDTO = qnaService.findById(id);
+            String content = qnaDTO.getContent();
+            content = content.replaceAll("<br>", "\n");
+            qnaDTO.setContent(content);
+
+            TopicDTO topicDTO = qnaService.findTopic(id);
+            model.addAttribute("qna", qnaDTO);
+            model.addAttribute("selectedTopic", topicDTO);
+            return "qna/update";
+        }
+    }
+
+    // 게시글 수정
+    @PostMapping("/update")
+    public String update(@ModelAttribute QnaDTO qnaDTO,
+                         @ModelAttribute QnaTopicDTO qnaTopicDTO,
+                         Model model) {
+        QnaDTO updateQnaDTO = qnaService.updateQna(qnaDTO);
+
+        String content = updateQnaDTO.getContent();
+        content = content.replaceAll("<br>", "\r\n");
+        updateQnaDTO.setContent(content);
+
+        TopicDTO updateTopicDTO = qnaService.updateQnaTopic(qnaDTO.getId(), qnaTopicDTO);
+
+        model.addAttribute("qna", updateQnaDTO);
+        model.addAttribute("topic", updateTopicDTO);
+        return "qna/detail";
     }
 
 

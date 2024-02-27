@@ -112,19 +112,40 @@
                                                 </a>
                                             </div>
 
-                                            <div class="row mt-3 mb-1">
+                                            <div class="row mt-3 mb-2">
                                                 <div class="col">
                                                     <div class="row">
                                                         <div class="col">
                                                             <!-- 나중에 리스트로 변경 -->
-                                                            <input type="button" class="btn btn-sm btn-secondary" th:value="${project.techList}">
+<!--                                                            th:if="${project.techList == 'Java'}"-->
+                                                            <button class="btn btn-sm cateButton" th:each="tech: ${project.techList}">
+                                                                <span th:if="${tech == 'Java'}" class="text-danger">•</span>
+                                                                <span th:if="${tech == 'Spring'}" class="text-success">•</span>
+                                                                <span th:if="${tech == 'C'}" style="color: #007aff;">•</span>
+                                                                <span th:if="${tech == 'Python'}" class="text-primary">•</span>
+                                                                <span th:if="${tech == 'React'}" style="color: #84ffff;">•</span>
+                                                                <span th:if="${tech == 'Vue'}" style="color: #4caf50;">•</span>
+                                                                <span th:if="${tech == 'NodeJS'}" style="color: #9c27b0;">•</span>
+                                                                <span th:if="${tech == 'Swift'}" style="color: #b71c1c;">•</span>
+                                                                <span th:if="${tech == 'Kotlin'}" style="color: #712cf9;">•</span>
+                                                                <span th:if="${tech == 'Git'}">•</span>
+                                                                <span th:if="${tech == 'AWS'}">•</span>
+                                                                <span th:if="${tech == 'Flutter'}">•</span>
+                                                                <span th:if="${tech == 'Docker'}">•</span>
+                                                                <span th:if="${tech == 'JavaScript'}" style="color: #712cf9;">•</span>
+                                                                <span th:if="${tech == 'TypeScript'}" class="text-primary">•</span>
+                                                                <span th:if="${tech == 'Django'}">•</span>
+                                                                <span th:if="${tech == 'PHP'}" class="text-secondary">•</span>
+                                                                <span th:if="${tech == 'SQL'}" style="color: #ff6f0f">•</span>
+                                                                <span class="ms-1" th:text="${tech}"></span>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col text-end">
-                                                    <i class="bi bi-chat-left-dots"></i>
+                                                    <span>댓글</span>
                                                     <span th:text="${project.commentCount}"></span>
-                                                    <i class="bi bi-hand-thumbs-up ms-1"></i>
+                                                    <span class="ms-1">스크랩</span>
                                                     <span>0</span>
                                                 </div>
                                             </div>

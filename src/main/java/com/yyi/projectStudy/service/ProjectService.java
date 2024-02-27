@@ -103,14 +103,25 @@ public class ProjectService {
     }
 
     // 프로젝트 - 기술스택 카테고리 T 데이터 추가
-    public void saveProjectTech(ProjectDTO dto, ProjectTechCategoryLinkDTO projectTechCategoryLinkDTO) {
+    public void saveProjectTech(ProjectDTO dto, List<ProjectTechCategoryLinkDTO> proTechDTOList) {
         ProjectEntity projectEntity = projectRepository.findById(dto.getId()).get();
-        TechCategoryEntity techCategoryEntity = techCategoryRepository.findById(projectTechCategoryLinkDTO.getTechId()).get();
-        projectTechCategoryLinkRepository.save(
-                ProjectTechCategoryLinkEntity.toProjectTechCategoryLinkEntity(projectTechCategoryLinkDTO,
+        for (ProjectTechCategoryLinkDTO proTechDTO : proTechDTOList) {
+            TechCategoryEntity techCategoryEntity = techCategoryRepository.findById(proTechDTO.getTechId()).get();
+            projectTechCategoryLinkRepository.save(
+            ProjectTechCategoryLinkEntity.toProjectTechCategoryLinkEntity(proTechDTO,
                         projectEntity, techCategoryEntity));
 
+        }
     }
+
+//    public void saveProjectTech(ProjectDTO dto, ProjectTechCategoryLinkDTO projectTechCategoryLinkDTO) {
+//        ProjectEntity projectEntity = projectRepository.findById(dto.getId()).get();
+//        TechCategoryEntity techCategoryEntity = techCategoryRepository.findById(projectTechCategoryLinkDTO.getTechId()).get();
+//        projectTechCategoryLinkRepository.save(
+//                ProjectTechCategoryLinkEntity.toProjectTechCategoryLinkEntity(projectTechCategoryLinkDTO,
+//                        projectEntity, techCategoryEntity));
+//
+//    }
 
     // 프로젝트 - 스터디 카테고리 T 데이터 추가
     public void saveProjectStudy(ProjectDTO dto, ProjectStudyCategoryLinkDTO projectStudyCategoryLinkDTO) {
@@ -165,14 +176,27 @@ public class ProjectService {
     }
 
     // 게시글 - 기술스택 조회
-    public TechCategoryDTO findTechCategory(Long projectId) {
+    public List<TechCategoryDTO> findTechCategory(Long projectId) {
         // 나중에 리스트 형태로 수정 !!!!!!
-        ProjectTechCategoryLinkEntity projectTechCategoryLinkEntity
-                = projectTechCategoryLinkRepository.findByProjectEntity_Id(projectId).get();
-        Long techId = projectTechCategoryLinkEntity.getTechCategoryEntity().getId();
-        TechCategoryEntity techCategoryEntity = techCategoryRepository.findById(techId).get();
-        return TechCategoryDTO.toTechCategoryDTO(techCategoryEntity);
+       List<ProjectTechCategoryLinkEntity> projectTechCategoryLinkEntityList
+                = projectTechCategoryLinkRepository.findByProjectEntity_Id(projectId);
+       List<TechCategoryDTO> techCategoryDTOList = new ArrayList<>();
+       for (ProjectTechCategoryLinkEntity projectTechCategoryLinkEntity : projectTechCategoryLinkEntityList) {
+           Long techId = projectTechCategoryLinkEntity.getTechCategoryEntity().getId();
+           TechCategoryEntity techCategoryEntity = techCategoryRepository.findById(techId).get();
+           techCategoryDTOList.add(TechCategoryDTO.toTechCategoryDTO(techCategoryEntity));
+       }
+        return techCategoryDTOList;
     }
+
+//    public TechCategoryDTO findTechCategory(Long projectId) {
+//        // 나중에 리스트 형태로 수정 !!!!!!
+//        ProjectTechCategoryLinkEntity projectTechCategoryLinkEntity
+//                = projectTechCategoryLinkRepository.findByProjectEntity_Id(projectId).get();
+//        Long techId = projectTechCategoryLinkEntity.getTechCategoryEntity().getId();
+//        TechCategoryEntity techCategoryEntity = techCategoryRepository.findById(techId).get();
+//        return TechCategoryDTO.toTechCategoryDTO(techCategoryEntity);
+//    }
 
     // 게시글 - 진행기간 조회
     public PeriodCategoryDTO findPeriodCategory(Long projectId) {
@@ -224,13 +248,21 @@ public class ProjectService {
     }
 
     // 기술스택 수정 (나중에 리스트 형태로 수정해야함)
-    @Transactional
-    public TechCategoryDTO updateTech(ProjectDTO projectDTO,
-                                      ProjectTechCategoryLinkDTO projectTechCategoryLinkDTO) {
-        projectTechCategoryLinkRepository.updateTech(projectTechCategoryLinkDTO.getTechId(), projectDTO.getId());
-        TechCategoryEntity techCategoryEntity = projectTechCategoryLinkRepository.findByProjectEntity_Id(projectDTO.getId()).get().getTechCategoryEntity();
-        return TechCategoryDTO.toTechCategoryDTO(techCategoryEntity);
-    }
+//    @Transactional
+//    public TechCategoryDTO updateTech(ProjectDTO projectDTO,
+//                                      ProjectTechCategoryLinkDTO projectTechCategoryLinkDTO) {
+//        projectTechCategoryLinkRepository.updateTech(projectTechCategoryLinkDTO.getTechId(), projectDTO.getId());
+//        TechCategoryEntity techCategoryEntity = projectTechCategoryLinkRepository.findByProjectEntity_Id(projectDTO.getId()).get().getTechCategoryEntity();
+//        return TechCategoryDTO.toTechCategoryDTO(techCategoryEntity);
+//    }
+
+//    @Transactional
+//    public TechCategoryDTO updateTech(ProjectDTO projectDTO,
+//                                      ProjectTechCategoryLinkDTO projectTechCategoryLinkDTO) {
+//        projectTechCategoryLinkRepository.updateTech(projectTechCategoryLinkDTO.getTechId(), projectDTO.getId());
+//        TechCategoryEntity techCategoryEntity = projectTechCategoryLinkRepository.findByProjectEntity_Id(projectDTO.getId()).get().getTechCategoryEntity();
+//        return TechCategoryDTO.toTechCategoryDTO(techCategoryEntity);
+//    }
 
     // 프로젝트 / 스터디 여부 수정
     @Transactional
