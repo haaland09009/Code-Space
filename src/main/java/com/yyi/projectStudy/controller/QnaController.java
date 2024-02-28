@@ -1,9 +1,7 @@
 package com.yyi.projectStudy.controller;
 
-import com.yyi.projectStudy.dto.QnaDTO;
-import com.yyi.projectStudy.dto.QnaTopicDTO;
-import com.yyi.projectStudy.dto.TopicDTO;
-import com.yyi.projectStudy.dto.UserDTO;
+import com.yyi.projectStudy.dto.*;
+import com.yyi.projectStudy.service.QnaReplyService;
 import com.yyi.projectStudy.service.QnaService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +16,7 @@ import java.util.List;
 @RequestMapping("/qna")
 public class QnaController {
     private final QnaService qnaService;
+    private final QnaReplyService qnaReplyService;
     // 메인 페이지 - 기술, 커리어, 기타 모두 조회
     @GetMapping("")
     public String mainPage(Model model) {
@@ -84,6 +83,17 @@ public class QnaController {
 
         // 조회수 증가
         qnaService.updateReadCount(id);
+
+        // 답변 불러오기
+        List<QnaReplyDTO> qnaReplyDTOList = qnaReplyService.findAll(id);
+        // enter 처리
+        for (QnaReplyDTO dto : qnaReplyDTOList) {
+            String replyContent = dto.getContent();
+            replyContent = replyContent.replaceAll("<br>", "\n");
+            dto.setContent(replyContent);
+        }
+        //
+        model.addAttribute("replyList", qnaReplyDTOList);
         return "qna/detail";
     }
 

@@ -32,13 +32,13 @@ public class ProjectTechCategoryLinkEntity {
     private TechCategoryEntity techCategoryEntity;
 
     public static ProjectTechCategoryLinkEntity toProjectTechCategoryLinkEntity
-            (ProjectTechCategoryLinkDTO projectTechCategoryLinkDTO,
+            (
              ProjectEntity projectEntity,
              TechCategoryEntity techCategoryEntity)
     {
         ProjectTechCategoryLinkEntity projectTechCategoryLinkEntity =
                 new ProjectTechCategoryLinkEntity();
-        projectTechCategoryLinkEntity.setId(projectTechCategoryLinkDTO.getId());
+//        projectTechCategoryLinkEntity.setId(projectTechCategoryLinkDTO.getId());
         projectTechCategoryLinkEntity.setProjectEntity(projectEntity);
         projectTechCategoryLinkEntity.setTechCategoryEntity(techCategoryEntity);
         return projectTechCategoryLinkEntity;

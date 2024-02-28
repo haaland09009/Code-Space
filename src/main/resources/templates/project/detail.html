@@ -23,7 +23,7 @@
 <!--            <div th:include="common/sidemenu :: sidemenu"></div>-->
 <!--        </div>-->
 
-        <div class="col">
+        <div class="col bg-light">
 
             <div class="row mt-3 mb-4"></div>
             <div class="row">
@@ -39,9 +39,10 @@
                                     <!-- 제목 -->
                                     <div class="row">
                                         <div class="col">
-                                            <button class="btn btn-sm cateButton" th:each="tech: ${techCategoryList}">
+                                            <button class="btn btn-sm cateButton me-1" th:each="tech: ${techCategoryList}">
                                                 <span th:if="${tech.name == 'Java'}" class="text-danger">•</span>
                                                 <span th:if="${tech.name == 'Spring'}" class="text-success">•</span>
+                                                <span th:if="${tech.name == 'Spring Boot'}" class="text-success">•</span>
                                                 <span th:if="${tech.name == 'C'}" style="color: #007aff;">•</span>
                                                 <span th:if="${tech.name == 'Python'}" class="text-primary">•</span>
                                                 <span th:if="${tech.name == 'React'}" style="color: #84ffff;">•</span>
@@ -62,14 +63,15 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="row mt-1">
+                                    <div class="row mt-2">
                                         <div class="col fs-4 fw-semibold" th:text="${project.title}">
 
                                         </div>
+
                                     </div>
                                     <!-- 제목 -->
 
-                                    <div class="row mt-2 mb-1"></div>
+                                    <div class="row mt-1 mb-1"></div>
                                     <!-- 윗 상단 -->
                                     <div class="row mt-2">
                                         <div class="col-8">
@@ -108,15 +110,7 @@
                                         <div class="col text-end me-1 mt-4">
                                             <div class="row">
                                                 <div class="col">
-<!--                                                    <button class="btn btn-sm" style="background-color: #dee2e6;">-->
-<!--                                                        <i class="bi bi-star"></i>-->
-<!--                                                        <span class="ms-1">스크랩</span>-->
-<!--                                                        <span class="ms-1">0</span>-->
-<!--                                                    </button>-->
                                                 </div>
-                                                <!--                                                th:if="${session.userDTO != null-->
-                                                <!--                                                and session.userDTO.id == project.userId}"-->
-
                                                 <div class="col-1 mt-1 ps-0 dropdown" style="cursor: pointer;"
                                                      th:if="${session.userDTO != null and session.userDTO.id == project.userId}">
                                                     <i class="bi bi-three-dots-vertical" style="height: 10px" id="dropButton"
@@ -129,16 +123,17 @@
                                                                 <span class="ms-1"> 수정하기 </span>
                                                             </a>
                                                         </li>
-
-
                                                         <li>
-                                                            <a class="dropdown-item" onclick="deleteBoardReq()">
+                                                            <a class="dropdown-item" onclick="deleteReplyReq()">
                                                                 <i class="bi bi-trash3"></i>
                                                                 <span class="ms-1"> 삭제하기 </span>
                                                             </a>
                                                         </li>
-
                                                     </ul>
+                                                </div>
+                                                <div class="col-1 mt-1 ps-0 me-2" style="cursor: pointer;"
+                                                     th:if="${session.userDTO != null and session.userDTO.id != project.userId}">
+                                                    <i class="bi bi-bookmark fs-5"></i>
                                                 </div>
                                             </div>
 
@@ -175,7 +170,9 @@
                                                     기술 스택
                                                 </div>
                                                 <div class="col fw-semibold">
-<!--                                                    th:text="${techCategory.name}"-->
+                                                    <span th:each="tech: ${techCategoryList}">
+                                                        <span th:text="${tech.name}"></span>
+                                                    </span>
                                                 </div>
                                             </div>
 
@@ -258,7 +255,14 @@
 
                                         <div class="col">
                                             <textarea name="" id="commentContent" cols="10" rows="4"
-                                                      class="form-control" ></textarea>
+                                                      class="form-control"  style="resize:none;"
+                                                      th:if="${session.userDTO != null}"
+                                                      placeholder="댓글을 작성하여 프로젝트와 스터디에 참여해보세요 !"></textarea>
+                                            <textarea cols="10" rows="4"
+                                                      class="form-control" style="resize:none; pointer-events: none;"
+                                            th:if="${session.userDTO == null}"
+                                            placeholder="로그인 후 댓글을 작성하실 수 있습니다."></textarea>
+
                                         </div>
                                     </div>
 
@@ -418,7 +422,7 @@
                         </div>
                         <div class="col-4">
                             <div class="row">
-                                <div class="col-9 ms-5 bg-light" style="min-height: 300px">
+                                <div class="col-9 ms-5 bg-white border border-1" style="min-height: 300px">
                                     <div class="row mt-5">
                                         <div class="col d-flex justify-content-center">
                                            <img src="/img/user.jpg" class="rounded-circle" style="width: 140px; height: 140px;"

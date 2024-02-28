@@ -54,7 +54,7 @@ public class ProjectController {
                                 projectStudyCategoryLinkDTO,
                         @ModelAttribute ProjectPositionCategoryLinkDTO
                                 projectPositionCategoryLinkDTO,
-                        @RequestParam(name = "techId", required = false) List<ProjectTechCategoryLinkDTO> proTechDToList) {
+                        @RequestParam(name = "techId", required = false) List<Long> techIdList) {
         // 내용 enter 처리
         String content = projectDTO.getContent().replaceAll("\\n", "<br>");
         projectDTO.setContent(content);
@@ -68,7 +68,10 @@ public class ProjectController {
         // 프로젝트 - 진행기간 T
         projectService.saveProjectPeriod(dto, projectPeriodCategoryLinkDTO);
         // 프로젝트 - 기술스택 T
-        projectService.saveProjectTech(dto, proTechDToList);
+        System.out.println("---------------------------------------");
+        System.out.println("techIdList:" + techIdList);
+        System.out.println("---------------------------------------");
+        projectService.saveProjectTech(dto, techIdList);
         // 프로젝트 - 스터디 T
         projectService.saveProjectStudy(dto, projectStudyCategoryLinkDTO);
 
@@ -261,8 +264,7 @@ public class ProjectController {
                                      projectStudyCategoryLinkDTO,
                          @ModelAttribute ProjectPositionCategoryLinkDTO
                                      projectPositionCategoryLinkDTO,
-                         @ModelAttribute ProjectTechCategoryLinkDTO
-                                     projectTechCategoryLinkDTO,
+                         @RequestParam(name = "techId", required = false) List<Long> techIdList,
                          Model model) {
         ProjectDTO project = projectService.update(projectDTO);
         model.addAttribute("project", project);
@@ -276,8 +278,8 @@ public class ProjectController {
         model.addAttribute("projectStudyCategory", projectStudyCategoryDTO);
 
         // 기술스택
-//        TechCategoryDTO techCategoryDTO = projectService.updateTech(projectDTO, projectTechCategoryLinkDTO);
-//        model.addAttribute("techCategory", techCategoryDTO);
+        List<TechCategoryDTO> techCategoryDTOList = projectService.updateTech(projectDTO, techIdList);
+        model.addAttribute("techCategoryList", techCategoryDTOList);
 
         // 진행기간 조회
         PeriodCategoryDTO periodCategoryDTO = projectService.updatePeriod(projectDTO, projectPeriodCategoryLinkDTO);
@@ -289,6 +291,11 @@ public class ProjectController {
 
         model.addAttribute("commentList", projectCommentDTOList);
         model.addAttribute("commentCount", commentCount);
+
+        // 작성자 정보
+        Long userId = projectService.findById(projectDTO.getId()).getUserId();
+        UserDTO userDTO = userService.findById(userId);
+        model.addAttribute("writerInfo", userDTO);
 
         return "project/detail";
 
