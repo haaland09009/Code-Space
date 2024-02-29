@@ -1,7 +1,10 @@
 package com.yyi.projectStudy.controller;
 
 import com.yyi.projectStudy.dto.QnaReplyDTO;
+import com.yyi.projectStudy.dto.QnaReplyLikeDTO;
+import com.yyi.projectStudy.dto.UserDTO;
 import com.yyi.projectStudy.service.QnaReplyService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,13 +47,25 @@ public class QnaReplyController {
 
     // 답글 조회
     @GetMapping("/getReplyList/{qnaId}")
-    public ResponseEntity getReplyList(@PathVariable("qnaId") Long qnaId) {
+    public ResponseEntity getReplyList(@PathVariable("qnaId") Long qnaId, HttpSession session) {
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
         if (qnaId != null) {
             List<QnaReplyDTO> qnaReplyDTOList = qnaReplyService.findAll(qnaId);
             for (QnaReplyDTO dto : qnaReplyDTOList) {
                 String replyContent = dto.getContent();
                 replyContent = replyContent.replaceAll("<br>", "\n");
                 dto.setContent(replyContent);
+                // 좋아요 수
+                int likeCount = qnaReplyService.likeCount(dto.getId());
+                dto.setLikeCount(likeCount);
+
+                if (sessionUser == null) {
+                    dto.setIsLike(0);
+                } else {
+                    int isLike = qnaReplyService.checkReplyLikeForColor(dto.getId(), sessionUser.getId());
+                    dto.setIsLike(isLike);
+                }
+
             }
             return new ResponseEntity<>(qnaReplyDTOList, HttpStatus.OK);
         } else {
@@ -69,5 +84,47 @@ public class QnaReplyController {
     public @ResponseBody int replyCount(@PathVariable("id") Long id) {
         return qnaReplyService.count(id);
     }
+
+    // 본인이 작성한 답변인지의 여부 확인 (좋아요)
+    @GetMapping("isYourReply")
+    public @ResponseBody boolean isYourReply(@ModelAttribute QnaReplyDTO qnaReplyDTO) {
+        Long userId = qnaReplyDTO.getUserId(); // sessionId
+        Long writerId = qnaReplyService.isYourReply(qnaReplyDTO.getId());
+        if (userId.equals(writerId)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // 답변 좋아요
+    @PostMapping("like")
+    public @ResponseBody void like(@ModelAttribute QnaReplyLikeDTO qnaReplyLikeDTO) {
+        qnaReplyService.like(qnaReplyLikeDTO);
+    }
+
+    // 답변 좋아요 수 업데이트
+    @GetMapping("likeCount/{id}")
+    public @ResponseBody int likeCount(@PathVariable("id") Long id) {
+        return qnaReplyService.likeCount(id);
+    }
+
+    // 사용자가 답변에 좋아요를 눌렀는지 확인 (색깔 변경 목적)
+    @GetMapping("/checkReplyLikeForColor/{id}")
+    public @ResponseBody boolean checkReplyLikeForColor(@PathVariable("id") Long id,
+                                                      HttpSession session) {
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+
+        int count = qnaReplyService.checkReplyLikeForColor(id, sessionUser.getId());
+        if (count > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+
 
 }

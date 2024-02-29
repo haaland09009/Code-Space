@@ -256,21 +256,63 @@
                             </div>
 
                             <div class="row mt-4 ms-2">
-                                <div class="col-11 boardContent" th:utext="${reply.content}">
+                                <div class="col-11 boardContent pe-0" th:utext="${reply.content}">
 
                                 </div>
                             </div>
 
                             <div class="row mt-4 ms-2 text-secondary fw-semibold">
                                 <div class="col">
-                                    <img src="/img/like.png" style="width: 23px; height: 23px; cursor: pointer;">
-                                    <span>좋아요</span><span class="ms-1">0</span>
+                                    <span style="cursor: pointer;" th:onclick="isYourReplyForLike([[${reply.id}]])" th:id="'replyLikeSpan_' + ${reply.id}"
+                                    th:if="${reply.isLike == 0}" >
+                                        <img src="/img/like.png" style="width: 23px; height: 23px;">
+                                        <span>좋아요</span><span class="ms-1" th:id="'replyLike_' + ${reply.id}" th:text="${reply.likeCount}"></span>
+                                    </span>
+                                    <span style="cursor: pointer;" th:onclick="isYourReplyForLike([[${reply.id}]])" th:id="'replyLikeSpan_' + ${reply.id}"
+                                          th:if="${reply.isLike == 1}" class="text-black">
+                                        <img src="/img/like.png" style="width: 23px; height: 23px;">
+                                        <span>좋아요</span><span class="ms-1" th:id="'replyLike_' + ${reply.id}" th:text="${reply.likeCount}"></span>
+                                    </span>
 
-                                    <i class="bi bi-chat-left-dots ms-3 me-1" style="position:relative; top:2px"></i>
-                                    <span>댓글</span><span class="ms-1">0</span>
+                                    <span style="cursor: pointer;" th:id="'toggleReplyButton_' + ${reply.id}"
+                                          th:onclick="toggleReplyInputBox([[${reply.id}]])">
+                                        <i class="bi bi-chat-left-dots ms-3 me-1" style="position:relative; top:2px"></i>
+                                        <span>댓글</span><span class="ms-1">0</span>
+                                    </span>
                                 </div>
                             </div>
 
+                            <!-- 댓글 폼 -->
+                            <div class="row mt-3" style="display: none;" th:id="'toggleReplyInputBox_' + ${reply.id}">
+                                <div class="col-11 ms-4 border border-1" style="position: relative; left: 7px">
+                                    <div class="row">
+                                        <div class="col">
+                                            <textarea name=""  cols="10" rows="3" id=""
+                                                      class="form-control form-control-no-border ps-0" style="resize:none;"
+                                                      placeholder="여러분의 소중한 댓글을 남겨주세요."
+                                                      th:if="${session.userDTO != null}" onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
+                                            <textarea name=""  cols="10" rows="3"
+                                                      class="form-control disabled form-control-no-border ps-0"
+                                                      placeholder="로그인 후 답변을 작성하실 수 있습니다."
+                                                      style="resize:none; pointer-events: none;"
+                                                      th:if="${session.userDTO == null}"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col text-end">
+                                            <button class="btn mainButton text-secondary" onclick=""
+                                                    th:if="${session.userDTO != null}"
+                                                    style="background-color: #e9ecef;"> 등록
+                                            </button>
+                                            <button class="btn mainButton disabled text-secondary"
+                                                    th:if="${session.userDTO == null}"
+                                                    style="background-color: #e9ecef;">등록
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 댓글 폼 -->
                             <div class="row mt-3 mb-1"></div>
 
                         </div>
@@ -419,6 +461,36 @@
 </div>
 <!-- 게시글 좋아요 / 싫어요 alert -->
 
+
+<!-- 답변 좋아요 / 싫어요 alert -->
+<div class="modal" id="alertReplyNoLikeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">알림</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row text-center">
+                    <div class="col">
+                        본인이 작성하신 답변에 좋아요를 클릭하실 수 없습니다.
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">창닫기</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- 답변 좋아요 / 싫어요 alert -->
+
+
+
 <script th:inline="javascript">
     /*<![CDATA[*/
       let sessionId = [[${session.userDTO != null ? session.userDTO.id : 0}]];
@@ -543,19 +615,54 @@
             output += '</div>';
 
             output += '<div class="row mt-4 ms-2">';
-            output += '<div class="col-11 boardContent">' + replies[i].content +  '</div>';
+            output += '<div class="col-11 boardContent pe-0">' + replies[i].content +  '</div>';
             output += '</div>';
 
             output += '<div class="row mt-4 ms-2 text-secondary fw-semibold">';
             output += '<div class="col">';
+
+            if (replies[i].isLike == 0) {
+                output += '<span style="cursor: pointer;" onclick="isYourReplyForLike(' + replies[i].id + ')">';
+            } else {
+                output += '<span style="cursor: pointer;" onclick="isYourReplyForLike(' + replies[i].id + ')" class="text-black">';
+            }
             output += '<img src="/img/like.png" style="width: 23px; height: 23px; cursor: pointer;">';
             output += '<span class="ms-1">' + "좋아요" + '</span>';
-            output += '<span class="ms-1 me-1">' + "0" + '</span>';
+            output += '<span class="ms-1 me-1" id="replyLike_' + replies[i].id + '">' + replies[i].likeCount + '</span>';
+            output += '</span>';
+
+            output += '<span style="cursor: pointer;" onclick="toggleReplyInputBox(' + replies[i].id + ')">';
             output += '<i class="bi bi-chat-left-dots ms-3 me-1" style="position:relative; top:2px">' + '</i>';
             output += '<span class="ms-1">' + "댓글" + '</span>';
             output += '<span class="ms-1">' + "0" + '</span>';
+            output += '</span>';
             output += '</div>';
             output += '</div>';
+
+            <!-- 답글 입력 폼 -->
+            output += '<div class="row mt-3" style="display: none;" id="toggleReplyInputBox_' + replies[i].id  + '">';
+            output += '<div class="col-11 ms-4 border border-1" style="position: relative; left: 7px">';
+            output += '<div class="row">';
+            output += '<div class="col">';
+            if (sessionId != 0) {
+                output += '<textarea name=""  cols="10" rows="3" id="" class="form-control form-control-no-border ps-0" style="resize:none;" placeholder="여러분의 소중한 댓글을 남겨주세요." onkeydown="resize(this)" onkeyup="resize(this)">' + '</textarea>';
+            } else if (sessionId == 0) {
+                output += '<textarea name=""  cols="10" rows="3" id="" class="form-control disabled form-control-no-border ps-0" style="resize:none; pointer-events: none;" placeholder="로그인 후 답변을 작성하실 수 있습니다." onkeydown="resize(this)" onkeyup="resize(this)">' + '</textarea>';
+            }
+            output += '</div>';
+            output += '</div>';
+            output += '<div class="row mb-2">';
+            output += '<div class="col text-end">';
+            if (sessionId != 0) {
+                output += '<button class="btn mainButton text-secondary" onclick="" style="background-color: #e9ecef;">' +  "등록" +'</button>';
+            } else if (sessionId == 0) {
+                output += '<button class="btn mainButton disabled text-secondary" onclick="" style="background-color: #e9ecef;">' +  "등록" +'</button>';
+            }
+            output += '</div>';
+            output += '</div>';
+            output += '</div>';
+            output += '</div>';
+            <!-- 답글 입력 폼 -->
 
             <!-- 댓글 사이 경계선 -->
             output += '<div class="row mt-3 mb-1">' + '</div>';
@@ -909,6 +1016,114 @@
          }
      });
   }
+
+    // 본인 작성 답변 좋아요 x
+    const alertReplyNoLikeModal = () => {
+        const alertReplyNoLikeModal = bootstrap.Modal.getOrCreateInstance("#alertReplyNoLikeModal");
+        alertReplyNoLikeModal.show();
+
+        setTimeout(function() {
+            alertReplyNoLikeModal.hide();
+        }, 2000);
+    }
+
+    // 본인이 작성한 답변인지의 여부 확인 (좋아요)
+    const isYourReplyForLike = (id) => {
+       if (sessionId == 0) {
+           location.href = "/user/loginPage";
+           return;
+       }
+
+       $.ajax({
+         type: "get",
+         url: "/qnaReply/isYourReply",
+         data: {
+            "id": id,
+            "userId": sessionId
+         },
+         success: function(res) {
+            if (res) {
+            // 반환값 true
+                alertReplyNoLikeModal();
+                return;
+            } else {
+                // 반환값 false
+                toggleReplyLike(id);
+            }
+         },
+         error: function(err) {
+             return;
+         }
+     });
+  }
+
+  // 답변 좋아요
+  const toggleReplyLike = (id) => {
+
+       $.ajax({
+         type: "post",
+         url: "/qnaReply/like",
+         data: {
+            "replyId": id,
+            "userId": sessionId
+         },
+         success: function(res) {
+             updateReplyLikeCount(id);
+             checkReplyLikeForColor(id);
+         },
+         error: function(err) {
+             return;
+         }
+     });
+  }
+
+  // 답변 좋아요 수 업데이트
+  const updateReplyLikeCount = (id) => {
+       const replyLikeBox = document.getElementById("replyLike_" + id);
+       $.ajax({
+         type: "get",
+         url: "/qnaReply/likeCount/" + id,
+         success: function(res) {
+            replyLikeBox.innerText = res;
+         },
+         error: function(err) {
+             return;
+         }
+     });
+  }
+
+
+ // 사용자가 답변에 좋아요를 눌렀는지 확인 (색깔 변경 목적)
+  const checkReplyLikeForColor = (id) => {
+    const replyLikeSpan = document.getElementById("replyLikeSpan_" + id);
+    $.ajax({
+         type: "get",
+         url: "/qnaReply/checkReplyLikeForColor/" + id,
+         success: function(res) {
+            if (res) {
+                replyLikeSpan.classList.add("text-black");
+            } else {
+-                replyLikeSpan.classList.remove("text-black");
+            }
+         },
+         error: function(err) {
+             return;
+         }
+     });
+  }
+
+
+   // 답글 작성 폼 열고 닫기
+ const toggleReplyInputBox = (id) => {
+    const replyBox = document.getElementById("toggleReplyInputBox_" + id);
+    const replyButton = document.getElementById("toggleReplyButton_" + id);
+    if (replyBox.style.display == 'none') {
+        replyBox.style.display = 'block';
+    } else {
+       replyBox.style.display = 'none';
+    }
+ }
+
 
 
 

@@ -207,7 +207,7 @@
                                             <button class="btn btn-sm cateButton rounded rounded-4">
                                                 <i class="bi bi-people"></i>
                                             </button>
-                                            <span class="ms-1" th:text="${project.headCount == 0 ? '인원 미정' : project.headCount == 10 ? '10명 이상' : project.headCount + '명'}"</span>
+                                            <span class="ms-1" th:text="${project.headCount == 0 ? '인원 미정' : project.headCount == 10 ? '10명 이상' : project.headCount + '명'}"></span>
                                         </div>
                                     </div>
 
@@ -829,6 +829,8 @@ const alertLikeCheckModal = () => {
 <!--                 output += '<div class="row mt-3">';-->
 <!--                 output += '<div class="col commentFont ms-1 mb-1 text-secondary" onclick="toggleReplyInputBox(' + comments[i].id + ')" id="toggleReplyButton_' + comments[i].id + '" style="cursor: pointer;">' + "댓글 작성" + '</div>';-->
 <!--                 output += '</div>';-->
+
+
 
                  <!-- 답글 작성 -->
 <!--                 output += '<div class="row" id="toggleReplyInputBox_' + comments[i].id + '" style="display: none;">';-->

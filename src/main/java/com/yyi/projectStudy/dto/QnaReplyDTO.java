@@ -21,6 +21,10 @@ public class QnaReplyDTO {
     private String writer;
     private int fileAttached;
     private String storedFileName;
+    private int likeCount;
+
+    // user에 따라 달라짐.
+    private int isLike;
 
     public static QnaReplyDTO toQnaReplyDTO(QnaReplyEntity qnaReplyEntity) {
         QnaReplyDTO qnaReplyDTO = new QnaReplyDTO();

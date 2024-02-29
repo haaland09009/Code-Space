@@ -88,6 +88,8 @@ public class QnaController {
         // 조회수 증가
         qnaService.updateReadCount(id);
 
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+
         // 답변 불러오기
         List<QnaReplyDTO> qnaReplyDTOList = qnaReplyService.findAll(id);
         // enter 처리
@@ -95,6 +97,14 @@ public class QnaController {
             String replyContent = dto.getContent();
             replyContent = replyContent.replaceAll("<br>", "\n");
             dto.setContent(replyContent);
+            int likeCount = qnaReplyService.likeCount(dto.getId());
+            dto.setLikeCount(likeCount);
+            if (sessionUser == null) {
+                dto.setIsLike(0);
+            } else {
+                int isLike = qnaReplyService.checkReplyLikeForColor(dto.getId(), sessionUser.getId());
+                dto.setIsLike(isLike);
+            }
         }
         //
         model.addAttribute("replyList", qnaReplyDTOList);
@@ -110,7 +120,7 @@ public class QnaController {
         qnaDTO.setDislikeCount(dislikeCount);
 
 //        // 좋아요, 싫어요 여부
-        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+
         if (sessionUser == null) {
             model.addAttribute("isLike", 0);
             model.addAttribute("isDisLike", 0);
@@ -120,6 +130,7 @@ public class QnaController {
             model.addAttribute("isLike", isLike);
             model.addAttribute("isDisLike", isDisLike);
         }
+
 
         return "qna/detail";
     }
@@ -171,6 +182,7 @@ public class QnaController {
         model.addAttribute("qna", updateQnaDTO);
         model.addAttribute("topic", updateTopicDTO);
 
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
         // 답변 불러오기
         List<QnaReplyDTO> qnaReplyDTOList = qnaReplyService.findAll(qnaDTO.getId());
         // enter 처리
@@ -178,6 +190,14 @@ public class QnaController {
             String replyContent = dto.getContent();
             replyContent = replyContent.replaceAll("<br>", "\n");
             dto.setContent(replyContent);
+            int likeCount = qnaReplyService.likeCount(dto.getId());
+            dto.setLikeCount(likeCount);
+            if (sessionUser == null) {
+                dto.setIsLike(0);
+            } else {
+                int isLike = qnaReplyService.checkReplyLikeForColor(dto.getId(), sessionUser.getId());
+                dto.setIsLike(isLike);
+            }
         }
         //
         model.addAttribute("replyList", qnaReplyDTOList);
@@ -189,11 +209,11 @@ public class QnaController {
         // 좋아요 수, 싫어요 수
         int likeCount = qnaService.likeCount(qnaDTO.getId());
         int dislikeCount = qnaService.disLikeCount(qnaDTO.getId());
-        qnaDTO.setLikeCount(likeCount);
-        qnaDTO.setDislikeCount(dislikeCount);
+        updateQnaDTO.setLikeCount(likeCount);
+        updateQnaDTO.setDislikeCount(dislikeCount);
 
 //        // 좋아요, 싫어요 여부
-        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+
         if (sessionUser == null) {
             model.addAttribute("isLike", 0);
             model.addAttribute("isDisLike", 0);
