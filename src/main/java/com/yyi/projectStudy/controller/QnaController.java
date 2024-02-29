@@ -27,8 +27,12 @@ public class QnaController {
 //            content = content.replaceAll("<br>", " ");
             content = content.replaceAll("<br>", "\r\n");
             qnaDTO.setContent(content);
+
             TopicDTO topicDTO = qnaService.findTopic(qnaDTO.getId());
             qnaDTO.setCategoryName(topicDTO.getName());
+
+            int replyCount = qnaReplyService.count(qnaDTO.getId());
+            qnaDTO.setReplyCount(replyCount);
         }
         model.addAttribute("qnaList", qnaDTOList);
         return "qna/list";
@@ -62,13 +66,13 @@ public class QnaController {
         QnaDTO dto = qnaService.findById(savedId);
         TopicDTO topicDTO = qnaService.findByIdForTopic(qnaTopicDTO.getTopicId());
         qnaService.saveQnaTopic(dto, topicDTO);
-        return "redirect:/qna";
+        return "redirect:/qna/" + savedId;
     }
 
 
     // 게시글 상세보기
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Long id, Model model) {
+    public String findById(@PathVariable("id") Long id, Model model, HttpSession session) {
         // 토픽 카테고리
         TopicDTO topicDTO = qnaService.findTopic(id);
         model.addAttribute("topic", topicDTO);
@@ -94,6 +98,29 @@ public class QnaController {
         }
         //
         model.addAttribute("replyList", qnaReplyDTOList);
+
+        // 답변 수
+        int replyCount = qnaReplyService.count(qnaDTO.getId());
+        model.addAttribute("replyCount", replyCount);
+
+        // 좋아요 수, 싫어요 수
+        int likeCount = qnaService.likeCount(id);
+        int dislikeCount = qnaService.disLikeCount(id);
+        qnaDTO.setLikeCount(likeCount);
+        qnaDTO.setDislikeCount(dislikeCount);
+
+//        // 좋아요, 싫어요 여부
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+        if (sessionUser == null) {
+            model.addAttribute("isLike", 0);
+            model.addAttribute("isDisLike", 0);
+        } else {
+            int isLike = qnaService.checkQnaLikeForColor(id, sessionUser.getId());
+            int isDisLike = qnaService.checkQnaDisLikeForColor(id, sessionUser.getId());
+            model.addAttribute("isLike", isLike);
+            model.addAttribute("isDisLike", isDisLike);
+        }
+
         return "qna/detail";
     }
 
@@ -132,7 +159,7 @@ public class QnaController {
     @PostMapping("/update")
     public String update(@ModelAttribute QnaDTO qnaDTO,
                          @ModelAttribute QnaTopicDTO qnaTopicDTO,
-                         Model model) {
+                         Model model, HttpSession session) {
         QnaDTO updateQnaDTO = qnaService.updateQna(qnaDTO);
 
         String content = updateQnaDTO.getContent();
@@ -143,8 +170,120 @@ public class QnaController {
 
         model.addAttribute("qna", updateQnaDTO);
         model.addAttribute("topic", updateTopicDTO);
+
+        // 답변 불러오기
+        List<QnaReplyDTO> qnaReplyDTOList = qnaReplyService.findAll(qnaDTO.getId());
+        // enter 처리
+        for (QnaReplyDTO dto : qnaReplyDTOList) {
+            String replyContent = dto.getContent();
+            replyContent = replyContent.replaceAll("<br>", "\n");
+            dto.setContent(replyContent);
+        }
+        //
+        model.addAttribute("replyList", qnaReplyDTOList);
+
+        // 답변 수
+        int replyCount = qnaReplyService.count(qnaDTO.getId());
+        model.addAttribute("replyCount", replyCount);
+
+        // 좋아요 수, 싫어요 수
+        int likeCount = qnaService.likeCount(qnaDTO.getId());
+        int dislikeCount = qnaService.disLikeCount(qnaDTO.getId());
+        qnaDTO.setLikeCount(likeCount);
+        qnaDTO.setDislikeCount(dislikeCount);
+
+//        // 좋아요, 싫어요 여부
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+        if (sessionUser == null) {
+            model.addAttribute("isLike", 0);
+            model.addAttribute("isDisLike", 0);
+        } else {
+            int isLike = qnaService.checkQnaLikeForColor(qnaDTO.getId(), sessionUser.getId());
+            int isDisLike = qnaService.checkQnaDisLikeForColor(qnaDTO.getId(), sessionUser.getId());
+            model.addAttribute("isLike", isLike);
+            model.addAttribute("isDisLike", isDisLike);
+        }
+
         return "qna/detail";
     }
+
+    // 본인이 작성한 게시글인지 확인 (만약 눌렀을 때 삭제된 게시물일 경우 후처리 해야함)
+    @GetMapping("/isYourQna")
+    public @ResponseBody boolean isYourQna(@ModelAttribute QnaDTO qnaDTO) {
+
+        Long userId = qnaDTO.getUserId(); // sessionId
+        Long writerId = qnaService.isYourQna(qnaDTO.getId());
+        if (userId.equals(writerId)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // 게시글 좋아요를 눌렀을 때 싫어요 여부 확인
+    @GetMapping("/checkQnaDisLike")
+    public @ResponseBody int checkQnaDisLike(@ModelAttribute QnaDTO qnaDTO) {
+        return qnaService.checkQnaDisLike(qnaDTO);
+    }
+
+
+    // 게시글 좋아요 클릭
+    @PostMapping("/like")
+    public @ResponseBody void like(@ModelAttribute QnaLikeDTO qnaLikeDTO) {
+        qnaService.like(qnaLikeDTO);
+    }
+
+    // 댓글 좋아요 수 확인
+    @GetMapping("/likeCount/{id}")
+    public @ResponseBody int qnaLikeCount(@PathVariable("id") Long id) {
+        return qnaService.likeCount(id);
+    }
+
+    // 게시글 싫어요를 눌렀을 때 좋어요 여부 확인
+    @GetMapping("/checkQnaLike")
+    public @ResponseBody int checkQnaLike(@ModelAttribute QnaDTO qnaDTO) {
+        return qnaService.checkQnaLike(qnaDTO);
+    }
+
+    // 게시글 싫어요 클릭
+    @PostMapping("/dislike")
+    public @ResponseBody void disLike(@ModelAttribute QnaDisLikeDTO qnaDisLikeDTO) {
+        qnaService.disLike(qnaDisLikeDTO);
+    }
+
+    // 게시글 싫어요 수 확인
+    @GetMapping("/disLikeCount/{id}")
+    public @ResponseBody int qnaDisLikeCount(@PathVariable("id") Long id) {
+        return qnaService.disLikeCount(id);
+    }
+
+    // 사용자가 게시글에 좋아요를 눌렀는지 확인 (색깔 변경 목적)
+    @GetMapping("/checkQnaLikeForColor/{id}")
+    public @ResponseBody boolean checkQnaLikeForColor(@PathVariable("id") Long id,
+            HttpSession session) {
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+
+        int count = qnaService.checkQnaLikeForColor(id, sessionUser.getId());
+        if (count > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // 사용자가 게시글에 싫어요를 눌렀는지 확인 (색깔 변경 목적)
+    @GetMapping("/checkQnaDisLikeForColor/{id}")
+    public @ResponseBody boolean checkQnaDisLikeForColor(@PathVariable("id") Long id,
+                                                         HttpSession session) {
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+        int count = qnaService.checkQnaDisLikeForColor(id, sessionUser.getId());
+        if (count > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 
 }

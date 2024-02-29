@@ -45,6 +45,12 @@ public class QnaEntity extends BaseEntity {
     @OneToMany(mappedBy = "qnaEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
     private List<QnaReplyEntity> qnaReplyEntityList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "qnaEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
+    private List<QnaLikeEntity> qnaLikeEntityList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "qnaEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
+    private List<QnaDisLikeEntity> qnaDisLikeEntityList = new ArrayList<>();
+
     public static QnaEntity toQnaEntity(QnaDTO qnaDTO, UserEntity userEntity) {
         QnaEntity qnaEntity = new QnaEntity();
         qnaEntity.setTitle(qnaDTO.getTitle());

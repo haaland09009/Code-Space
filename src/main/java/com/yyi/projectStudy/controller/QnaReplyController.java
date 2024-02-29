@@ -6,9 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,6 +39,35 @@ public class QnaReplyController {
         } else {
             return new ResponseEntity<>("해당 게시글이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
         }
+    }
+
+
+    // 답글 조회
+    @GetMapping("/getReplyList/{qnaId}")
+    public ResponseEntity getReplyList(@PathVariable("qnaId") Long qnaId) {
+        if (qnaId != null) {
+            List<QnaReplyDTO> qnaReplyDTOList = qnaReplyService.findAll(qnaId);
+            for (QnaReplyDTO dto : qnaReplyDTOList) {
+                String replyContent = dto.getContent();
+                replyContent = replyContent.replaceAll("<br>", "\n");
+                dto.setContent(replyContent);
+            }
+            return new ResponseEntity<>(qnaReplyDTOList, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("해당 게시글이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // 답변 삭제
+    @PostMapping("/delete/{id}")
+    public @ResponseBody void delete(@PathVariable("id") Long id) {
+        qnaReplyService.deleteById(id);
+    }
+
+    // 답글 수 조회
+    @GetMapping("/count/{id}")
+    public @ResponseBody int replyCount(@PathVariable("id") Long id) {
+        return qnaReplyService.count(id);
     }
 
 }

@@ -12,4 +12,7 @@ public interface QnaReplyRepository extends JpaRepository<QnaReplyEntity, Long> 
     // 게시글 당 댓글 조회
     // select * from qna_reply_table where qna_id = ? order by id desc;
     List<QnaReplyEntity> findAllByQnaEntityOrderByIdDesc(QnaEntity qnaEntity);
+
+    // select count(*) from qna_reply_table where qna_id = ?
+    int countByQnaEntity(QnaEntity qnaEntity);
 }

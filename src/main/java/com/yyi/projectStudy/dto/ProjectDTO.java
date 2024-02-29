@@ -31,6 +31,7 @@ public class ProjectDTO {
     private Long commentCount;
     private List<String> techList = new ArrayList<>();
 //    private String techList;
+    private String projectStudy;
 
     public static ProjectDTO toProjectDTO(ProjectEntity projectEntity) {
         ProjectDTO projectDTO = new ProjectDTO();

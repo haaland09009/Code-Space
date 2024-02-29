@@ -1,6 +1,7 @@
 package com.yyi.projectStudy.service;
 
 import com.yyi.projectStudy.dto.QnaReplyDTO;
+import com.yyi.projectStudy.entity.ProjectEntity;
 import com.yyi.projectStudy.entity.QnaEntity;
 import com.yyi.projectStudy.entity.QnaReplyEntity;
 import com.yyi.projectStudy.entity.UserEntity;
@@ -47,5 +48,18 @@ public class QnaReplyService {
             qnaReplyDTOList.add(QnaReplyDTO.toQnaReplyDTO(qnaReplyEntity));
         }
         return qnaReplyDTOList;
+    }
+
+    // 답변 삭제
+    public void deleteById(Long id) {
+        qnaReplyRepository.deleteById(id);
+    }
+
+
+    // 답글 수 조회
+    @Transactional
+    public int count(Long id) {
+        QnaEntity qnaEntity = qnaRepository.findById(id).get();
+        return qnaReplyRepository.countByQnaEntity(qnaEntity);
     }
 }

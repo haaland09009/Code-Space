@@ -1,16 +1,8 @@
 package com.yyi.projectStudy.service;
 
-import com.yyi.projectStudy.dto.QnaDTO;
-import com.yyi.projectStudy.dto.QnaTopicDTO;
-import com.yyi.projectStudy.dto.TopicDTO;
-import com.yyi.projectStudy.entity.QnaEntity;
-import com.yyi.projectStudy.entity.QnaTopicEntity;
-import com.yyi.projectStudy.entity.TopicEntity;
-import com.yyi.projectStudy.entity.UserEntity;
-import com.yyi.projectStudy.repository.QnaRepository;
-import com.yyi.projectStudy.repository.QnaTopicRepository;
-import com.yyi.projectStudy.repository.TopicRepository;
-import com.yyi.projectStudy.repository.UserRepository;
+import com.yyi.projectStudy.dto.*;
+import com.yyi.projectStudy.entity.*;
+import com.yyi.projectStudy.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -18,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +19,8 @@ public class QnaService {
     private final QnaRepository qnaRepository;
     private final UserRepository userRepository;
     private final QnaTopicRepository qnaTopicRepository;
+    private final QnaDisLikeRepository qnaDisLikeRepository;
+    private final QnaLikeRepository qnaLikeRepository;
 
     // 토픽 종류 조회
     public List<TopicDTO> findAllTopic() {
@@ -121,4 +116,91 @@ public class QnaService {
         TopicEntity topicEntity = topicRepository.findById(qnaTopicDTO.getTopicId()).get();
         return TopicDTO.toTopicDTO(topicEntity);
     }
+
+    // 본인이 작성한 게시글인지 확인
+    public Long isYourQna(Long id) {
+        Optional<QnaEntity> optionalQnaEntity = qnaRepository.findById(id);
+        if (optionalQnaEntity.isPresent()) {
+            QnaEntity qnaEntity = optionalQnaEntity.get();
+            return qnaEntity.getUserEntity().getId();
+        } else {
+            return null;
+        }
+    }
+
+    // 게시글 좋아요를 눌렀을 때 싫어요 여부 확인
+    public int checkQnaDisLike(QnaDTO qnaDTO) {
+        QnaEntity qnaEntity = qnaRepository.findById(qnaDTO.getId()).get();
+        UserEntity userEntity = userRepository.findById(qnaDTO.getUserId()).get();
+        return qnaDisLikeRepository.countByQnaEntityAndUserEntity(qnaEntity, userEntity);
+    }
+
+    // 게시글 좋아요 클릭
+    public void like(QnaLikeDTO qnaLikeDTO) {
+        Optional<QnaEntity> optionalQnaEntity = qnaRepository.findById(qnaLikeDTO.getQnaId());
+        if (optionalQnaEntity.isPresent()) {
+            QnaEntity qnaEntity = optionalQnaEntity.get();
+            UserEntity userEntity = userRepository.findById(qnaLikeDTO.getUserId()).get();
+            if (qnaLikeRepository.countByQnaEntityAndUserEntity(qnaEntity, userEntity) > 0) {
+                Long id = qnaLikeRepository.findByQnaEntityAndUserEntity(qnaEntity, userEntity).get().getId();
+                qnaLikeRepository.deleteById(id);
+            } else {
+                qnaLikeRepository.save(QnaLikeEntity.toQnaLikeEntity(qnaEntity, userEntity));
+            }
+        }
+    }
+
+    // 게시글 좋아요 수 확인
+    public int likeCount(Long id) {
+        QnaEntity qnaEntity = qnaRepository.findById(id).get();
+        return qnaLikeRepository.countByQnaEntity(qnaEntity);
+    }
+
+
+    // 게시글 싫어요를 눌렀을 때 좋어요 여부 확인
+    public int checkQnaLike(QnaDTO qnaDTO) {
+        QnaEntity qnaEntity = qnaRepository.findById(qnaDTO.getId()).get();
+        UserEntity userEntity = userRepository.findById(qnaDTO.getUserId()).get();
+        return qnaLikeRepository.countByQnaEntityAndUserEntity(qnaEntity, userEntity);
+    }
+
+
+    // 게시글 싫어요 클릭
+    public void disLike(QnaDisLikeDTO qnaDisLikeDTO) {
+        Optional<QnaEntity> optionalQnaEntity = qnaRepository.findById(qnaDisLikeDTO.getQnaId());
+        if (optionalQnaEntity.isPresent()) {
+            QnaEntity qnaEntity = optionalQnaEntity.get();
+            UserEntity userEntity = userRepository.findById(qnaDisLikeDTO.getUserId()).get();
+            if (qnaDisLikeRepository.countByQnaEntityAndUserEntity(qnaEntity, userEntity) > 0) {
+                Long id = qnaDisLikeRepository.findByQnaEntityAndUserEntity(qnaEntity, userEntity).get().getId();
+                qnaDisLikeRepository.deleteById(id);
+            } else {
+                qnaDisLikeRepository.save(QnaDisLikeEntity.toQnaDisLikeEntity(qnaEntity, userEntity));
+            }
+        }
+    }
+
+
+    // 게시글 싫어요 수 확인
+    public int disLikeCount(Long id) {
+        QnaEntity qnaEntity = qnaRepository.findById(id).get();
+        return qnaDisLikeRepository.countByQnaEntity(qnaEntity);
+    }
+
+    // 게시글에 좋아요를 눌렀는지
+    public int checkQnaLikeForColor(Long qnaId, Long userId) {
+        QnaEntity qnaEntity = qnaRepository.findById(qnaId).get();
+        UserEntity userEntity = userRepository.findById(userId).get();
+        return qnaLikeRepository.countByQnaEntityAndUserEntity(qnaEntity, userEntity);
+    }
+
+    // 게시글에 싫어요를 눌렀는지
+    public int checkQnaDisLikeForColor(Long qnaId, Long userId) {
+        QnaEntity qnaEntity = qnaRepository.findById(qnaId).get();
+        UserEntity userEntity = userRepository.findById(userId).get();
+        return qnaDisLikeRepository.countByQnaEntityAndUserEntity(qnaEntity, userEntity);
+    }
+
+
+
 }

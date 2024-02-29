@@ -22,6 +22,10 @@ public class QnaDTO {
     private String categoryName;
     private int fileAttached;
     private String storedFileName;
+    private int replyCount;
+
+    private int likeCount;
+    private int dislikeCount;
 
 
     public static QnaDTO toQnaDTO(QnaEntity qnaEntity) {

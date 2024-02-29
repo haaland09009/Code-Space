@@ -110,7 +110,7 @@
 
                     <div class="row">
                         <div class="col text-secondary">
-                            <span>이 질문이 도움이 되었나요 ?</span>
+                            <span>이 질문이 도움이 되었나요?</span>
                             <i class="ms-1 bi bi-exclamation-circle"></i>
                         </div>
                     </div>
@@ -482,21 +482,7 @@
      url: "/qnaReply/getReplyList/" + qnaId,
      success: function(replies) {
          let output = "";
-         if (replies.length == 0) {
-            output += '<div class="row mt-4">';
-            output += '<div class="col text-center">';
-            output += '<div class="row mt-3">';
-            output += '<div class="col">';
-            output += '<img src="/img/comment.png">';
-            output += '</div>';
-            output += '</div>';
-            output += '<div class="row">';
-            output += '<div class="col text-secondary">' + "아직 작성된 답변이 없습니다." + '</div>';
-            output += '</div>';
-            output += '</div>';
-            output += '</div>';
-         } else {
-          for (let i in replies) {
+         for (let i in replies) {
             output += '<div class="row mt-4">';
             output += '<div class="col ms-3 border border-1">';
 
@@ -563,7 +549,6 @@
 
             output += '</div>';
             output += '</div>';
-            }
         }
         document.getElementById('reply-list').innerHTML = output;
      },

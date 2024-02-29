@@ -13,6 +13,11 @@
         location.href = "/user/logout";
     }
 
+    // 자등으로 높이 조절
+    const resize = (obj) => {
+      obj.style.height = 'auto'; // 초기화
+      obj.style.height = (obj.scrollHeight + 4) + 'px'; // 더 정확한 높이 계산
+    }
 
    const formatDateTime = (dateString) => {
 

@@ -107,3 +107,16 @@ body {
 .boardContent {
    white-space: pre-line;
 }
+
+
+// textarea 높이 조절 설정
+textarea {
+    min-height: 8rem;
+    overflow-y: hidden;
+    resize: none;
+}
+
+.lanLogo {
+    width: 60px;
+    height: 60px;
+}

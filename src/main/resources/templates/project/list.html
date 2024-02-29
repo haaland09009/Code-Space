@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
-    <script src="http://localhost:8081/livereload.js"></script>
+    <script type="text/javascript" th:src="@{/js/projectList.js}"></script>
 
 </head>
 <style>
@@ -117,7 +117,8 @@
                                                     <div class="row">
                                                         <div class="col">
                                                             <!-- 나중에 리스트로 변경 -->
-<!--                                                            th:if="${project.techList == 'Java'}"-->
+
+                                                            <button class="btn btn-sm cateButton" th:text="${project.projectStudy}"></button>
                                                             <button class="btn btn-sm cateButton me-1" th:each="tech: ${project.techList}">
                                                                 <span th:if="${tech == 'Java'}" class="text-danger">•</span>
                                                                 <span th:if="${tech == 'Spring'}" class="text-success">•</span>

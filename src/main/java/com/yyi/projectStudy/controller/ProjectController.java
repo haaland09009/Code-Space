@@ -121,6 +121,11 @@ public class ProjectController {
             String content = projectDTO.getContent().replace("<br>", "\\n");
             projectDTO.setContent(content);
             projectDTO.setCommentCount(projectCommentService.count(projectDTO.getId()));
+
+            ProjectStudyCategoryDTO projectStudyCategoryDTO = projectService.findProjectStudyCategory(projectDTO.getId());
+            projectDTO.setProjectStudy(projectStudyCategoryDTO.getName());
+
+
             // 나중에 리스트로 변경
 //            projectDTO.setTechList(projectService.findTechCategory(projectDTO.getId()).getName());
             List<TechCategoryDTO> techCategoryDTOList = projectService.findTechCategory(projectDTO.getId());
