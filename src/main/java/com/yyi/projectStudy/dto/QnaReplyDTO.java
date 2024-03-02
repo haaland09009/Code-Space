@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,6 +23,8 @@ public class QnaReplyDTO {
     private int fileAttached;
     private String storedFileName;
     private int likeCount;
+    private List<QnaReplyCommentDTO> commentList;
+    private int commentCount;
 
     // user에 따라 달라짐.
     private int isLike;

@@ -211,7 +211,7 @@
 
                         </div>
                     </div>
-                    <div class="row mt-4" th:each="reply : ${replyList}" th:if="${replyCount != 0}">
+                    <div class="row mt-4 mb-5" th:each="reply : ${replyList}" th:if="${replyCount != 0}">
                         <div class="col ms-3 border border-1">
 
                             <div class="row mt-4 ms-1">
@@ -277,7 +277,7 @@
                                     <span style="cursor: pointer;" th:id="'toggleReplyButton_' + ${reply.id}"
                                           th:onclick="toggleReplyInputBox([[${reply.id}]])">
                                         <i class="bi bi-chat-left-dots ms-3 me-1" style="position:relative; top:2px"></i>
-                                        <span>댓글</span><span class="ms-1">0</span>
+                                        <span>댓글</span><span class="ms-1" th:id="'replyComment_' + ${reply.id}" th:text="${reply.commentCount}"></span>
                                     </span>
                                 </div>
                             </div>
@@ -287,20 +287,20 @@
                                 <div class="col-11 ms-4 border border-1" style="position: relative; left: 7px">
                                     <div class="row">
                                         <div class="col">
-                                            <textarea name=""  cols="10" rows="3" id=""
+                                            <textarea name=""  cols="10" rows="3" th:id="'commentContent_' + ${reply.id}"
                                                       class="form-control form-control-no-border ps-0" style="resize:none;"
                                                       placeholder="여러분의 소중한 댓글을 남겨주세요."
                                                       th:if="${session.userDTO != null}" onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
                                             <textarea name=""  cols="10" rows="3"
                                                       class="form-control disabled form-control-no-border ps-0"
-                                                      placeholder="로그인 후 답변을 작성하실 수 있습니다."
+                                                      placeholder="로그인 후 댓글을 작성하실 수 있습니다."
                                                       style="resize:none; pointer-events: none;"
                                                       th:if="${session.userDTO == null}"></textarea>
                                         </div>
                                     </div>
                                     <div class="row mb-2">
                                         <div class="col text-end">
-                                            <button class="btn mainButton text-secondary" onclick=""
+                                            <button class="btn mainButton text-secondary" th:onclick="writeComment([[${reply.id}]])"
                                                     th:if="${session.userDTO != null}"
                                                     style="background-color: #e9ecef;"> 등록
                                             </button>
@@ -313,6 +313,64 @@
                                 </div>
                             </div>
                             <!-- 댓글 폼 -->
+                            <!-- 댓글 -->
+                            <div th:id="'comment-list_' + ${reply.id}">
+                            <div class="row mt-4 border-top" th:each="comment : ${reply.commentList}">
+                                <div class="col ms-5">
+
+                                    <div class="row mt-3">
+                                        <div class="col-1">
+                                            <img src="/img/user.jpg" class="rounded-circle" style="width: 40px; height: 40px; position: relative; top: 2px;"
+                                            th:if="${comment.fileAttached == 0}">
+                                            <img th:src="@{|/upload/${comment.storedFileName}|}" class="rounded-circle" style="width: 40px; height: 40px; position: relative; top: 2px;"
+                                                 th:if="${comment.fileAttached == 1}">
+                                        </div>
+                                        <div class="col px-0">
+                                            <div class="row">
+                                                <div class="col fw-semibold" th:text="${comment.writer}">
+
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col text-secondary likeFont date-element" th:text="${comment.regDate}">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 text-end dropdown" style="cursor: pointer;"
+                                        th:if="${session.userDTO != null and session.userDTO.id == comment.userId}">
+                                            <i class="bi bi-three-dots-vertical" style="height: 10px" id="dropCommentButton"
+                                               data-bs-toggle="dropdown" aria-expanded="false">
+                                            </i>
+                                            <ul class="dropdown-menu" aria-labelledby="dropCommentButton">
+                                                <li>
+                                                    <a class="dropdown-item">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                        <span class="ms-1"> 수정하기 </span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" th:onclick="deleteCommentPage([[${comment.id}]])">
+                                                        <i class="bi bi-trash3"></i>
+                                                        <span class="ms-1"> 삭제하기 </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                        <div class="col-11 ms-1 boardContent" th:utext="${comment.content}">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+
+
+                            <!-- 댓글 -->
                             <div class="row mt-3 mb-1"></div>
 
                         </div>
@@ -489,6 +547,34 @@
 </div>
 <!-- 답변 좋아요 / 싫어요 alert -->
 
+<!-- 댓글 삭제 alert -->
+<div class="modal" id="deleteCommentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">댓글 삭제</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row text-center">
+                    <div class="col">
+                        댓글을 삭제하시겠습니까?
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <input type="button" class="btn btn-outline-dark fw-semibold" value="확인" onclick="deleteComment()">
+                <button type="button" class="btn mainButton" data-bs-dismiss="modal">취소</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- 댓글 삭제 alert -->
+
 
 
 <script th:inline="javascript">
@@ -569,7 +655,7 @@
             output += '</div>';
          } else {
           for (let i in replies) {
-            output += '<div class="row mt-4">';
+            output += '<div class="row mt-4 mb-5">';
             output += '<div class="col ms-3 border border-1">';
 
             output += '<div class="row mt-4 ms-1">';
@@ -622,9 +708,9 @@
             output += '<div class="col">';
 
             if (replies[i].isLike == 0) {
-                output += '<span style="cursor: pointer;" onclick="isYourReplyForLike(' + replies[i].id + ')">';
+                output += '<span style="cursor: pointer;" onclick="isYourReplyForLike(' + replies[i].id + ')" id="replyLikeSpan_' + replies[i].id + '">';
             } else {
-                output += '<span style="cursor: pointer;" onclick="isYourReplyForLike(' + replies[i].id + ')" class="text-black">';
+                output += '<span style="cursor: pointer;" onclick="isYourReplyForLike(' + replies[i].id + ')" class="text-black" id="replyLikeSpan_' + replies[i].id + '">';
             }
             output += '<img src="/img/like.png" style="width: 23px; height: 23px; cursor: pointer;">';
             output += '<span class="ms-1">' + "좋아요" + '</span>';
@@ -634,27 +720,27 @@
             output += '<span style="cursor: pointer;" onclick="toggleReplyInputBox(' + replies[i].id + ')">';
             output += '<i class="bi bi-chat-left-dots ms-3 me-1" style="position:relative; top:2px">' + '</i>';
             output += '<span class="ms-1">' + "댓글" + '</span>';
-            output += '<span class="ms-1">' + "0" + '</span>';
+            output += '<span class="ms-1" id="replyComment_' + replies[i].id + '">' + replies[i].commentCount + '</span>';
             output += '</span>';
             output += '</div>';
             output += '</div>';
 
-            <!-- 답글 입력 폼 -->
+            <!-- 댓글 입력 폼 -->
             output += '<div class="row mt-3" style="display: none;" id="toggleReplyInputBox_' + replies[i].id  + '">';
             output += '<div class="col-11 ms-4 border border-1" style="position: relative; left: 7px">';
             output += '<div class="row">';
             output += '<div class="col">';
             if (sessionId != 0) {
-                output += '<textarea name=""  cols="10" rows="3" id="" class="form-control form-control-no-border ps-0" style="resize:none;" placeholder="여러분의 소중한 댓글을 남겨주세요." onkeydown="resize(this)" onkeyup="resize(this)">' + '</textarea>';
+                output += '<textarea name=""  cols="10" rows="3" id="commentContent_' + replies[i].id  + '" class="form-control form-control-no-border ps-0" style="resize:none;" placeholder="여러분의 소중한 댓글을 남겨주세요." onkeydown="resize(this)" onkeyup="resize(this)">' + '</textarea>';
             } else if (sessionId == 0) {
-                output += '<textarea name=""  cols="10" rows="3" id="" class="form-control disabled form-control-no-border ps-0" style="resize:none; pointer-events: none;" placeholder="로그인 후 답변을 작성하실 수 있습니다." onkeydown="resize(this)" onkeyup="resize(this)">' + '</textarea>';
+                output += '<textarea name=""  cols="10" rows="3" id="" class="form-control disabled form-control-no-border ps-0" style="resize:none; pointer-events: none;" placeholder="로그인 후 댓글을 작성하실 수 있습니다." onkeydown="resize(this)" onkeyup="resize(this)">' + '</textarea>';
             }
             output += '</div>';
             output += '</div>';
             output += '<div class="row mb-2">';
             output += '<div class="col text-end">';
             if (sessionId != 0) {
-                output += '<button class="btn mainButton text-secondary" onclick="" style="background-color: #e9ecef;">' +  "등록" +'</button>';
+                output += '<button class="btn mainButton text-secondary" onclick="writeComment(' + replies[i].id + ')" style="background-color: #e9ecef;">' +  "등록" +'</button>';
             } else if (sessionId == 0) {
                 output += '<button class="btn mainButton disabled text-secondary" onclick="" style="background-color: #e9ecef;">' +  "등록" +'</button>';
             }
@@ -662,7 +748,59 @@
             output += '</div>';
             output += '</div>';
             output += '</div>';
-            <!-- 답글 입력 폼 -->
+            <!-- 댓글 입력 폼 -->
+
+            output += '<div id="comment-list_' + replies[i].id + '">';
+            // 여기 사이에 코드 넣어야함
+            for (let c in replies[i].commentList) {
+                output += '<div class="row mt-4 border-top">';
+                output += '<div class="col ms-5">';
+                output += '<div class="row mt-3">';
+                output += '<div class="col-1">';
+                if (replies[i].commentList[c].fileAttached == 0) {
+                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 40px; height: 40px; position: relative; top: 2px;">';
+                } else {
+                    output += '<img class="rounded-circle" style="width: 40px; height: 40px;" src="/upload/' + replies[i].commentList[c].storedFileName + '">';
+                }
+
+                output += '</div>';
+                output += '<div class="col px-0">';
+                output += '<div class="row">';
+                output += '<div class="col fw-semibold">' + replies[i].commentList[c].writer + '</div>';
+                output += '</div>';
+                output += '<div class="row">';
+                output += '<div class="col text-secondary likeFont">' + formatDateTime(replies[i].commentList[c].regDate) + '</div>';
+                output += '</div>';
+                output += '</div>';
+                if (sessionId == replies[i].commentList[c].userId) {
+                    output += '<div class="col-2 text-end dropdown" style="cursor: pointer;">';
+                    output += '<i class="bi bi-three-dots-vertical" style="height: 10px" id="dropCommentButton" data-bs-toggle="dropdown" aria-expanded="false">' + '</i>';
+                    output += '<ul class="dropdown-menu" aria-labelledby="dropCommentButton">';
+                    output += '<li>';
+                    output += '<a class="dropdown-item">';
+                    output += '<i class="bi bi-pencil-square">' + '</i>';
+                    output += '<span class="ms-2">' +  "수정하기" + '</span>';
+                    output += '</a>';
+                    output += '</li>';
+                    output += '<li>';
+                    output += '<a class="dropdown-item" onclick="deleteCommentPage(' + replies[i].commentList[c].id + ')">';
+                    output += '<i class="bi bi-trash3">' + '</i>';
+                    output += '<span class="ms-2">' +  "삭제하기" + '</span>';
+                    output += '</a>';
+                    output += '</li>';
+                    output += '</ul>';
+                    output += '</div>';
+                }
+                output += '</div>';
+                output += '<div class="row mt-3">';
+                output += '<div class="col-11 ms-1 boardContent">' + replies[i].commentList[c].content + '</div>';
+                output += '</div>';
+                output += '</div>';
+                output += '</div>';
+            }
+            output += '</div>';
+            // 여기 사이에 코드 넣어야함
+
 
             <!-- 댓글 사이 경계선 -->
             output += '<div class="row mt-3 mb-1">' + '</div>';
@@ -704,7 +842,7 @@
 	    deleteReplyModal.show();
     }
 
-    // 댓글 삭제
+    // 답변 삭제
     const deleteReply = () => {
         const id = selectedReplyId;
         const qnaId = [[${qna.id}]];
@@ -1123,6 +1261,179 @@
        replyBox.style.display = 'none';
     }
  }
+
+
+    // 댓글 작성
+    const writeComment = (id) => {
+        const content = document.querySelector("#commentContent_" + id);
+
+        if (sessionId == 0) {
+            location.href = "/user/loginPage";
+            return;
+        }
+
+        if (content.value.trim() == "") {
+            alert("내용을 입력하세요.");
+            content.focus();
+            return;
+        }
+        $.ajax({
+             type: "post",
+             url: "/qnaReplyComment/save",
+             data: {
+                 "replyId" : id,
+                 "userId" : sessionId,
+                 "content" : content.value
+             },
+             success: function(res) {
+                // 댓글 load 함수
+                loadComments(id);
+                // 댓글 수 업데이트 함수
+                updateCommentCount(id);
+                 content.value = "";
+             }, error: function(err) {
+                 return;
+             }
+          });
+    }
+
+    // 답변의 댓글 load
+    const loadComments = (id) => {
+      $.ajax({
+         type: "get",
+         url: "/qnaReplyComment/getCommentList/" + id,
+         success: function(comments) {
+          let output = "";
+          for (let i in comments) {
+            output += '<div class="row mt-4 border-top">';
+            output += '<div class="col ms-5">';
+            output += '<div class="row mt-3">';
+            output += '<div class="col-1">';
+            if (comments[i].fileAttached == 0) {
+                output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 40px; height: 40px; position: relative; top: 2px;">';
+            } else {
+                output += '<img class="rounded-circle" style="width: 40px; height: 40px;" src="/upload/' + comments[i].storedFileName + '">';
+            }
+
+            output += '</div>';
+            output += '<div class="col px-0">';
+            output += '<div class="row">';
+            output += '<div class="col fw-semibold">' + comments[i].writer + '</div>';
+            output += '</div>';
+            output += '<div class="row">';
+            output += '<div class="col text-secondary likeFont">' + formatDateTime(comments[i].regDate) + '</div>';
+            output += '</div>';
+            output += '</div>';
+            if (sessionId == comments[i].userId) {
+                output += '<div class="col-2 text-end dropdown" style="cursor: pointer;">';
+                output += '<i class="bi bi-three-dots-vertical" style="height: 10px" id="dropCommentButton" data-bs-toggle="dropdown" aria-expanded="false">' + '</i>';
+                output += '<ul class="dropdown-menu" aria-labelledby="dropCommentButton">';
+                output += '<li>';
+                output += '<a class="dropdown-item">';
+                output += '<i class="bi bi-pencil-square">' + '</i>';
+                output += '<span class="ms-2">' +  "수정하기" + '</span>';
+                output += '</a>';
+                output += '</li>';
+                output += '<li>';
+                output += '<a class="dropdown-item" onclick="deleteCommentPage(' + comments[i].id + ')">';
+                output += '<i class="bi bi-trash3">' + '</i>';
+                output += '<span class="ms-2">' +  "삭제하기" + '</span>';
+                output += '</a>';
+                output += '</li>';
+                output += '</ul>';
+                output += '</div>';
+            }
+            output += '</div>';
+            output += '<div class="row mt-3">';
+            output += '<div class="col-11 ms-1 boardContent">' + comments[i].content + '</div>';
+            output += '</div>';
+            output += '</div>';
+            output += '</div>';
+          }
+          document.getElementById("comment-list_" + id).innerHTML = output;
+         },
+         error: function(err) {
+             return;
+         }
+      });
+    }
+
+
+    /*<![CDATA[*/
+        let selectedCommentId = null;
+    /*]]>*/
+
+    /*<![CDATA[*/
+        let selectedReplyIdForComment = null;
+    /*]]>*/
+
+
+    // 댓글 삭제 모달
+    const deleteCommentPage = (id) => {
+        selectedCommentId = id;
+        getReplyPk(selectedCommentId);
+
+        const deleteCommentModal = bootstrap.Modal.getOrCreateInstance("#deleteCommentModal");
+	    deleteCommentModal.show();
+
+    }
+
+   // 답변 pk 조회
+    const getReplyPk = (id) => {
+         $.ajax({
+         type: "get",
+         url: "/qnaReplyComment/getReplyPk/" + id,
+         success: function(res) {
+            selectedReplyIdForComment = res;
+         },
+         error: function(err) {
+             return;
+         }
+     });
+    }
+
+     // 댓글 삭제
+    const deleteComment = () => {
+
+        $.ajax({
+         type: "post",
+         url: "/qnaReplyComment/delete/" + selectedCommentId,
+         success: function(res) {
+
+          	const deleteCommentModal = bootstrap.Modal.getOrCreateInstance("#deleteCommentModal");
+			deleteCommentModal.hide();
+
+            updateCommentCount(selectedReplyIdForComment);
+            loadComments(selectedReplyIdForComment);
+
+
+            /*<![CDATA[*/  selectedCommentId = null;  /*]]>*/
+            /*<![CDATA[*/  selectedReplyIdForComment = null;  /*]]>*/
+
+         },
+         error: function(err) {
+             return;
+         }
+     });
+    }
+
+    // 답변에 달린 댓글 수
+    const updateCommentCount = (id) => {
+        const commentCount = document.querySelector("#replyComment_" + id);
+        $.ajax({
+         type: "get",
+         url: "/qnaReplyComment/count/" + id,
+         success: function(res) {
+            commentCount.innerText = res;
+         },
+         error: function(err) {
+             return;
+         }
+     });
+
+    }
+
+
 
 
 

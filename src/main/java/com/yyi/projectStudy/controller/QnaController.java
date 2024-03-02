@@ -1,6 +1,7 @@
 package com.yyi.projectStudy.controller;
 
 import com.yyi.projectStudy.dto.*;
+import com.yyi.projectStudy.service.QnaReplyCommentService;
 import com.yyi.projectStudy.service.QnaReplyService;
 import com.yyi.projectStudy.service.QnaService;
 import jakarta.servlet.http.HttpSession;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -17,6 +19,7 @@ import java.util.List;
 public class QnaController {
     private final QnaService qnaService;
     private final QnaReplyService qnaReplyService;
+    private final QnaReplyCommentService qnaReplyCommentService;
     // 메인 페이지 - 기술, 커리어, 기타 모두 조회
     @GetMapping("")
     public String mainPage(Model model) {
@@ -33,8 +36,29 @@ public class QnaController {
 
             int replyCount = qnaReplyService.count(qnaDTO.getId());
             qnaDTO.setReplyCount(replyCount);
+
+            // 댓글 수
+            // 게시글 당 답변 모두 조회
+            List<QnaReplyDTO> qnaReplyDTOList = qnaReplyService.findAll(qnaDTO.getId());
+            int commentCount = 0;
+            // 답변에 달린 댓글 수 모두 조회
+            for (QnaReplyDTO qnaReplyDTO : qnaReplyDTOList) {
+                commentCount += qnaReplyCommentService.commentCount(qnaReplyDTO.getId());
+            }
+            qnaDTO.setCommentCount(commentCount);
+
         }
         model.addAttribute("qnaList", qnaDTOList);
+
+        // 베스트 답변
+        List<QnaBestReplyDTO> bestReplyList = qnaService.findBestReplyList();
+        model.addAttribute("bestReplyList", bestReplyList);
+
+        // 베스트 질문
+        List<QnaBestDTO> qnaBestDTOList = qnaService.findBestQnaList();
+        model.addAttribute("bestQnaList", qnaBestDTOList);
+
+
         return "qna/list";
     }
 
@@ -99,6 +123,23 @@ public class QnaController {
             dto.setContent(replyContent);
             int likeCount = qnaReplyService.likeCount(dto.getId());
             dto.setLikeCount(likeCount);
+
+            // 답변에 달린 댓글 가져오기
+            List<QnaReplyCommentDTO> qnaReplyCommentDTOList = qnaReplyCommentService.findAll(dto.getId());
+            List<QnaReplyCommentDTO> commentList = new ArrayList<>();
+            for (QnaReplyCommentDTO qnaReplyCommentDTO : qnaReplyCommentDTOList) {
+                String commentContent = qnaReplyCommentDTO.getContent();
+                commentContent = commentContent.replaceAll("<br>", "\n");
+                qnaReplyCommentDTO.setContent(commentContent);
+                commentList.add(qnaReplyCommentDTO);
+            }
+            dto.setCommentList(commentList);
+
+            // 댓글 수
+            int commentCount = qnaReplyCommentService.commentCount(dto.getId());
+            dto.setCommentCount(commentCount);
+
+
             if (sessionUser == null) {
                 dto.setIsLike(0);
             } else {
@@ -192,6 +233,23 @@ public class QnaController {
             dto.setContent(replyContent);
             int likeCount = qnaReplyService.likeCount(dto.getId());
             dto.setLikeCount(likeCount);
+
+            // 답변에 달린 댓글 가져오기
+            List<QnaReplyCommentDTO> qnaReplyCommentDTOList = qnaReplyCommentService.findAll(dto.getId());
+            List<QnaReplyCommentDTO> commentList = new ArrayList<>();
+            for (QnaReplyCommentDTO qnaReplyCommentDTO : qnaReplyCommentDTOList) {
+                String commentContent = qnaReplyCommentDTO.getContent();
+                commentContent = commentContent.replaceAll("<br>", "\n");
+                qnaReplyCommentDTO.setContent(commentContent);
+                commentList.add(qnaReplyCommentDTO);
+            }
+            dto.setCommentList(commentList);
+
+            // 댓글 수
+            int commentCount = qnaReplyCommentService.commentCount(dto.getId());
+            dto.setCommentCount(commentCount);
+
+
             if (sessionUser == null) {
                 dto.setIsLike(0);
             } else {

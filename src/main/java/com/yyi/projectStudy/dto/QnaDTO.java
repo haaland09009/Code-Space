@@ -26,6 +26,8 @@ public class QnaDTO {
 
     private int likeCount;
     private int dislikeCount;
+    private int commentCount;
+
 
 
     public static QnaDTO toQnaDTO(QnaEntity qnaEntity) {

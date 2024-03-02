@@ -1,10 +1,14 @@
 package com.yyi.projectStudy.repository;
 
+import com.yyi.projectStudy.dto.QnaBestReplyDTO;
 import com.yyi.projectStudy.entity.QnaEntity;
+import com.yyi.projectStudy.entity.QnaLikeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface QnaRepository extends JpaRepository<QnaEntity, Long> {
     // 게시글 조회수 증가
@@ -18,4 +22,29 @@ public interface QnaRepository extends JpaRepository<QnaEntity, Long> {
     @Modifying
     @Query(value = "update QnaEntity q set q.title = :title, q.content = :content where q.id = :id")
     void updateQna(@Param("title") String title, @Param("content") String content, @Param("id") Long id);
+
+//    @Query(value ="SELECT * FROM qna_table WHERE id IN (SELECT qna_id FROM (SELECT qna_id, COUNT(*) likeCount FROM qna_like_table GROUP BY qna_id ORDER BY likeCount DESC) WHERE ROWNUM <= 5)", nativeQuery = true)
+//    List<QnaEntity> findBestLikeQna();
+
+    @Query(value= "SELECT *\n" +
+            "FROM (\n" +
+            "    SELECT qna.*, likeCounts.likeCount, replyCounts.replyCount\n" +
+            "    FROM qna_table qna\n" +
+            "    JOIN (\n" +
+            "        SELECT qna_id, COUNT(*) likeCount\n" +
+            "        FROM qna_like_table\n" +
+            "        GROUP BY qna_id\n" +
+            "        ORDER BY likeCount DESC\n" +
+            "    ) likeCounts ON qna.id = likeCounts.qna_id\n" +
+            "    JOIN (\n" +
+            "        SELECT qna_id, COUNT(*) replyCount\n" +
+            "        FROM qna_reply_table\n" +
+            "        GROUP BY qna_id\n" +
+            "        ORDER BY replyCount DESC\n" +
+            "    ) replyCounts ON qna.id = replyCounts.qna_id\n" +
+            "    ORDER BY likeCounts.likeCount DESC, replyCounts.replyCount DESC\n" +
+            ")\n" +
+            "WHERE ROWNUM <= 5", nativeQuery = true)
+    List<QnaEntity> findBestLikeQna();
+
 }

@@ -1,8 +1,10 @@
 package com.yyi.projectStudy.controller;
 
+import com.yyi.projectStudy.dto.QnaReplyCommentDTO;
 import com.yyi.projectStudy.dto.QnaReplyDTO;
 import com.yyi.projectStudy.dto.QnaReplyLikeDTO;
 import com.yyi.projectStudy.dto.UserDTO;
+import com.yyi.projectStudy.service.QnaReplyCommentService;
 import com.yyi.projectStudy.service.QnaReplyService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -18,6 +21,7 @@ import java.util.List;
 @RequestMapping("/qnaReply")
 public class QnaReplyController {
     private final QnaReplyService qnaReplyService;
+    private final QnaReplyCommentService qnaReplyCommentService;
 
     // 답변 작성
     @PostMapping("/save")
@@ -58,6 +62,21 @@ public class QnaReplyController {
                 // 좋아요 수
                 int likeCount = qnaReplyService.likeCount(dto.getId());
                 dto.setLikeCount(likeCount);
+
+                // 답변에 달린 댓글 가져오기
+                List<QnaReplyCommentDTO> qnaReplyCommentDTOList = qnaReplyCommentService.findAll(dto.getId());
+                List<QnaReplyCommentDTO> commentList = new ArrayList<>();
+                for (QnaReplyCommentDTO qnaReplyCommentDTO : qnaReplyCommentDTOList) {
+                    String commentContent = qnaReplyCommentDTO.getContent();
+                    commentContent = commentContent.replaceAll("<br>", "\n");
+                    qnaReplyCommentDTO.setContent(commentContent);
+                    commentList.add(qnaReplyCommentDTO);
+                }
+                dto.setCommentList(commentList);
+
+                // 댓글 수
+                int commentCount = qnaReplyCommentService.commentCount(dto.getId());
+                dto.setCommentCount(commentCount);
 
                 if (sessionUser == null) {
                     dto.setIsLike(0);
@@ -122,6 +141,7 @@ public class QnaReplyController {
             return false;
         }
     }
+
 
 
 

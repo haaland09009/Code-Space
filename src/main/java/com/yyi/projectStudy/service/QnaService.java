@@ -21,6 +21,8 @@ public class QnaService {
     private final QnaTopicRepository qnaTopicRepository;
     private final QnaDisLikeRepository qnaDisLikeRepository;
     private final QnaLikeRepository qnaLikeRepository;
+    private final QnaReplyRepository qnaReplyRepository;
+    private final QnaReplyLikeRepository qnaReplyLikeRepository;
 
     // 토픽 종류 조회
     public List<TopicDTO> findAllTopic() {
@@ -200,6 +202,77 @@ public class QnaService {
         UserEntity userEntity = userRepository.findById(userId).get();
         return qnaDisLikeRepository.countByQnaEntityAndUserEntity(qnaEntity, userEntity);
     }
+
+
+    // 베스트 답변 찾기
+    public List<QnaBestReplyDTO> findBestReplyList() {
+        List<QnaReplyEntity> qnaReplyEntityList = qnaReplyRepository.findBestReply();
+        // 위 쿼리 qna_id, id (reply_id) 추출
+        List<QnaBestReplyDTO> bestReplyDTOlist = new ArrayList<>();
+        for (QnaReplyEntity qnaReplyEntity : qnaReplyEntityList) {
+            QnaBestReplyDTO qnaBestReplyDTO = new QnaBestReplyDTO();
+
+            int likeCount = qnaReplyLikeRepository.countByQnaReplyEntity(qnaReplyEntity);
+            // 답변 좋아요
+            qnaBestReplyDTO.setLikeCount(likeCount);
+
+            Long qnaId = qnaReplyEntity.getQnaEntity().getId();
+            QnaEntity qnaEntity = qnaRepository.findById(qnaId).get();
+            // id값
+            qnaBestReplyDTO.setId(qnaId);
+            // 제목
+            qnaBestReplyDTO.setTitle(qnaEntity.getTitle());
+
+            int replyCount = qnaReplyRepository.countByQnaEntity(qnaEntity);
+            // 답변 수
+            qnaBestReplyDTO.setReplyCount(replyCount);
+
+            // 토픽
+            QnaTopicEntity qnaTopicEntity = qnaTopicRepository.findByQnaEntity(qnaEntity).get();
+            TopicEntity topicEntity = topicRepository.findById(qnaTopicEntity.getTopicEntity().getId()).get();
+            qnaBestReplyDTO.setTopicName(topicEntity.getName());
+
+            bestReplyDTOlist.add(qnaBestReplyDTO);
+        }
+        return bestReplyDTOlist;
+    }
+
+    // 베스트 질문
+    public List<QnaBestDTO> findBestQnaList() {
+        // 좋아요 많은 순
+        List<QnaEntity> qnaEntityList = qnaRepository.findBestLikeQna();
+        List<QnaBestDTO> qnaBestDTOList = new ArrayList<>();
+        for (QnaEntity qnaEntity : qnaEntityList) {
+            QnaBestDTO qnaBestDTO = new QnaBestDTO();
+            Long qnaId = qnaEntity.getId();
+
+            // id
+            qnaBestDTO.setId(qnaId);
+            // 좋아요 수
+            int likeCount = qnaLikeRepository.countByQnaEntity(qnaEntity);
+            qnaBestDTO.setLikeCount(likeCount);
+
+            // 답변 수
+            int replyCount = qnaReplyRepository.countByQnaEntity(qnaEntity);
+            qnaBestDTO.setReplyCount(replyCount);
+
+            // 제목
+            qnaBestDTO.setTitle(qnaEntity.getTitle());
+
+            // 토픽
+            QnaTopicEntity qnaTopicEntity = qnaTopicRepository.findByQnaEntity(qnaEntity).get();
+            TopicEntity topicEntity = topicRepository.findById(qnaTopicEntity.getTopicEntity().getId()).get();
+            qnaBestDTO.setTopicName(topicEntity.getName());
+
+//            // 싫어요 수
+//            int disLikeCount = qnaDisLikeRepository.countByQnaEntity(qnaEntity);
+            qnaBestDTOList.add(qnaBestDTO);
+
+        }
+        return qnaBestDTOList;
+    }
+
+
 
 
 

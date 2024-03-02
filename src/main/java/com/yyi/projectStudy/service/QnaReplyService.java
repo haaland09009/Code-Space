@@ -96,4 +96,16 @@ public class QnaReplyService {
         UserEntity userEntity = userRepository.findById(userId).get();
         return qnaReplyLikeRepository.countByQnaReplyEntityAndUserEntity(qnaReplyEntity, userEntity);
     }
+
+    // 답변 하나 조회
+    @Transactional
+    public QnaReplyDTO findById(Long id) {
+        Optional<QnaReplyEntity> optionalQnaReplyEntity = qnaReplyRepository.findById(id);
+        if (optionalQnaReplyEntity.isPresent()) {
+            return QnaReplyDTO.toQnaReplyDTO(optionalQnaReplyEntity.get());
+        } else {
+            return null;
+        }
+    }
+
 }

@@ -2,7 +2,9 @@ package com.yyi.projectStudy.repository;
 
 import com.yyi.projectStudy.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface QnaLikeRepository extends JpaRepository<QnaLikeEntity, Long> {
@@ -17,4 +19,5 @@ public interface QnaLikeRepository extends JpaRepository<QnaLikeEntity, Long> {
     // 게시글 좋아요 수 확인
     // select count(*) from qna_like_table where qna_id = ?
     int countByQnaEntity(QnaEntity qnaEntity);
+
 }
