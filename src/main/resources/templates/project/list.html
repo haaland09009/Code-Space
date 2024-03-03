@@ -118,7 +118,15 @@
                                                         <div class="col">
                                                             <!-- 나중에 리스트로 변경 -->
 
-                                                            <button class="btn btn-sm cateButton" th:text="${project.projectStudy}"></button>
+                                                            <button class="btn btn-sm cateButton">
+                                                                <span th:if="${project.projectStudy == '스터디'}">
+                                                                    ✏️
+                                                                </span>
+
+                                                                <i class="bi bi-pc-display-horizontal me-1 text-secondary" th:if="${project.projectStudy == '프로젝트'}"></i>
+
+                                                                <span th:text="${project.projectStudy}"></span>
+                                                            </button>
                                                             <button class="btn btn-sm cateButton me-1" th:each="tech: ${project.techList}">
                                                                 <span th:if="${tech == 'Java'}" class="text-danger">•</span>
                                                                 <span th:if="${tech == 'Spring'}" class="text-success">•</span>

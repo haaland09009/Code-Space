@@ -363,5 +363,68 @@ public class QnaController {
     }
 
 
+    // 기술 탭
+    @GetMapping("/tech")
+    public String techList(Model model) {
+        List<QnaDTO> qnaDTOList = qnaService.findAllByTopic(1L);
+        for (QnaDTO qnaDTO : qnaDTOList) {
+            String content = qnaDTO.getContent();
+//            content = content.replaceAll("<br>", " ");
+            content = content.replaceAll("<br>", "\r\n");
+            qnaDTO.setContent(content);
+
+            TopicDTO topicDTO = qnaService.findTopic(qnaDTO.getId());
+            qnaDTO.setCategoryName(topicDTO.getName());
+
+            int replyCount = qnaReplyService.count(qnaDTO.getId());
+            qnaDTO.setReplyCount(replyCount);
+
+            // 댓글 수
+            // 게시글 당 답변 모두 조회
+            List<QnaReplyDTO> qnaReplyDTOList = qnaReplyService.findAll(qnaDTO.getId());
+            int commentCount = 0;
+            // 답변에 달린 댓글 수 모두 조회
+            for (QnaReplyDTO qnaReplyDTO : qnaReplyDTOList) {
+                commentCount += qnaReplyCommentService.commentCount(qnaReplyDTO.getId());
+            }
+            qnaDTO.setCommentCount(commentCount);
+
+        }
+        model.addAttribute("qnaList", qnaDTOList);
+        return "qna/techList";
+    }
+
+
+    // 기술 탭
+    @GetMapping("/career")
+    public String careerList(Model model) {
+        List<QnaDTO> qnaDTOList = qnaService.findAllByTopic(2L);
+        for (QnaDTO qnaDTO : qnaDTOList) {
+            String content = qnaDTO.getContent();
+//            content = content.replaceAll("<br>", " ");
+            content = content.replaceAll("<br>", "\r\n");
+            qnaDTO.setContent(content);
+
+            TopicDTO topicDTO = qnaService.findTopic(qnaDTO.getId());
+            qnaDTO.setCategoryName(topicDTO.getName());
+
+            int replyCount = qnaReplyService.count(qnaDTO.getId());
+            qnaDTO.setReplyCount(replyCount);
+
+            // 댓글 수
+            // 게시글 당 답변 모두 조회
+            List<QnaReplyDTO> qnaReplyDTOList = qnaReplyService.findAll(qnaDTO.getId());
+            int commentCount = 0;
+            // 답변에 달린 댓글 수 모두 조회
+            for (QnaReplyDTO qnaReplyDTO : qnaReplyDTOList) {
+                commentCount += qnaReplyCommentService.commentCount(qnaReplyDTO.getId());
+            }
+            qnaDTO.setCommentCount(commentCount);
+
+        }
+        model.addAttribute("qnaList", qnaDTOList);
+        return "qna/careerList";
+    }
+
 
 }

@@ -19,7 +19,17 @@ public interface QnaReplyRepository extends JpaRepository<QnaReplyEntity, Long> 
 
 
     // SELECT id, qna_id FROM qna_reply_table WHERE id IN (SELECT reply_id FROM (SELECT reply_id, COUNT(*) likeCount FROM qna_reply_like_table GROUP BY reply_id ORDER BY likeCount DESC) WHERE ROWNUM <= 10);
-    @Query(value = "SELECT * FROM qna_reply_table WHERE id IN (SELECT reply_id FROM (SELECT reply_id, COUNT(*) likeCount FROM qna_reply_like_table GROUP BY reply_id ORDER BY likeCount DESC) WHERE ROWNUM <= 5)", nativeQuery = true)
+    @Query(value = "SELECT * FROM (\n" +
+            "    SELECT r.*\n" +
+            "    FROM qna_reply_table r\n" +
+            "    JOIN (\n" +
+            "        SELECT reply_id, COUNT(*) likeCount\n" +
+            "        FROM qna_reply_like_table\n" +
+            "        GROUP BY reply_id\n" +
+            "        ORDER BY likeCount DESC\n" +
+            "    ) l ON r.id = l.reply_id\n" +
+            "    WHERE ROWNUM <= 5\n" +
+            ")", nativeQuery = true)
     List<QnaReplyEntity> findBestReply();
 
 }

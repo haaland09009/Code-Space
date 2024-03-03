@@ -1,12 +1,8 @@
 package com.yyi.projectStudy.service;
 
 import com.yyi.projectStudy.dto.NotificationDTO;
-import com.yyi.projectStudy.entity.NotificationEntity;
-import com.yyi.projectStudy.entity.ProjectCommentEntity;
-import com.yyi.projectStudy.entity.UserEntity;
-import com.yyi.projectStudy.repository.NotificationRepository;
-import com.yyi.projectStudy.repository.ProjectCommentRepository;
-import com.yyi.projectStudy.repository.UserRepository;
+import com.yyi.projectStudy.entity.*;
+import com.yyi.projectStudy.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +16,8 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
     private final ProjectCommentRepository projectCommentRepository;
+    private final QnaReplyRepository qnaReplyRepository;
+    private final QnaReplyCommentRepository qnaReplyCommentRepository;
 
     // 알림 저장 - 댓글
     public void saveComment(NotificationDTO notificationDTO, Long commentId) {
@@ -29,12 +27,29 @@ public class NotificationService {
         ProjectCommentEntity projectCommentEntity = projectCommentRepository.findById(commentId).get();
         NotificationEntity notificationEntity = NotificationEntity.toCommentNotificationEntity(notificationDTO, userEntity, projectCommentEntity);
 
-        System.out.println("type = " + notificationEntity.getNotType());
-        System.out.println("userEntity = " + notificationEntity.getUserEntity().getId());
-        System.out.println("commenEnTITY= " + notificationEntity.getProjectCommentEntity().getId());
 
         notificationRepository.save(notificationEntity);
     }
+
+    // 알림 저장 - qna 답변
+    public void saveQnaReply(NotificationDTO notificationDTO, Long replyId) {
+        // 수신자 저장
+        UserEntity userEntity = userRepository.findById(notificationDTO.getUserId()).get();
+        // 답변 저장
+        QnaReplyEntity qnaReplyEntity = qnaReplyRepository.findById(replyId).get();
+        NotificationEntity qnaReplyNotificationEntity = NotificationEntity.toQnaReplyNotificationEntity(notificationDTO, userEntity, qnaReplyEntity);
+        notificationRepository.save(qnaReplyNotificationEntity);
+    }
+
+    // 알림 저장 - qna 답변에 대한 댓글
+    public void saveQnaReplyComment(NotificationDTO notificationDTO, Long commentId) {
+        UserEntity userEntity = userRepository.findById(notificationDTO.getUserId()).get();
+        QnaReplyCommentEntity qnaReplyCommentEntity = qnaReplyCommentRepository.findById(commentId).get();
+        NotificationEntity notificationEntity = NotificationEntity.toQnaReplyCommentNotificationEntity(notificationDTO, userEntity, qnaReplyCommentEntity);
+        notificationRepository.save(notificationEntity);
+    }
+
+
 
     // 알림 조회
     @Transactional
@@ -46,4 +61,7 @@ public class NotificationService {
         }
         return notificationDTOList;
     }
+
+
+
 }

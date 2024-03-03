@@ -45,6 +45,15 @@
         @JoinColumn(name = "user_id")
         private UserEntity userEntity;
 
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "reply_id")
+        private QnaReplyEntity qnaReplyEntity;
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "comment_id")
+        private QnaReplyCommentEntity qnaReplyCommentEntity;
+
+
         // 알림 저장 : 댓글
         public static NotificationEntity toCommentNotificationEntity(NotificationDTO notificationDTO,
                                                               UserEntity userEntity,
@@ -61,4 +70,34 @@
         }
 
 
+        // 알림 저장 : qna 답변
+        public static NotificationEntity toQnaReplyNotificationEntity(NotificationDTO notificationDTO,
+                                                                     UserEntity userEntity,
+                                                                    QnaReplyEntity qnaReplyEntity) {
+            NotificationEntity notificationEntity = new NotificationEntity();
+            notificationEntity.setId(notificationDTO.getId());
+            notificationEntity.setSenderId(notificationDTO.getSenderId());
+            notificationEntity.setNotType(notificationDTO.getNotType());
+            notificationEntity.setQnaReplyEntity(qnaReplyEntity);
+            notificationEntity.setNotUrl(notificationDTO.getNotUrl());
+            notificationEntity.setUserEntity(userEntity);
+            // 읽음 컬럼 추가??
+            return notificationEntity;
+        }
+
+        // 알림 저장 : qna 답변에 대한 댓글
+        public static NotificationEntity toQnaReplyCommentNotificationEntity(NotificationDTO notificationDTO,
+                                                                             UserEntity userEntity,
+                                                                             QnaReplyCommentEntity qnaReplyCommentEntity) {
+            NotificationEntity notificationEntity = new NotificationEntity();
+            notificationEntity.setId(notificationDTO.getId());
+            notificationEntity.setSenderId(notificationDTO.getSenderId());
+            notificationEntity.setNotType(notificationDTO.getNotType());
+            notificationEntity.setQnaReplyCommentEntity(qnaReplyCommentEntity);
+            notificationEntity.setNotUrl(notificationDTO.getNotUrl());
+            notificationEntity.setUserEntity(userEntity);
+            // 읽음 컬럼 추가??
+            return notificationEntity;
+
+        }
     }

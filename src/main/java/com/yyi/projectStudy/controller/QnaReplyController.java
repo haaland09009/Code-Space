@@ -1,11 +1,10 @@
 package com.yyi.projectStudy.controller;
 
-import com.yyi.projectStudy.dto.QnaReplyCommentDTO;
-import com.yyi.projectStudy.dto.QnaReplyDTO;
-import com.yyi.projectStudy.dto.QnaReplyLikeDTO;
-import com.yyi.projectStudy.dto.UserDTO;
+import com.yyi.projectStudy.dto.*;
+import com.yyi.projectStudy.service.NotificationService;
 import com.yyi.projectStudy.service.QnaReplyCommentService;
 import com.yyi.projectStudy.service.QnaReplyService;
+import com.yyi.projectStudy.service.QnaService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +21,8 @@ import java.util.List;
 public class QnaReplyController {
     private final QnaReplyService qnaReplyService;
     private final QnaReplyCommentService qnaReplyCommentService;
+    private final QnaService qnaService;
+    private final NotificationService notificationService;
 
     // 답변 작성
     @PostMapping("/save")
@@ -41,7 +42,20 @@ public class QnaReplyController {
                 replyContent = replyContent.replaceAll("<br>", "\n");
                 dto.setContent(replyContent);
             }
-            //
+
+            // 답변 작성 - 알림 넣기
+            QnaDTO qnaDTO = qnaService.findById(qnaReplyDTO.getQnaId());
+            NotificationDTO notificationDTO = new NotificationDTO();
+            if (!qnaReplyDTO.getUserId().equals(qnaDTO.getUserId())) {
+                notificationDTO.setUserId(qnaDTO.getUserId()); // 수신자 id
+                notificationDTO.setSenderId(qnaReplyDTO.getUserId()); // 발신자 id
+                notificationDTO.setNotType("qnaReply"); // 알림 종류
+                notificationDTO.setNotContentId(replyId);
+                notificationDTO.setNotUrl("/qna/" + qnaDTO.getId());
+                notificationService.saveQnaReply(notificationDTO, replyId);
+            }
+
+
             return new ResponseEntity<>(qnaReplyDTOList, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("해당 게시글이 존재하지 않습니다.", HttpStatus.NOT_FOUND);

@@ -273,6 +273,24 @@ public class QnaService {
     }
 
 
+    // 기술, 커리어 조회
+    @Transactional
+    public List<QnaDTO> findAllByTopic(Long id) {
+        TopicEntity topicEntity = topicRepository.findById(id).get();
+        List<QnaTopicEntity> qnaTopicEntityList = qnaTopicRepository.findByTopicEntityOrderByQnaEntityIdDesc(topicEntity);
+        List<QnaDTO> qnaDTOList = new ArrayList<>();
+        for (QnaTopicEntity qnaTopicEntity : qnaTopicEntityList) {
+            Long qnaId = qnaTopicEntity.getQnaEntity().getId();
+            QnaEntity qnaEntity = qnaRepository.findById(qnaId).get();
+            qnaDTOList.add(QnaDTO.toQnaDTO(qnaEntity));
+        }
+        return qnaDTOList;
+    }
+
+
+
+
+
 
 
 

@@ -25,7 +25,67 @@
         <div class="col-10">
             <div class="row">
                 <!---------------->
-                <div class="col-3" th:include="qna/common:: common"></div>
+                <div class="col-3">
+                    <div class="row">
+                        <div class="col fw-semibold fs-4">
+                            개발자 Q&A
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-9">
+                           <i class="bi bi-search" style="position: relative; top: 30px; left: 14px;"></i>
+                            <input type="text" class="form-control bg-light rounded rounded-4" placeholder="질문 검색" style="text-indent: 25px">
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col menu">
+                            <div class="row">
+                                <a href="/qna">
+                                <div class="col fs-5 text-secondary menu-item1">
+                                    <i class="bi bi-house-door"></i>
+                                    <span class="ms-2 fw-semibold">홈</span>
+                                </div>
+                                </a>
+                            </div>
+                            <div class="row mt-3">
+                                <a href="/qna">
+                                <div class="col fs-5 text-secondary menu-item2">
+                                    <i class="bi bi-pencil"></i>
+                                    <span class="ms-2 fw-semibold">기술</span>
+                                </div>
+                                </a>
+                            </div>
+                            <div class="row mt-3">
+                                <a href="/qna">
+                                <div class="col fs-5 text-secondary menu-item3">
+                                    <i class="bi bi-bag"></i>
+                                    <span class="ms-2 fw-semibold">커리어</span>
+                                </div>
+                                </a>
+                            </div>
+                            <div class="row mt-3 ">
+                                <a href="/qna">
+                                <div class="col fs-5 text-secondary menu-item4">
+                                    <i class="bi bi-chat-left-dots"></i>
+                                    <span class="ms-2 fw-semibold">답변하기</span>
+                                </div>
+                                </a>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-9 d-grid ps-0 pe-0">
+                                    <button class="btn mainButton" onclick="location.href='/qna/write'">
+                                        <i class="bi bi-pencil-square"></i>
+                                        <span class="ms-1">질문하기</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
                 <!---------------->
                 <div class="col">
                     <!---------------->

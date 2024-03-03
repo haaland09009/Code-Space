@@ -35,6 +35,10 @@ public class NotificationDTO {
         notificationDTO.setNotType(notificationEntity.getNotType());
         if (notificationEntity.getNotType().equals("projectComment")) {
             notificationDTO.setNotContentId(notificationEntity.getProjectCommentEntity().getId());
+        } else if (notificationEntity.getNotType().equals("qnaReply")) {
+            notificationDTO.setNotContentId(notificationEntity.getQnaReplyEntity().getId());
+        } else if (notificationEntity.getNotType().equals("qnaReplyComment")) {
+            notificationDTO.setNotContentId(notificationEntity.getQnaReplyCommentEntity().getId());
         }
         notificationDTO.setNotUrl(notificationEntity.getNotUrl());
         notificationDTO.setReadDate(notificationEntity.getReadDate());

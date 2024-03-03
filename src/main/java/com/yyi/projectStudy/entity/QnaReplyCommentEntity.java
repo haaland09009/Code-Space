@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -34,6 +37,8 @@ public class QnaReplyCommentEntity extends BaseEntity {
     @Column(nullable = false, length = 4000)
     private String content;
 
+    @OneToMany(mappedBy = "qnaReplyCommentEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
+    private List<NotificationEntity> notificationEntityList = new ArrayList<>();
 
     public static QnaReplyCommentEntity toQnaReplyCommentEntity(QnaReplyCommentDTO qnaReplyCommentDTO, QnaReplyEntity qnaReplyEntity, UserEntity userEntity) {
         QnaReplyCommentEntity qnaReplyCommentEntity = new QnaReplyCommentEntity();

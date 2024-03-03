@@ -1,7 +1,10 @@
 package com.yyi.projectStudy.controller;
 
+import com.yyi.projectStudy.dto.NotificationDTO;
+import com.yyi.projectStudy.dto.QnaDTO;
 import com.yyi.projectStudy.dto.QnaReplyCommentDTO;
 import com.yyi.projectStudy.dto.QnaReplyDTO;
+import com.yyi.projectStudy.service.NotificationService;
 import com.yyi.projectStudy.service.QnaReplyCommentService;
 import com.yyi.projectStudy.service.QnaReplyService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,7 @@ import java.util.List;
 public class QnaReplyCommentController {
     private final QnaReplyCommentService qnaReplyCommentService;
     private final QnaReplyService qnaReplyService;
+    private final NotificationService notificationService;
 
     // 댓글 작성
     @PostMapping("/save")
@@ -32,6 +36,19 @@ public class QnaReplyCommentController {
         if (commentId != null) {
             List<QnaReplyCommentDTO> qnaReplyCommentDTOList =
                     qnaReplyCommentService.findAll(qnaReplyCommentDTO.getReplyId());
+
+            // 답변에 대한 댓글 작성 - 알림 넣기
+            QnaReplyDTO qnaReplyDTO = qnaReplyService.findById(qnaReplyCommentDTO.getReplyId());
+            NotificationDTO notificationDTO = new NotificationDTO();
+            if (!qnaReplyCommentDTO.getUserId().equals(qnaReplyDTO.getUserId())) {
+                notificationDTO.setUserId(qnaReplyDTO.getUserId()); // 수신자 id
+                notificationDTO.setSenderId(qnaReplyCommentDTO.getUserId()); // 발신자 id
+                notificationDTO.setNotType("qnaReplyComment"); // 알림 종류
+                notificationDTO.setNotContentId(commentId);
+                notificationDTO.setNotUrl("/qna/" + qnaReplyDTO.getQnaId());
+                notificationService.saveQnaReplyComment(notificationDTO, commentId);
+            }
+
             return new ResponseEntity<>(qnaReplyCommentDTOList, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("해당 답변이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
