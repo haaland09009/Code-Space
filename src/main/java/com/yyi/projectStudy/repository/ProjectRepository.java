@@ -27,5 +27,9 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
     @Query(value = "SELECT * FROM (SELECT * FROM project_table ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM <= 3", nativeQuery = true)
     List<ProjectEntity> findRandomProjects();
 
+    // 메인 페이지 HOT 프로젝트 / 스터디 조회 (일단 조회수 순, 나중에 수정해야함!!!)
+    @Query(value = "SELECT * FROM (SELECT * FROM project_table ORDER BY read_count DESC) WHERE ROWNUM <= 6", nativeQuery = true)
+    List<ProjectEntity> findAllByOrderByReadCountDesc();
+
 
 }

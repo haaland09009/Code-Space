@@ -324,7 +324,11 @@
                                 <div class="col ms-5">
 
                                     <div class="row mt-3">
+<!--                                        <div class="col-1">-->
+<!--                                            -->
+<!--                                        </div>-->
                                         <div class="col-1">
+<!--                                            <img src="/img/replyArrow.png" style="width: 30px; height: 30px;">-->
                                             <img src="/img/user.jpg" class="rounded-circle" style="width: 40px; height: 40px; position: relative; top: 2px;"
                                             th:if="${comment.fileAttached == 0}">
                                             <img th:src="@{|/upload/${comment.storedFileName}|}" class="rounded-circle" style="width: 40px; height: 40px; position: relative; top: 2px;"
@@ -401,9 +405,72 @@
 
 
         </div>
+        <!------------>
         <div class="col-4 ms-4">
 
+            <div class="row">
+                <div class="col fw-semibold fs-5">
+                    추천 질문
+                </div>
+            </div>
 
+            <div class="row mt-2" th:each="random : ${randomQnaList}">
+                <a th:href="@{|/qna/${random.id}|}">
+                <div class="col-9 py-2 contentDiv">
+
+                    <div class="row">
+                        <div class="col" th:text="${random.title}">
+
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col text-secondary" style="font-size: 15px">
+                            <span>답변</span>
+                            <span th:text="${random.replyCount}"></span>
+                            <span>·</span>
+                            <span>추천해요</span>
+                            <span th:text="${random.likeCount}"></span>
+                        </div>
+                    </div>
+
+                </div>
+                </a>
+            </div>
+
+
+            <div class="mt-5 mb-5"></div>
+
+            <div class="row">
+                <div class="col fw-semibold fs-5">
+                    키워드로 질문 검색하기
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col fs-5 text-secondary">
+
+                    <div class="row mt-3">
+                        <div class="col">
+                            # django >
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col">
+                            # Spring >
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col">
+                            # Java >
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
 
 
         </div>

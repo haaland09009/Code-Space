@@ -47,4 +47,14 @@ public interface QnaRepository extends JpaRepository<QnaEntity, Long> {
             "WHERE ROWNUM <= 5", nativeQuery = true)
     List<QnaEntity> findBestLikeQna();
 
+
+    // 랜덤 추출 4개
+    @Query(value = "SELECT * FROM (\n" +
+            "    SELECT * FROM qna_table \n" +
+            "    WHERE id != :id\n" +
+            "    ORDER BY DBMS_RANDOM.VALUE\n" +
+            ") \n" +
+            "WHERE ROWNUM <= 4", nativeQuery = true)
+    List<QnaEntity> randomQna(@Param("id") Long id);
+
 }

@@ -1,17 +1,26 @@
 package com.yyi.projectStudy.service;
 
+import com.yyi.projectStudy.dto.JobDTO;
 import com.yyi.projectStudy.dto.UserDTO;
+import com.yyi.projectStudy.dto.UserJobDTO;
+import com.yyi.projectStudy.entity.JobEntity;
 import com.yyi.projectStudy.entity.UserEntity;
 import com.yyi.projectStudy.entity.UserImageFileEntity;
+import com.yyi.projectStudy.entity.UserJobEntity;
+import com.yyi.projectStudy.repository.JobRepository;
 import com.yyi.projectStudy.repository.UserImageFileRepository;
+import com.yyi.projectStudy.repository.UserJobRepository;
 import com.yyi.projectStudy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,11 +28,20 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final UserImageFileRepository userImageFileRepository;
+    private final JobRepository jobRepository;
+    private final UserJobRepository userJobRepository;
 
     // 회원가입 프로세스
-    public void save(UserDTO userDTO) throws IOException {
+    public void save(UserDTO userDTO, UserJobDTO userJobDTO) throws IOException {
         if (userDTO.getProfileImageFile().isEmpty()) {
-            userRepository.save(UserEntity.toUserEntity(userDTO));
+            Long savedUserId = userRepository.save(UserEntity.toUserEntity(userDTO)).getId();
+
+            // 직군 데이터 추가
+            UserEntity userEntity = userRepository.findById(savedUserId).get();
+            JobEntity jobEntity = jobRepository.findById(userJobDTO.getJobId()).get();
+            UserJobEntity userJobEntity = UserJobEntity.toUserJobEntity(userEntity, jobEntity);
+            userJobRepository.save(userJobEntity);
+
         } else {
             // 이미지 파일이 존재할 경우
             // 1. DTO에 담긴 이미지 파일 꺼내기
@@ -46,6 +64,12 @@ public class UserService {
             // id 값을 얻어오는 이유: 자식 테이블 입장에서 부모가 어떤 id(pk)인지 필요해서
             Long savedUserId = userRepository.save(userEntity).getId();
             UserEntity user = userRepository.findById(savedUserId).get();
+
+            // 직군 데이터 추가
+            UserEntity newUserEntity = userRepository.findById(savedUserId).get();
+            JobEntity jobEntity = jobRepository.findById(userJobDTO.getJobId()).get();
+            UserJobEntity userJobEntity = UserJobEntity.toUserJobEntity(newUserEntity, jobEntity);
+            userJobRepository.save(userJobEntity);
 
             UserImageFileEntity userImageFileEntity
                     = UserImageFileEntity.toUserImageFileEntity(user, originalFilename, storedFileName);
@@ -81,8 +105,25 @@ public class UserService {
         }
     }
 
-    // 회원탈퇴
-//    public void deleteById(Long id) {
-//        userRepository.deleteById(id);
-//    }
+    // 모든 직군 조회
+    @Transactional
+    public List<JobDTO> findAllJobs() {
+        List<JobEntity> jobEntityList = jobRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+        List<JobDTO> jobDTOList = new ArrayList<>();
+        for (JobEntity jobEntity : jobEntityList) {
+            jobDTOList.add(JobDTO.toJobDTO(jobEntity));
+        }
+        return jobDTOList;
+    }
+
+    // 회원의 직군 조회
+    public JobDTO findJob(Long id) {
+        UserEntity userEntity = userRepository.findById(id).get();
+        UserJobEntity userJobEntity = userJobRepository.findByUserEntity(userEntity).get();
+
+        JobEntity jobEntity = jobRepository.findById(userJobEntity.getJobEntity().getId()).get();
+        return JobDTO.toJobDTO(jobEntity);
+    }
+
+
 }

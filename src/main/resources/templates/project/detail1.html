@@ -96,7 +96,7 @@
 
                                                         </div>
                                                     </div>
-                                                    <div class="row mt-1 text-secondary">
+                                                    <div class="row mt-1">
                                                         <div class="col">
 
 
@@ -152,21 +152,12 @@
 
                                     <div class="row mt-4">
                                         <div class="col fw-semibold fs-5">
-                                            모집 구분
-                                        </div>
-                                        <div class="col fw-semibold fs-5">
                                             모집 역할
                                         </div>
+
                                     </div>
 
                                     <div class="row mt-3">
-                                        <div class="col">
-                                            <button class="btn btn-sm cateButton rounded rounded-4">
-                                                <span th:if="${projectStudyCategory.name == '스터디'}">✏️</span>
-                                                <i class="bi bi-pc-display-horizontal me-1 text-secondary" th:if="${projectStudyCategory.name == '프로젝트'}"></i>
-                                            </button>
-                                            <span class="ms-1" th:text="${projectStudyCategory.name}"></span>
-                                        </div>
                                         <div class="col">
                                             <button class="btn btn-sm cateButton rounded rounded-4" th:if="${positionCategory.name == '프론트엔드'}">
                                                 <i class="bi bi-laptop text-success"></i>
@@ -177,17 +168,41 @@
                                             </button>
                                             <span class="ms-1" th:if="${positionCategory.name == '백엔드'}">백엔드</span>
                                         </div>
-
                                     </div>
 
+                                    <div class="row mt-5">
+                                        <div class="col fw-semibold fs-5">
+                                            사용 언어
+                                        </div>
+                                    </div>
 
+                                    <div class="row mt-2">
+                                        <div class="col">
+                                             <span th:each="tech: ${techCategoryList}">
+                                                <img src="/img/language/java.png" class="lanLogo" th:if="${tech.name == 'Java'}">
+                                                <img src="/img/language/spring.png" class="lanLogo" th:if="${tech.name == 'Spring'}">
+                                                <img src="/img/language/springboot.png" class="lanLogo" th:if="${tech.name == 'Spring Boot'}">
+                                                <img src="/img/language/aws.png" class="lanLogo" th:if="${tech.name == 'AWS'}">
+                                                 <img src="/img/language/c.png" class="lanLogo" th:if="${tech.name == 'C'}">
+                                                 <img src="/img/language/docker.png" class="lanLogo" th:if="${tech.name == 'Docker'}">
+                                                 <img src="/img/language/git.png" class="lanLogo" th:if="${tech.name == 'Git'}">
+                                                 <img src="/img/language/javascript.png" class="lanLogo" th:if="${tech.name == 'JavaScript'}">
+                                                 <img src="/img/language/kotlin.png" class="lanLogo" th:if="${tech.name == 'Kotlin'}">
+                                                 <img src="/img/language/mysql.png" class="lanLogo" th:if="${tech.name == 'MySQL'}">
+                                                 <img src="/img/language/nodejs.png" class="lanLogo" th:if="${tech.name == 'NodeJS'}">
+                                                 <img src="/img/language/python.png" class="lanLogo" th:if="${tech.name == 'Python'}">
+                                                 <img src="/img/language/swift.png" class="lanLogo" th:if="${tech.name == 'Swift'}">
+                                                 <img src="/img/language/typescript.png" class="lanLogo" th:if="${tech.name == 'TypeScript'}">
+                                                 <img src="/img/language/vue.png" class="lanLogo" th:if="${tech.name == 'Vue'}">
+                                                 <img src="/img/language/react.png" class="lanLogo" th:if="${tech.name == 'React'}">
+                                                 <img src="/img/language/flutter.png" class="lanLogo" th:if="${tech.name == 'Flutter'}">
+                                             </span>
+                                        </div>
+                                    </div>
 
                                     <div class="row mt-5">
                                         <div class="col fw-semibold fs-5">
                                             모집 인원
-                                        </div>
-                                        <div class="col fw-semibold fs-5">
-                                            사용 언어
                                         </div>
                                     </div>
 
@@ -198,35 +213,11 @@
                                             </button>
                                             <span class="ms-1" th:text="${project.headCount == 0 ? '인원 미정' : project.headCount == 10 ? '10명 이상' : project.headCount + '명'}"></span>
                                         </div>
-                                        <div class="col">
-                                             <span th:each="tech: ${techCategoryList}">
-                                                <img src="/img/language/java.svg" class="lanLogo me-1" th:if="${tech.name == 'Java'}">
-                                                <img src="/img/language/spring.svg" class="lanLogo me-1" th:if="${tech.name == 'Spring'}">
-                                                <img src="/img/language/springboot.png" class="lanLogo me-1" th:if="${tech.name == 'Spring Boot'}">
-                                                <img src="/img/language/aws.svg" class="lanLogo me-1" th:if="${tech.name == 'AWS'}">
-                                                 <img src="/img/language/c.svg" class="lanLogo me-1" th:if="${tech.name == 'C'}">
-                                                 <img src="/img/language/docker.svg" class="lanLogo me-1" th:if="${tech.name == 'Docker'}">
-                                                 <img src="/img/language/git.svg" class="lanLogo me-1" th:if="${tech.name == 'Git'}">
-                                                 <img src="/img/language/javascript.svg" class="lanLogo me-1" th:if="${tech.name == 'JavaScript'}">
-                                                 <img src="/img/language/kotlin.png" class="lanLogo me-1" th:if="${tech.name == 'Kotlin'}">
-                                                 <img src="/img/language/mysql.svg" class="lanLogo me-1" th:if="${tech.name == 'MySQL'}">
-                                                 <img src="/img/language/nodejs.svg" class="lanLogo me-1" th:if="${tech.name == 'NodeJS'}">
-                                                 <img src="/img/language/python.svg" class="lanLogo me-1" th:if="${tech.name == 'Python'}">
-                                                 <img src="/img/language/swift.svg" class="lanLogo me-1" th:if="${tech.name == 'Swift'}">
-                                                 <img src="/img/language/typescript.png" class="lanLogo me-1" th:if="${tech.name == 'TypeScript'}">
-                                                 <img src="/img/language/vue.svg" class="lanLogo me-1" th:if="${tech.name == 'Vue'}">
-                                                 <img src="/img/language/react.svg" class="lanLogo me-1" th:if="${tech.name == 'React'}">
-                                                 <img src="/img/language/flutter.svg" class="lanLogo me-1" th:if="${tech.name == 'Flutter'}">
-                                             </span>
-                                        </div>
                                     </div>
 
                                     <div class="row mt-5">
                                         <div class="col fw-semibold fs-5">
                                             진행 기간
-                                        </div>
-                                        <div class="col fw-semibold fs-5">
-                                            모집 마감일
                                         </div>
                                     </div>
 
@@ -236,13 +227,6 @@
                                                 <i class="bi bi-clock"></i>
                                             </button>
                                             <span class="ms-1" th:text="${periodCategory.name}"></span>
-                                        </div>
-                                        <div class="col">
-                                            <button class="btn btn-sm cateButton rounded rounded-4">
-                                                <i class="bi bi-calendar-check"></i>
-                                            </button>
-
-                                            <span th:text="${#dates.format(project.endDate, 'yyyy-MM-dd')}"></span>
                                         </div>
                                     </div>
 
@@ -465,18 +449,12 @@
                                     <div class="row mt-3">
                                         <div class="col fw-semibold fs-5 d-flex justify-content-center" th:text="${writerInfo.nickname}"></div>
                                     </div>
-
-                                    <div class="row mt-2">
-                                        <div class="col d-flex justify-content-center text-secondary" th:text="${job.name}"
-                                        style="font-size: 16px"></div>
-                                    </div>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-9 ms-5 d-grid ps-0 pe-0">
-                                    <button class="btn mt-3 mainButton p-2" style="font-size: 18px"
-                                    onclick="sendMessageModal()">채팅하기</button>
+                                    <button class="btn mt-3 mainButton p-2" style="font-size: 18px">채팅하기</button>
                                     <button class="btn mt-2 btn-outline-dark p-2">
                                         <i class="bi bi-bookmark"></i>
                                         <span style="font-size: 18px">스크랩</span>
@@ -662,85 +640,6 @@
     </div>
 </div>
 <!-- 댓글 좋아요 / 싫어요 alert -->
-
-
-<!-- 메시지 전송 모달 -->
-<div class="modal" id="sendMessageModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-light">
-                <div class="row">
-                    <div class="col ms-2 fw-semibold fs-5">
-                        메시지 작성
-                    </div>
-                </div>
-
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body mb-3">
-
-                <div class="mt-3 mb-3"></div>
-                <div class="row">
-                    <div class="col"></div>
-                    <div class="col-10">
-
-                        <div class="row">
-                            <div class="col-2">
-                                <img src="/img/user.jpg" class="rounded-circle" style="width: 100px; height: 100px;"
-                                     th:if="${writerInfo.fileAttached == 0}">
-                                <img th:src="@{|/upload/${writerInfo.storedFileName}|}" class="rounded-circle" style="width: 100px; height: 100px;"
-                                     th:if="${writerInfo.fileAttached == 1}">
-                            </div>
-                            <div class="col ms-4">
-
-                                <div class="row mt-1">
-                                    <div class="col fw-semibold" th:text="${writerInfo.nickname}"
-                                    style="font-size: 22px">
-
-                                    </div>
-                                </div>
-                                <div class="row mt-1">
-                                    <div class="col" th:text="${job.name}"></div>
-                                </div>
-                                <div class="row mt-1">
-                                    <div class="col text-secondary" th:text="${project.title}"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mt-4">
-                            <div class="col">
-                                <textarea  rows="10" class="form-control"
-                                style="resize: none; text-indent: 8px; font-size: 18px"
-                                placeholder="프로젝트에 대해 문의하거나, 팀원으로 지원해보세요."
-                                th:if="${projectStudyCategory.name == '프로젝트'}"></textarea>
-                                <textarea  rows="10" class="form-control"
-                                          style="resize: none; text-indent: 8px; font-size: 18px"
-                                          placeholder="스터디에 대해 문의하거나, 팀원으로 지원해보세요."
-                                           th:if="${projectStudyCategory.name == '스터디'}"></textarea>
-                            </div>
-                        </div>
-
-                        <div class="row mt-4">
-                            <div class="col d-grid">
-                                <button class="mainButton btn p-2 fs-5">보내기</button>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="col">
-
-                    </div>
-                </div>
-
-
-            </div>
-
-
-        </div>
-    </div>
-</div>
-<!-- 메시지 전송 모달 -->
 
 <script th:inline="javascript">
 
@@ -1248,12 +1147,18 @@ const alertLikeCheckModal = () => {
   }
 
 
-    // 채팅하기 모달
-    const sendMessageModal = () => {
-        const sendMessageModal = bootstrap.Modal.getOrCreateInstance("#sendMessageModal");
-	    sendMessageModal.show();
-    }
-
+ // 답글 작성 폼 열고 닫기
+<!-- const toggleReplyInputBox = (id) => {-->
+<!--    const replyBox = document.getElementById("toggleReplyInputBox_" + id);-->
+<!--    const replyButton = document.getElementById("toggleReplyButton_" + id);-->
+<!--    if (replyBox.style.display == 'none') {-->
+<!--        replyBox.style.display = 'block';-->
+<!--        replyButton.innerText = '댓글 취소';-->
+<!--    } else {-->
+<!--       replyBox.style.display = 'none';-->
+<!--       replyButton.innerText = '댓글 작성';-->
+<!--    }-->
+<!-- }-->
 
 window.addEventListener("DOMContentLoaded", function(){
     getNotificationList();

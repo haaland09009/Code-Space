@@ -56,7 +56,7 @@ public class ProjectController {
                                 projectPositionCategoryLinkDTO,
                         @RequestParam(name = "techId", required = false) List<Long> techIdList) {
         // 내용 enter 처리
-        String content = projectDTO.getContent().replaceAll("\\n", "<br>");
+        String content = projectDTO.getContent().replaceAll("\r\n", "<br>");
         projectDTO.setContent(content);
         //
         Long savedId = projectService.save(projectDTO);
@@ -68,9 +68,6 @@ public class ProjectController {
         // 프로젝트 - 진행기간 T
         projectService.saveProjectPeriod(dto, projectPeriodCategoryLinkDTO);
         // 프로젝트 - 기술스택 T
-        System.out.println("---------------------------------------");
-        System.out.println("techIdList:" + techIdList);
-        System.out.println("---------------------------------------");
         projectService.saveProjectTech(dto, techIdList);
         // 프로젝트 - 스터디 T
         projectService.saveProjectStudy(dto, projectStudyCategoryLinkDTO);
@@ -80,45 +77,13 @@ public class ProjectController {
     }
 
 
-
-//    @PostMapping("/write")
-//    public String write(@ModelAttribute ProjectDTO projectDTO,
-//                        @ModelAttribute ProjectPeriodCategoryLinkDTO
-//                                projectPeriodCategoryLinkDTO,
-//                        @ModelAttribute ProjectStudyCategoryLinkDTO
-//                                projectStudyCategoryLinkDTO,
-//                        @ModelAttribute ProjectPositionCategoryLinkDTO
-//                                projectPositionCategoryLinkDTO,
-//                        @ModelAttribute ProjectTechCategoryLinkDTO
-//                                projectTechCategoryLinkDTO) {
-//        // 내용 enter 처리
-//        String content = projectDTO.getContent().replaceAll("\\n", "<br>");
-//        projectDTO.setContent(content);
-//        //
-//        Long savedId = projectService.save(projectDTO);
-//
-//        ProjectDTO dto = projectService.findById(savedId);
-//
-//        // 프로젝트 - 포지션 T
-//        projectService.saveProjectPosition(dto, projectPositionCategoryLinkDTO);
-//        // 프로젝트 - 진행기간 T
-//        projectService.saveProjectPeriod(dto, projectPeriodCategoryLinkDTO);
-//        // 프로젝트 - 기술스택 T
-//        projectService.saveProjectTech(dto, projectTechCategoryLinkDTO);
-//        // 프로젝트 - 스터디 T
-//        projectService.saveProjectStudy(dto, projectStudyCategoryLinkDTO);
-//
-//
-//        return "redirect:/project/" + savedId;
-//    }
-
     // 게시글 리스트
     @GetMapping("")
     public String boardList(Model model) {
         List<ProjectDTO> projectDTOList = projectService.findAll();
 
         for (ProjectDTO projectDTO : projectDTOList) {
-            String content = projectDTO.getContent().replace("<br>", "\\n");
+            String content = projectDTO.getContent().replace("<br>", "\n");
             projectDTO.setContent(content);
             projectDTO.setCommentCount(projectCommentService.count(projectDTO.getId()));
 
@@ -153,10 +118,14 @@ public class ProjectController {
         UserDTO userDTO = userService.findById(userId);
         model.addAttribute("writerInfo", userDTO);
 
+        // 작성자 직군 조회
+        JobDTO job = userService.findJob(userId);
+        model.addAttribute("job", job);
+
         projectService.updateReadCount(id);
         ProjectDTO projectDTO = projectService.findById(id);
         // enter 처리
-        String content = projectDTO.getContent().replace("<br>", "\r\n");
+        String content = projectDTO.getContent().replace("<br>", "\n");
         projectDTO.setContent(content);
         //
 
@@ -253,8 +222,11 @@ public class ProjectController {
         PeriodCategoryDTO periodCategoryDTO = projectService.findPeriodCategory(id);
         model.addAttribute("selectedPeriodId", periodCategoryDTO.getId());
 
-
         ProjectDTO projectDTO = projectService.findById(id);
+        String content = projectDTO.getContent();
+        content = content.replaceAll("<br>", "\n");
+        projectDTO.setContent(content);
+
         model.addAttribute("project", projectDTO);
         return "project/update";
     }
@@ -301,6 +273,10 @@ public class ProjectController {
         Long userId = projectService.findById(projectDTO.getId()).getUserId();
         UserDTO userDTO = userService.findById(userId);
         model.addAttribute("writerInfo", userDTO);
+
+        // 작성자 직군 조회
+        JobDTO job = userService.findJob(userId);
+        model.addAttribute("job", job);
 
         return "project/detail";
 

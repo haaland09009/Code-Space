@@ -38,16 +38,41 @@
         <div class="col">
 
             <div class="row mt-3 me-2">
-                <div class="col-7 text-end">
-<!--                    <input type="text" class="form-control">-->
-                </div>
+                <div class="col-7 text-end" th:if="${session.userDTO == null}"></div>
+                <div class="col-5 text-end" th:if="${session.userDTO != null}"></div>
                 <div class="col text-start" th:if="${session.userDTO != null}">
                     <div class="row">
                         <div class="col">
-                            <i class="bi bi-bookmark fs-4 ms-4 text-secondary"></i>
+                            <i class="bi bi-bookmark fs-4 ms-5 text-secondary"></i>
                         </div>
                         <div class="col">
-                            <i class="bi bi-bell alarmBell fs-4 ms-2 text-secondary" style="cursor:pointer;"
+                            <i class="bi bi-envelope alarmBell fs-4 ms-2 text-secondary"
+                               id="dropMessageButton" data-bs-toggle="dropdown" aria-expanded="false"
+                            style="cursor: pointer;"></i>
+                            <div class="dropdown-menu row bg-light Small shadow" aria-labelledby="dropMessageButton" style="width: 450px">
+                                <div class="col">
+
+                                    <div class="row">
+                                        <div class="col p-1 fw-semibold border-bottom border-1">
+                                            <span class="ms-3" style="position: relative; bottom: 3px;"> 메시지 </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col bg-white">
+
+                                            <div class="row mt-2 mb-2"></div>
+
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <i class="bi bi-bell alarmBell fs-4 ms-1 text-secondary" style="cursor:pointer;"
                             id="dropAlarmButton" data-bs-toggle="dropdown" aria-expanded="false"></i>
                             <div class="dropdown-menu row bg-light Small shadow" aria-labelledby="dropAlarmButton" style="width: 450px">
                                 <div class="col">
@@ -65,30 +90,7 @@
 
                                             <!---->
                                             <div id="notification-list"></div>
-<!--                                            <div class="row mt-2">-->
-<!--                                                <div class="col ms-3">-->
-<!--                                                    <div class="row">-->
-<!--                                                        <div class="col-1">-->
-<!--                                                            <img src="/img/user.jpg" class="rounded-circle" style="width: 28px; height: 28px; position: relative; bottom: 1px">-->
-<!--                                                        </div>-->
-<!--                                                        <div class="col ms-2 fw-semibold">-->
-<!--                                                            오케이수지-->
-<!--                                                        </div>-->
-<!--                                                        <div class="col text-end text-secondary me-1">-->
-<!--                                                            3분 전-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                    <div class="row">-->
-<!--                                                        <div class="col-1"></div>-->
-<!--                                                        <div class="col ms-2">-->
-<!--                                                            님이 회원님이 작성하신 글에 댓글을 달았습니다.-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
 
-<!--                                                    <div class="border-bottom mt-2"></div>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-                                            <!---->
 
                                         </div>
                                     </div>
@@ -122,7 +124,7 @@
                                 <li class="mb-1">
                                     <a class="dropdown-item" href="#">
                                         <i class="bi bi-envelope"></i>
-                                        <span class="ms-2"> 쪽지함 </span>
+                                        <span class="ms-2"> 메시지 </span>
                                     </a>
                                 </li>
                                 <div class="border-bottom mt-2 mb-2"></div>

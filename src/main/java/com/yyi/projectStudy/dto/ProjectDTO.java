@@ -33,6 +33,8 @@ public class ProjectDTO {
 //    private String techList;
     private String projectStudy;
 
+    private Long remainingDays;
+
     public static ProjectDTO toProjectDTO(ProjectEntity projectEntity) {
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.setId(projectEntity.getId());

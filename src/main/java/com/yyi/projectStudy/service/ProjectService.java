@@ -318,4 +318,14 @@ public class ProjectService {
         return projectDTOList;
     }
 
+    // 메인 페이지 (프로젝트 스터디 조회) - 나중에 수정 !!!!
+    @Transactional
+    public List<ProjectDTO> findAllInMainPage() {
+        List<ProjectEntity> projectEntityList = projectRepository.findAllByOrderByReadCountDesc();
+        List<ProjectDTO> projectDTOList = new ArrayList<>();
+        for (ProjectEntity projectEntity : projectEntityList) {
+            projectDTOList.add(ProjectDTO.toProjectDTO(projectEntity));
+        }
+        return projectDTOList;
+    }
 }

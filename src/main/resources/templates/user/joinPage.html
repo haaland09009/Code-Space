@@ -50,18 +50,6 @@
                 </div>
               </div>
 
-              <div class="row mt-3">
-                <div class="col me-2">
-                  닉네임
-                </div>
-              </div>
-
-              <div class="row mt-2">
-                <div class="col text-center">
-                  <input type="text" class="form-control p-3" placeholder="닉네임 입력"
-                  id="userNickname" name="nickname">
-                </div>
-              </div>
 
               <div class="row mt-3">
                 <div class="col me-2">
@@ -80,6 +68,38 @@
                 <div class="col text-center">
                   <input type="password" class="form-control p-3 bg-light" placeholder="비밀번호 확인"
                   id="userPasswordCheck">
+                </div>
+              </div>
+
+
+              <div class="row mt-3">
+                <div class="col me-2">
+                  직군
+                </div>
+              </div>
+
+              <div class="row mt-2">
+                <div class="col text-center">
+                  <select class="form-select p-3"  id="jobBox" name="jobId">
+                    <option selected disabled hidden value="">직군 선택하기</option>
+                    <option value="" th:each="job : ${jobList}"
+                            th:value="${job.id}" th:text="${job.name}"></option>
+
+                  </select>
+                </div>
+              </div>
+
+
+              <div class="row mt-3">
+                <div class="col me-2">
+                  닉네임
+                </div>
+              </div>
+
+              <div class="row mt-2">
+                <div class="col text-center">
+                  <input type="text" class="form-control p-3" placeholder="닉네임 입력"
+                         id="userNickname" name="nickname">
                 </div>
               </div>
 
@@ -156,6 +176,7 @@
 
        const email = document.querySelector("#userEmail");
        const nickname = document.querySelector("#userNickname");
+       const job = document.querySelector("#jobBox");
        const password = document.querySelector("#userPassword");
        const passwordCheck = document.querySelector("#userPasswordCheck");
 
@@ -166,6 +187,10 @@
        } else if (nickname.value.trim() == "") {
          alert("닉네임을 입력해주세요.");
          nickname.focus();
+         return;
+       }  else if (job.value.trim() == "") {
+         alert("직군을 선택해주세요.");
+         job.focus();
          return;
        } else if (password.value.trim() == "") {
          alert("비밀번호를 입력해주세요.");

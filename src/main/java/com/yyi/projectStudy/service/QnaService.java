@@ -238,6 +238,7 @@ public class QnaService {
     }
 
     // 베스트 질문
+    @Transactional
     public List<QnaBestDTO> findBestQnaList() {
         // 좋아요 많은 순
         List<QnaEntity> qnaEntityList = qnaRepository.findBestLikeQna();
@@ -259,10 +260,23 @@ public class QnaService {
             // 제목
             qnaBestDTO.setTitle(qnaEntity.getTitle());
 
+            // 작성자
+            qnaBestDTO.setWriter(qnaEntity.getUserEntity().getNickname());
+            qnaBestDTO.setFileAttached(qnaEntity.getUserEntity().getFileAttached());
+
+            if (qnaEntity.getUserEntity().getFileAttached() == 1) {
+                qnaBestDTO.setStoredFileName(qnaEntity.getUserEntity().getUserImageFileEntityList().get(0).getStoredFileName());
+            }
+
             // 토픽
             QnaTopicEntity qnaTopicEntity = qnaTopicRepository.findByQnaEntity(qnaEntity).get();
             TopicEntity topicEntity = topicRepository.findById(qnaTopicEntity.getTopicEntity().getId()).get();
             qnaBestDTO.setTopicName(topicEntity.getName());
+
+            // 등록일
+            qnaBestDTO.setRegDate(qnaEntity.getRegDate());
+
+
 
 //            // 싫어요 수
 //            int disLikeCount = qnaDisLikeRepository.countByQnaEntity(qnaEntity);
@@ -287,7 +301,16 @@ public class QnaService {
         return qnaDTOList;
     }
 
-
+    // 랜덤 추출
+    @Transactional
+    public List<QnaDTO> randomQnaList(Long id) {
+        List<QnaEntity> qnaEntityList = qnaRepository.randomQna(id);
+        List<QnaDTO> qnaDTOList = new ArrayList<>();
+        for (QnaEntity qnaEntity : qnaEntityList) {
+            qnaDTOList.add(QnaDTO.toQnaDTO(qnaEntity));
+        }
+        return qnaDTOList;
+    }
 
 
 

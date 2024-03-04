@@ -1,6 +1,8 @@
 package com.yyi.projectStudy.controller;
 
+import com.yyi.projectStudy.dto.JobDTO;
 import com.yyi.projectStudy.dto.UserDTO;
+import com.yyi.projectStudy.dto.UserJobDTO;
 import com.yyi.projectStudy.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,14 +27,17 @@ public class UserController {
 
     // 회원가입 페이지 이동
     @GetMapping("/joinPage")
-    public String joinPage() {
+    public String joinPage(Model model) {
+        List<JobDTO> jobDTOList = userService.findAllJobs();
+        model.addAttribute("jobList", jobDTOList);
         return "user/joinPage";
     }
 
     // 회원가입 프로세스
     @PostMapping("/joinProcess")
-    public String joinProcess(@ModelAttribute UserDTO userDTO) throws IOException {
-        userService.save(userDTO);
+    public String joinProcess(@ModelAttribute UserDTO userDTO,
+                              @ModelAttribute UserJobDTO userJobDTO) throws IOException {
+        userService.save(userDTO, userJobDTO);
         return "user/loginPage";
     }
 

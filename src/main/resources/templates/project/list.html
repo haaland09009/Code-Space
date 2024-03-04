@@ -67,7 +67,7 @@
                             <div class="row mt-3 mb-3"></div>
                             <!-- 게시글 목록 -->
                             <div class="row mt-2 mb-4" th:each="project: ${projectList}">
-                                <div class="col rounded border border-1 bg-white"
+                                <div class="col rounded border border-1 bg-white contentDiv"
                                      style="min-height: 180px">
 
                                     <div class="row mt-2">
@@ -106,7 +106,7 @@
 
                                             <div class="row mt-3">
                                                 <a th:href="@{|/project/${project.id}|}">
-                                                    <div class="col" th:text="${project.content}">
+                                                    <div class="col overflow-list" th:text="${project.content}">
 
                                                     </div>
                                                 </a>

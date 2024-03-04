@@ -172,6 +172,16 @@ public class QnaController {
             model.addAttribute("isDisLike", isDisLike);
         }
 
+        // 랜덤 추출
+        List<QnaDTO> randomQnaList = qnaService.randomQnaList(id);
+        for (QnaDTO randomDTO : randomQnaList) {
+            // 추천해요 수
+            randomDTO.setLikeCount(qnaService.likeCount(randomDTO.getId()));
+            // 답변 수
+            randomDTO.setReplyCount(qnaReplyService.count(randomDTO.getId()));
+        }
+        model.addAttribute("randomQnaList", randomQnaList);
+
 
         return "qna/detail";
     }
@@ -281,6 +291,16 @@ public class QnaController {
             model.addAttribute("isLike", isLike);
             model.addAttribute("isDisLike", isDisLike);
         }
+
+        // 랜덤 추출
+        List<QnaDTO> randomQnaList = qnaService.randomQnaList(qnaDTO.getId());
+        for (QnaDTO randomDTO : randomQnaList) {
+            // 추천해요 수
+            randomDTO.setLikeCount(qnaService.likeCount(randomDTO.getId()));
+            // 답변 수
+            randomDTO.setReplyCount(qnaReplyService.count(randomDTO.getId()));
+        }
+        model.addAttribute("randomQnaList", randomQnaList);
 
         return "qna/detail";
     }
