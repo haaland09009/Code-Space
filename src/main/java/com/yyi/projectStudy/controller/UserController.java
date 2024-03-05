@@ -1,8 +1,7 @@
 package com.yyi.projectStudy.controller;
 
-import com.yyi.projectStudy.dto.JobDTO;
-import com.yyi.projectStudy.dto.UserDTO;
-import com.yyi.projectStudy.dto.UserJobDTO;
+import com.yyi.projectStudy.dto.*;
+import com.yyi.projectStudy.service.ChatService;
 import com.yyi.projectStudy.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +17,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final ChatService chatService;
 
     // 로그인 페이지 이동
     @GetMapping("/loginPage")
@@ -71,21 +71,40 @@ public class UserController {
         } else {
             UserDTO userDTO = userService.findById(sessionUser.getId());
             model.addAttribute("userDTO", userDTO);
+
+            JobDTO jobDTO = userService.findJob(sessionUser.getId());
+            model.addAttribute("jobDTO", jobDTO);
+
+            List<JobDTO> jobDTOList = userService.findAllJobs();
+            model.addAttribute("jobList", jobDTOList);
+
+
             return "user/myPage";
         }
     }
 
 
-    // 회원탈퇴
-//    @GetMapping("/delete")
-//    public String delete(HttpSession session) {
-//        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
-//        if (sessionUser == null) {
-//            return "redirect:/user/loginPage";
-//        } else {
-//            session.invalidate();
-//            userService.deleteById(sessionUser.getId());
-//            return "redirect:/";
-//        }
-//    }
+    // 회원 정보 수정 (나중에 사진까지 수정해야함)
+    @PostMapping("/updateProcess")
+    public String updateProcess(@ModelAttribute UserDTO userDTO,
+                                @ModelAttribute UserJobDTO userJobDTO) {
+        userService.update(userDTO, userJobDTO);
+        return "redirect:/user/myPage";
+    }
+
+    // 메시지함 조회
+    @GetMapping("/message")
+    public String message(HttpSession session, Model model) {
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+        if (sessionUser == null) {
+            return "redirect:/user/loginPage";
+        } else {
+            Long userId = sessionUser.getId();
+            List<ChatDTO> chatDTOList = chatService.findRecentChats(userId);
+            model.addAttribute("chatRoomList", chatDTOList);
+            return "user/message";
+        }
+    }
+
+
 }

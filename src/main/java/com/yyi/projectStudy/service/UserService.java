@@ -126,4 +126,10 @@ public class UserService {
     }
 
 
+    // !! 회원정보 수정 (나중에 사진 첨부 수정해야함)
+    @Transactional
+    public void update(UserDTO userDTO, UserJobDTO userJobDTO) {
+        userRepository.updateUser(userDTO.getNickname(), userDTO.getEmail(), userDTO.getId());
+        userJobRepository.updateUserJob(userJobDTO.getJobId(), userDTO.getId());
+    }
 }

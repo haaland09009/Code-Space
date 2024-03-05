@@ -476,7 +476,9 @@
                             <div class="row">
                                 <div class="col-9 ms-5 d-grid ps-0 pe-0">
                                     <button class="btn mt-3 mainButton p-2" style="font-size: 18px"
-                                    onclick="sendMessageModal()">채팅하기</button>
+                                    onclick="sendMessageModal()" th:if="${session.userDTO != null}">채팅하기</button>
+                                    <button class="btn mt-3 mainButton p-2" style="font-size: 18px"
+                                            onclick="location.href='/user/loginPage'" th:if="${session.userDTO == null}">채팅하기</button>
                                     <button class="btn mt-2 btn-outline-dark p-2">
                                         <i class="bi bi-bookmark"></i>
                                         <span style="font-size: 18px">스크랩</span>
@@ -710,22 +712,30 @@
 
                         <div class="row mt-4">
                             <div class="col">
+
+                                <input type="hidden" name="receiverId" th:value="${project.userId}">
                                 <textarea  rows="10" class="form-control"
                                 style="resize: none; text-indent: 8px; font-size: 18px"
-                                placeholder="프로젝트에 대해 문의하거나, 팀원으로 지원해보세요."
-                                th:if="${projectStudyCategory.name == '프로젝트'}"></textarea>
-                                <textarea  rows="10" class="form-control"
-                                          style="resize: none; text-indent: 8px; font-size: 18px"
-                                          placeholder="스터디에 대해 문의하거나, 팀원으로 지원해보세요."
-                                           th:if="${projectStudyCategory.name == '스터디'}"></textarea>
+                                placeholder="프로젝트 / 스터디에 대해 문의하거나, 팀원으로 지원해보세요."
+                               id="messageContent" name="content"></textarea>
+
+
+                            </div>
+                        </div>
+
+                        <div class="row mt-2" style="display: none;" id="alertMessageBox">
+                            <div class="col text-danger">
+                                메시지 내용을 입력해주세요.
                             </div>
                         </div>
 
                         <div class="row mt-4">
                             <div class="col d-grid">
-                                <button class="mainButton btn p-2 fs-5">보내기</button>
+                                <button class="mainButton btn p-2 fs-5"
+                                        onclick="sendMessage()">보내기</button>
                             </div>
                         </div>
+                        </form>
 
                     </div>
                     <div class="col">
@@ -741,6 +751,34 @@
     </div>
 </div>
 <!-- 메시지 전송 모달 -->
+
+
+<!-- 메시지 전송 성공 alert -->
+<div class="modal" id="sendSuccessModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">알림</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row text-center">
+                    <div class="col">
+                        메시지 전송 요청을 보냈습니다.
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">창닫기</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- 메시지 전송 성공 alert -->
 
 <script th:inline="javascript">
 
@@ -1254,6 +1292,74 @@ const alertLikeCheckModal = () => {
 	    sendMessageModal.show();
     }
 
+
+
+    // 메시지 전송
+    const sendMessage = () => {
+
+        if (sessionId == 0) {
+            location.href = "/user/loginPage";
+            return;
+        }
+        const content = document.querySelector("#messageContent");
+        const alertBox = document.querySelector("#alertMessageBox");
+
+        content.addEventListener("input", () => {
+            if (content.value.trim() !== "") {
+                alertBox.style.display = "none"; // 내용이 입력되면 alertBox를 숨깁니다.
+            }
+        });
+
+        if (content.value.trim() == "") {
+            alertBox.style.display = "block";
+            content.focus();
+            return;
+        }
+
+        $.ajax({
+           type: "post",
+           url: "/chat/save",
+           data: {
+               "content" : content.value,
+               "receiverId" : [[${project.userId}]]
+           },
+            success: function(res) {
+                if (res == "ok") {
+                    // 성공시
+
+                     content.value = "";
+
+                     const sendSuccessModal = bootstrap.Modal.getOrCreateInstance("#sendSuccessModal");
+	                sendSuccessModal.show();
+
+
+                     setTimeout(function() {
+                        sendSuccessModal.hide();
+                    }, 2000);
+               } else {
+                  // 코드 추가
+                   return;
+               }
+           },
+           error: function(err) {
+               console.log("실패");
+           }
+       });
+    }
+
+    // 메시지 모달 창을 닫을 때 이벤트 처리
+    const sendMessageModal1 = bootstrap.Modal.getOrCreateInstance("#sendMessageModal");
+    sendMessageModal1.hide(); // 모달을 닫기 전에 값 초기화
+    sendMessageModal1._element.addEventListener("hidden.bs.modal", function () {
+        resetModalInputs(); // 모달이 숨겨진 후에 초기화 함수 호출
+    });
+
+    const resetModalInputs = () => {
+        const alertBox = document.querySelector("#alertMessageBox");
+        const content = document.querySelector("#messageContent");
+        alertBox.style.display = "none";
+        content.value = "";
+    }
 
 window.addEventListener("DOMContentLoaded", function(){
     getNotificationList();

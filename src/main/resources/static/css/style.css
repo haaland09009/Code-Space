@@ -154,7 +154,16 @@ textarea {
     color: black!important;
 }
 
-
+.contentDiv {
+    cursor: pointer;
+}
 .contentDiv:hover {
     background-color : #f8f9fa!important;
+}
+
+.fs-14 {
+    font-size: 14px;
+}
+.fs-18 {
+    font-size: 18px;
 }

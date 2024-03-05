@@ -75,6 +75,17 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
     private List<UserJobEntity> userJobEntityList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
+    private List<ChatRoomEntity> chatRoomEntityList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
+    private List<ChatRoomEntity> chatRoomEntityList1 = new ArrayList<>();
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
+    private List<ChatEntity> chatEntityList = new ArrayList<>();
+
+
+
     // DTO -> Entity
     public static UserEntity toUserEntity(UserDTO userDTO) {
         UserEntity userEntity = new UserEntity();
