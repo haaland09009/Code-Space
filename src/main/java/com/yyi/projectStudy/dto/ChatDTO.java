@@ -22,6 +22,7 @@ public class ChatDTO {
     private String storedFileName;
     private String nickname;
     private Long friendId; // 상대방
+    private int isNotReadCount; // 최근 채팅방 목록에서 안 읽은 채팅 수
 
     public static ChatDTO toChatDTO(ChatEntity chatEntity) {
         ChatDTO chatDTO = new ChatDTO();

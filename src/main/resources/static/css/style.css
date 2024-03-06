@@ -167,3 +167,15 @@ textarea {
 .fs-18 {
     font-size: 18px;
 }
+
+.bg-gray {
+    background-color: #dee2e6;
+}
+
+#chatList {
+    min-height: 300px;
+}
+
+.chatDate {
+    font-size: 14px;
+}

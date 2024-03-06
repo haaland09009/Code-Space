@@ -4,13 +4,10 @@ package com.yyi.projectStudy.service;
 import com.yyi.projectStudy.dto.ChatDTO;
 import com.yyi.projectStudy.dto.ChatRoomDTO;
 import com.yyi.projectStudy.dto.UserDTO;
-import com.yyi.projectStudy.entity.ChatEntity;
-import com.yyi.projectStudy.entity.ChatRoomEntity;
-import com.yyi.projectStudy.entity.UserEntity;
-import com.yyi.projectStudy.repository.ChatRepository;
-import com.yyi.projectStudy.repository.ChatRoomRepository;
-import com.yyi.projectStudy.repository.UserRepository;
+import com.yyi.projectStudy.entity.*;
+import com.yyi.projectStudy.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +21,8 @@ public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
+    private final UserJobRepository userJobRepository;
+    private final JobRepository jobRepository;
 
 
    // 채팅 전송
@@ -58,6 +57,7 @@ public class ChatService {
             return chatRoomEntity.getId();
         }
     }
+
 
     // 채팅방에 있는 채팅 기록 모두 조회
     @Transactional
@@ -121,6 +121,12 @@ public class ChatService {
             // 수신자
             UserEntity receiver = chatRoomEntity.getReceiver();
 
+            // 채팅 안 읽은 개수
+            Long roomId = chatRoomEntity.getId();
+            Long userId = userRepository.findById(id).get().getId();
+            int isNotReadCount = chatRepository.countChatIsNotRead(roomId, userId);
+            chatDTO.setIsNotReadCount(isNotReadCount);
+
             if (!id.equals(sender.getId())) {
                 // 발신자 pk와 내 pk가 일치하지 않는다면
                 friend = sender;
@@ -144,6 +150,55 @@ public class ChatService {
     }
 
 
+    // 채팅방 pk로 회원정보 조회
+    @Transactional
+    public UserDTO getUserInfo(Long roomId, Long sessionId) {
+        ChatRoomEntity chatRoomEntity = chatRoomRepository.findById(roomId).get();
+        UserEntity sender = chatRoomEntity.getSender();
+        UserEntity receiver = chatRoomEntity.getReceiver();
+        if (!sessionId.equals(sender.getId())) {
+            UserDTO userDTO = UserDTO.toUserDTO(sender);
+            UserJobEntity userJobEntity = userJobRepository.findByUserEntity(sender).get();
+            JobEntity jobEntity = jobRepository.findById(userJobEntity.getJobEntity().getId()).get();
+            userDTO.setJobName(jobEntity.getName());
+            return userDTO;
+        } else if (!sessionId.equals(receiver.getId())) {
+            UserDTO userDTO = UserDTO.toUserDTO(receiver);
+            UserJobEntity userJobEntity = userJobRepository.findByUserEntity(receiver).get();
+            JobEntity jobEntity = jobRepository.findById(userJobEntity.getJobEntity().getId()).get();
+            userDTO.setJobName(jobEntity.getName());
+            return userDTO;
+        } else { // 나중에 처리
+            return null;
+        }
+    }
+
+    // 채팅방이 이미 있는 상황에서 채팅 전송
+    public Long sendMessage(ChatDTO chatDTO) {
+        Optional<ChatRoomEntity> optionalChatRoomEntity = chatRoomRepository.findById(chatDTO.getRoomId());
+        if (optionalChatRoomEntity.isPresent()) {
+            ChatRoomEntity chatRoomEntity = optionalChatRoomEntity.get();
+            UserEntity sender = userRepository.findById(chatDTO.getSenderId()).get();
+            ChatEntity chatEntity = ChatEntity.toChatEntity(chatDTO, chatRoomEntity, sender);
+            return chatRepository.save(chatEntity).getId();
+        } else {
+            return null;
+        }
+    }
+
+    // 채팅방 접속 - 채팅읽기
+    @Transactional
+    public void readChat(Long roomId, Long sessionId) {
+        List<ChatEntity> chatEntityList = chatRepository.checkChatIsNotRead(roomId, sessionId);
+        for (ChatEntity chatEntity : chatEntityList) {
+            chatRepository.readChat(chatEntity.getId());
+        }
+    }
+
+    // 채팅 삭제
+    public void deleteById(Long id) {
+        chatRepository.deleteById(id);
+    }
 
 
 //    @Transactional
