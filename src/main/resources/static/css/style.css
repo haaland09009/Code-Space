@@ -78,6 +78,7 @@
 }
 body {
   font-family: 'Pretendard';
+  font-size: 18px;
 }
 
 .alarmBell:hover {
@@ -163,6 +164,9 @@ textarea {
 
 .fs-14 {
     font-size: 14px;
+}
+.fs-15 {
+    font-size: 15px;
 }
 .fs-18 {
     font-size: 18px;

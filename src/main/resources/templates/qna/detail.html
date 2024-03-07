@@ -53,18 +53,37 @@
                     </div>
 
                     <div class="row mt-2">
-                        <div class="col-1">
+                        <div class="col-1"  id="userInfoButton" data-bs-toggle="dropdown" aria-expanded="false">
                             <img class="rounded-circle mt-1" style="width: 40px; height: 40px;"
                                  src="/img/user.jpg" th:if="${qna.fileAttached == 0}">
                             <img class="rounded-circle mt-1" style="width: 40px; height: 40px;"
                                  th:src="@{|/upload/${qna.storedFileName}|}" th:if="${qna.fileAttached == 1}">
+
+<!--                            <ul class="dropdown-menu" aria-labelledby="userInfoButton">-->
+<!--                                <li>-->
+<!--                                    <a class="dropdown-item">-->
+<!--                                        <i class="bi bi-pencil-square"></i>-->
+<!--                                        <span class="ms-1"> 수정하기 </span>-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                                <li>-->
+<!--                                    <a class="dropdown-item">-->
+<!--                                        <i class="bi bi-trash3"></i>-->
+<!--                                        <span class="ms-1"> 삭제하기 </span>-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+
+
                         </div>
                         <div class="col ps-0">
                             <div class="row">
-                                <div class="col fw-semibold" th:text="${qna.writer}">
+                                <div class="col-auto fw-semibold" th:text="${qna.writer}">
 
                                 </div>
+
                             </div>
+
                             <div class="row">
                                 <div class="col text-secondary">
                                     <span class="date-element" th:text="${qna.regDate}"></span>
@@ -152,6 +171,7 @@
                                          src="/img/user.jpg" th:if="${session.userDTO != null && session.userDTO.fileAttached == 0}">
                                     <img class="rounded-circle" style="width: 45px; height: 45px;"
                                          th:src="@{|/upload/${session.userDTO.storedFileName}|}" th:if="${session.userDTO != null && session.userDTO.fileAttached == 1}">
+
                                 </div>
                                 <div class="col">
                                     <div class="row">

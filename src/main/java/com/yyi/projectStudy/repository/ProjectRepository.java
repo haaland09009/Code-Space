@@ -32,4 +32,21 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
     List<ProjectEntity> findAllByOrderByReadCountDesc();
 
 
+
+    // 프로젝트 메뉴 - 활동 내역
+//    SELECT * FROM (
+//            SELECT id, title, content, reg_date FROM project_table WHERE user_id = 43
+//            UNION ALL
+//            SELECT id, NULL AS title, content, reg_date FROM project_comment_table WHERE user_id = 43
+//    )
+//    ORDER BY reg_date DESC
+    @Query(value = "SELECT * FROM (\n" +
+            "    SELECT id, title, content, reg_date FROM project_table WHERE user_id = :userId\n" +
+            "    UNION ALL\n" +
+            "    SELECT id, NULL AS title, content, reg_date FROM project_comment_table WHERE user_id = :userId\n" +
+            ")\n" +
+            "ORDER BY reg_date DESC", nativeQuery = true)
+    List<Object[]> getProjectArticles(@Param("userId") Long userId);
+
+
 }

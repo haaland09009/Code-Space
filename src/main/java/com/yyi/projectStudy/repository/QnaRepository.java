@@ -57,4 +57,24 @@ public interface QnaRepository extends JpaRepository<QnaEntity, Long> {
             "WHERE ROWNUM <= 4", nativeQuery = true)
     List<QnaEntity> randomQna(@Param("id") Long id);
 
+
+    // 활동 내역
+    //    SELECT * FROM (
+    //            SELECT id AS qna_id, NULL AS reply_id, NULL AS comment_id, title, reg_date, content FROM qna_table WHERE user_id = 1
+    //            UNION ALL
+    //            SELECT NULL AS qna_id, id AS reply_id, NULL AS comment_id,  NULL AS title, reg_date, content FROM qna_reply_table WHERE user_id = 1
+    //                    UNION ALL
+    //                    SELECT NULL AS qna_id, NULL AS reply_id, id AS comment_id, NULL AS title, reg_date, content FROM qna_reply_comment_table WHERE user_id = 1
+    //    )
+    //    ORDER BY reg_date DESC
+        @Query(value="SELECT * FROM (\n" +
+                "    SELECT id AS qna_id, NULL AS reply_id, NULL AS comment_id, title, reg_date, content FROM qna_table WHERE user_id = :userId\n" +
+                "    UNION ALL\n" +
+                "    SELECT NULL AS qna_id, id AS reply_id, NULL AS comment_id,  NULL AS title, reg_date, content FROM qna_reply_table WHERE user_id = :userId\n" +
+                "    UNION ALL\n" +
+                "    SELECT NULL AS qna_id, NULL AS reply_id, id AS comment_id, NULL AS title, reg_date, content FROM qna_reply_comment_table WHERE user_id = :userId\n" +
+                ")\n" +
+                "ORDER BY reg_date DESC", nativeQuery = true)
+        List<Object[]> getQnaArticles(@Param("userId") Long userId);
+
 }

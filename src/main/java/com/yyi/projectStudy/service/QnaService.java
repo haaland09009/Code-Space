@@ -8,6 +8,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +25,7 @@ public class QnaService {
     private final QnaLikeRepository qnaLikeRepository;
     private final QnaReplyRepository qnaReplyRepository;
     private final QnaReplyLikeRepository qnaReplyLikeRepository;
+    private final QnaReplyCommentRepository qnaReplyCommentRepository;
 
     // 토픽 종류 조회
     public List<TopicDTO> findAllTopic() {
@@ -312,6 +315,71 @@ public class QnaService {
         return qnaDTOList;
     }
 
+
+    // 활동내역
+    @Transactional
+    public List<QnaArticleDTO> findArticleList(Long userId) {
+        List<Object[]> qnaArticleList = qnaRepository.getQnaArticles(userId);
+        List<QnaArticleDTO> qnaArticleDTOList = new ArrayList<>();
+        for (Object[] article : qnaArticleList) {
+            QnaArticleDTO qnaArticleDTO = new QnaArticleDTO();
+            BigDecimal qnaIdBigDecimal = (BigDecimal) article[0];
+            BigDecimal replyIdBigDecimal = (BigDecimal) article[1];
+            BigDecimal commentIdBigDecimal = (BigDecimal) article[2];
+
+            Long qnaId = (qnaIdBigDecimal != null) ? qnaIdBigDecimal.longValue() : null;
+            Long replyId = (replyIdBigDecimal != null) ? replyIdBigDecimal.longValue() : null;
+            Long commentId = (commentIdBigDecimal != null) ? commentIdBigDecimal.longValue() : null;
+//            Long qnaId = (Long) article[0];
+//            Long replyId = (Long) article[1];
+//            Long commentId = (Long) article[2];
+            String title = (String) article[3];
+            java.sql.Timestamp timestamp = (java.sql.Timestamp) article[4];
+            LocalDateTime regDate = timestamp.toLocalDateTime();
+            String content = (String) article[5];
+            System.out.println("qnaId : " + qnaId  + ", replyId : " + replyId + ", commentId : " + commentId);
+            if (qnaId != null) {
+                qnaArticleDTO.setQnaId(qnaId);
+                qnaArticleDTO.setTitle(title);
+                qnaArticleDTO.setRegDate(regDate);
+                TopicDTO topicDTO = findTopic(qnaId);
+                qnaArticleDTO.setCategoryName(topicDTO.getName());
+
+                qnaArticleDTO.setBoardId(qnaId);
+            } else if (replyId != null) {
+                QnaReplyEntity qnaReplyEntity = qnaReplyRepository.findById(replyId).get();
+                QnaEntity qnaEntity = qnaReplyEntity.getQnaEntity();
+
+//                qnaArticleDTO.setQnaId(qnaEntity.getId());
+                qnaArticleDTO.setReplyId(replyId);
+                qnaArticleDTO.setTitle(qnaEntity.getTitle());
+                qnaArticleDTO.setRegDate(regDate);
+                qnaArticleDTO.setReplyContent(content);
+                qnaArticleDTO.setBoardId(qnaEntity.getId());
+
+                TopicDTO topicDTO = findTopic(qnaEntity.getId());
+                qnaArticleDTO.setCategoryName(topicDTO.getName());
+            } else if (commentId != null) {
+                QnaReplyCommentEntity qnaReplyCommentEntity = qnaReplyCommentRepository.findById(commentId).get();
+                QnaReplyEntity qnaReplyEntity = qnaReplyCommentEntity.getQnaReplyEntity();
+                QnaEntity qnaEntity = qnaReplyEntity.getQnaEntity();
+
+//                qnaArticleDTO.setQnaId(qnaEntity.getId());
+                qnaArticleDTO.setCommentId(commentId);
+//                qnaArticleDTO.setReplyId(qnaReplyCommentEntity.getQnaReplyEntity().getId());
+                qnaArticleDTO.setTitle(qnaEntity.getTitle());
+                qnaArticleDTO.setRegDate(regDate);
+                qnaArticleDTO.setReplyContent(qnaReplyCommentEntity.getContent());
+                qnaArticleDTO.setCommentContent(content);
+                qnaArticleDTO.setBoardId(qnaEntity.getId());
+
+                TopicDTO topicDTO = findTopic(qnaEntity.getId());
+                qnaArticleDTO.setCategoryName(topicDTO.getName());
+            }
+            qnaArticleDTOList.add(qnaArticleDTO);
+        }
+        return qnaArticleDTOList;
+    }
 
 
 

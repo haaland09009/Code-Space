@@ -2,6 +2,8 @@ package com.yyi.projectStudy.controller;
 
 import com.yyi.projectStudy.dto.*;
 import com.yyi.projectStudy.service.ChatService;
+import com.yyi.projectStudy.service.ProjectService;
+import com.yyi.projectStudy.service.QnaService;
 import com.yyi.projectStudy.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,8 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final ChatService chatService;
-
+    private final ProjectService projectService;
+    private final QnaService qnaService;
     // 로그인 페이지 이동
     @GetMapping("/loginPage")
     public String loginPage() {
@@ -104,6 +107,19 @@ public class UserController {
             model.addAttribute("chatRoomList", chatDTOList);
             return "user/message";
         }
+    }
+
+    // 작성 게시물 조회
+    @GetMapping("/articles")
+    public String boardList(Model model, HttpSession session) {
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+        Long userId = sessionUser.getId();
+        List<ProjectArticleDTO> projectArticleDTOList = projectService.findArticleList(userId);
+        model.addAttribute("projectArticleList", projectArticleDTOList);
+
+        List<QnaArticleDTO> qnaArticleDTOList = qnaService.findArticleList(userId);
+        model.addAttribute("qnaArticleList", qnaArticleDTOList);
+        return "user/articles";
     }
 
 

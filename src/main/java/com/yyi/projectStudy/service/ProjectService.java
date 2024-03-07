@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.text.Position;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class ProjectService {
     private final PositionCategoryRepository positionCategoryRepository;
     private final ProjectStudyCategoryRepository projectStudyCategoryRepository;
     private final TechCategoryRepository techCategoryRepository;
+    private final ProjectCommentRepository projectCommentRepository;
 
     private final ProjectPositionCategoryLinkRepository projectPositionCategoryLinkRepository;
     private final ProjectPeriodCategoryLinkRepository projectPeriodCategoryLinkRepository;
@@ -327,5 +329,51 @@ public class ProjectService {
             projectDTOList.add(ProjectDTO.toProjectDTO(projectEntity));
         }
         return projectDTOList;
+    }
+
+    // 활동 내역
+    @Transactional
+    public List<ProjectArticleDTO> findArticleList(Long userId) {
+        List<Object[]> projectArticles = projectRepository.getProjectArticles(userId);
+        List<ProjectArticleDTO> projectArticleDTOList = new ArrayList<>();
+        for (Object[] article : projectArticles) {
+            ProjectArticleDTO projectArticleDTO = new ProjectArticleDTO();
+            Long id = (Long) article[0];
+            String title = (String) article[1];
+            String content = (String) article[2];
+            java.sql.Timestamp timestamp = (java.sql.Timestamp) article[3];
+            LocalDateTime regDate = timestamp.toLocalDateTime();
+
+            // 게시물 내용일 경우
+            if (title != null) {
+                projectArticleDTO.setProjectId(id);
+                projectArticleDTO.setTitle(title);
+                projectArticleDTO.setProjectContent(content);
+                projectArticleDTO.setRegDate(regDate);
+                List<TechCategoryDTO> techCategoryDTOList = findTechCategory(id);
+                ProjectStudyCategoryDTO projectStudyCategoryDTO = findProjectStudyCategory(id);
+                projectArticleDTO.setProjectStudy(projectStudyCategoryDTO.getName());
+                projectArticleDTO.setTechList(techCategoryDTOList);
+            } else {
+                ProjectCommentEntity projectCommentEntity = projectCommentRepository.findById(id).get();
+                ProjectEntity projectEntity = projectCommentEntity.getProjectEntity();
+                Long projectId = projectEntity.getId();
+
+                projectArticleDTO.setProjectId(projectId);
+                projectArticleDTO.setCommentId(id);
+                projectArticleDTO.setTitle(projectEntity.getTitle());
+                projectArticleDTO.setCommentContent(content);
+                projectArticleDTO.setRegDate(regDate);
+
+                ProjectStudyCategoryDTO projectStudyCategoryDTO = findProjectStudyCategory(projectId);
+                projectArticleDTO.setProjectStudy(projectStudyCategoryDTO.getName());
+                List<TechCategoryDTO> techCategoryDTOList = findTechCategory(projectId);
+                projectArticleDTO.setTechList(techCategoryDTOList);
+            }
+
+            projectArticleDTOList.add(projectArticleDTO);
+
+        }
+        return projectArticleDTOList;
     }
 }
