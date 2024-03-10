@@ -26,6 +26,8 @@ public class QnaService {
     private final QnaReplyRepository qnaReplyRepository;
     private final QnaReplyLikeRepository qnaReplyLikeRepository;
     private final QnaReplyCommentRepository qnaReplyCommentRepository;
+    private final QnaClipRepository qnaClipRepository;
+    private final QnaTagsRepository qnaTagsRepository;
 
     // 토픽 종류 조회
     public List<TopicDTO> findAllTopic() {
@@ -382,7 +384,76 @@ public class QnaService {
     }
 
 
+    // 게시물 스크랩
+    public void clip(QnaClipDTO qnaClipDTO) {
+        Optional<QnaEntity> optionalQnaEntity = qnaRepository.findById(qnaClipDTO.getQnaId());
+        if (optionalQnaEntity.isPresent()) {
+            QnaEntity qnaEntity = optionalQnaEntity.get();
+            UserEntity userEntity = userRepository.findById(qnaClipDTO.getUserId()).get();
+            int clipCount = qnaClipRepository.countByQnaEntityAndUserEntity(qnaEntity, userEntity);
+            if (clipCount > 0) {
+                QnaClipEntity qnaClipEntity = qnaClipRepository.findByQnaEntityAndUserEntity(qnaEntity, userEntity).get();
+                qnaClipRepository.deleteById(qnaClipEntity.getId());
+            } else if (clipCount == 0) {
+                QnaClipEntity qnaClipEntity = QnaClipEntity.toQnaClipEntity(userEntity, qnaEntity);
+                qnaClipRepository.save(qnaClipEntity);
+            }
+        }
+    }
 
 
 
+    // 게시물 스크랩 여부 확인
+    public int checkClipYn(QnaClipDTO qnaClipDTO) {
+        QnaEntity qnaEntity = qnaRepository.findById(qnaClipDTO.getQnaId()).get();
+        UserEntity userEntity = userRepository.findById(qnaClipDTO.getUserId()).get();
+        return qnaClipRepository.countByQnaEntityAndUserEntity(qnaEntity, userEntity);
+    }
+
+    // 스크랩 목록
+    @Transactional
+    public List<QnaClipDTO> getClipList(Long id) {
+        UserEntity userEntity = userRepository.findById(id).get();
+
+        List<QnaClipDTO> qnaClipDTOList = new ArrayList<>();
+        List<QnaClipEntity> qnaClipEntityList = qnaClipRepository.findByUserEntityOrderByIdDesc(userEntity);
+        for (QnaClipEntity qnaClipEntity : qnaClipEntityList) {
+            qnaClipDTOList.add(QnaClipDTO.toQnaClipDTO(qnaClipEntity));
+        }
+        return qnaClipDTOList;
+    }
+
+    // 해시 태그 추가
+    @Transactional
+    public void saveHashTag(QnaDTO dto, String tag) {
+        if (findHashTag(dto.getId()) != null) {
+            Long qnaId = dto.getId();
+            qnaTagsRepository.updateTags(qnaId, tag);
+        } else {
+            QnaEntity qnaEntity = qnaRepository.findById(dto.getId()).get();
+            QnaTagsEntity qnaTagsEntity = QnaTagsEntity.toQnaTagsEntity(qnaEntity, tag);
+            qnaTagsRepository.save(qnaTagsEntity);
+        }
+    }
+
+
+
+    // 해시 태그 조회
+    @Transactional
+    public QnaTagsDTO findHashTag(Long id) {
+        QnaEntity qnaEntity = qnaRepository.findById(id).get();
+        Optional<QnaTagsEntity> optionalQnaTagsEntity = qnaTagsRepository.findByQnaEntity(qnaEntity);
+        if (optionalQnaTagsEntity.isPresent()) {
+            return QnaTagsDTO.toQnaTagsDTO(optionalQnaTagsEntity.get());
+        } else {
+            return null;
+        }
+    }
+
+//    // 해시태그 수정
+//    @Transactional
+//    public void updateHashTag(QnaDTO dto, String tag) {
+//        Long qnaId = dto.getId();
+//        qnaTagsRepository.updateTags(qnaId, tag);
+//    }
 }

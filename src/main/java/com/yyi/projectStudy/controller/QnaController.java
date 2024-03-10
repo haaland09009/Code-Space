@@ -1,9 +1,7 @@
 package com.yyi.projectStudy.controller;
 
 import com.yyi.projectStudy.dto.*;
-import com.yyi.projectStudy.service.QnaReplyCommentService;
-import com.yyi.projectStudy.service.QnaReplyService;
-import com.yyi.projectStudy.service.QnaService;
+import com.yyi.projectStudy.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -11,7 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,6 +21,8 @@ public class QnaController {
     private final QnaService qnaService;
     private final QnaReplyService qnaReplyService;
     private final QnaReplyCommentService qnaReplyCommentService;
+    private final UserService userService;
+    private final utils utils;
     // 메인 페이지 - 기술, 커리어, 기타 모두 조회
     @GetMapping("")
     public String mainPage(Model model) {
@@ -46,6 +49,12 @@ public class QnaController {
                 commentCount += qnaReplyCommentService.commentCount(qnaReplyDTO.getId());
             }
             qnaDTO.setCommentCount(commentCount);
+
+            // 해시태그 조회
+            QnaTagsDTO qnaTagsDTO = qnaService.findHashTag(qnaDTO.getId());
+            if (qnaTagsDTO != null) {
+                qnaDTO.setHashTag(qnaTagsDTO.getTag());
+            }
 
         }
         model.addAttribute("qnaList", qnaDTOList);
@@ -78,7 +87,8 @@ public class QnaController {
     // 게시글 작성
     @PostMapping("/write")
     public String write(@ModelAttribute QnaTopicDTO qnaTopicDTO,
-                        @ModelAttribute QnaDTO qnaDTO) {
+                        @ModelAttribute QnaDTO qnaDTO,
+                        @RequestParam(value = "tags", required = false) String tags) {
 
         // enter 처리
         String content = qnaDTO.getContent();
@@ -90,8 +100,33 @@ public class QnaController {
         QnaDTO dto = qnaService.findById(savedId);
         TopicDTO topicDTO = qnaService.findByIdForTopic(qnaTopicDTO.getTopicId());
         qnaService.saveQnaTopic(dto, topicDTO);
+
+        /* 해시태그 저장 */
+        if (!tags.isEmpty()) {
+            String tag = utils.hashtagParse(tags);
+            qnaService.saveHashTag(dto, tag);
+        }
+
         return "redirect:/qna/" + savedId;
     }
+
+//    // 게시글 작성
+//    @PostMapping("/write")
+//    public String write(@ModelAttribute QnaTopicDTO qnaTopicDTO,
+//                        @ModelAttribute QnaDTO qnaDTO) {
+//
+//        // enter 처리
+//        String content = qnaDTO.getContent();
+//        content = content.replaceAll("\r\n", "<br>");
+//        qnaDTO.setContent(content);
+//        // 게시글 저장 후 pk 가져오기
+//        Long savedId = qnaService.saveQna(qnaDTO);
+//        // qna - topic insert
+//        QnaDTO dto = qnaService.findById(savedId);
+//        TopicDTO topicDTO = qnaService.findByIdForTopic(qnaTopicDTO.getTopicId());
+//        qnaService.saveQnaTopic(dto, topicDTO);
+//        return "redirect:/qna/" + savedId;
+//    }
 
 
     // 게시글 상세보기
@@ -112,6 +147,10 @@ public class QnaController {
         // 조회수 증가
         qnaService.updateReadCount(id);
 
+        // 회원 직업
+        JobDTO jobDTO = userService.findJob(qnaDTO.getUserId());
+        model.addAttribute("job", jobDTO.getName());
+
         UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
 
         // 답변 불러오기
@@ -124,6 +163,9 @@ public class QnaController {
             int likeCount = qnaReplyService.likeCount(dto.getId());
             dto.setLikeCount(likeCount);
 
+            JobDTO replyJob = userService.findJob(dto.getUserId());
+            dto.setJobName(replyJob.getName());
+
             // 답변에 달린 댓글 가져오기
             List<QnaReplyCommentDTO> qnaReplyCommentDTOList = qnaReplyCommentService.findAll(dto.getId());
             List<QnaReplyCommentDTO> commentList = new ArrayList<>();
@@ -131,6 +173,10 @@ public class QnaController {
                 String commentContent = qnaReplyCommentDTO.getContent();
                 commentContent = commentContent.replaceAll("<br>", "\n");
                 qnaReplyCommentDTO.setContent(commentContent);
+
+                JobDTO commentJob = userService.findJob(qnaReplyCommentDTO.getUserId());
+                qnaReplyCommentDTO.setJobName(commentJob.getName());
+
                 commentList.add(qnaReplyCommentDTO);
             }
             dto.setCommentList(commentList);
@@ -182,6 +228,21 @@ public class QnaController {
         }
         model.addAttribute("randomQnaList", randomQnaList);
 
+        // 스크랩 여부 확인
+        if (sessionUser != null) {
+            QnaClipDTO qnaClipDTO = new QnaClipDTO();
+            qnaClipDTO.setQnaId(id);
+            qnaClipDTO.setUserId(sessionUser.getId());
+            int clipCount = qnaService.checkClipYn(qnaClipDTO);
+            model.addAttribute("clipCount", clipCount);
+        }
+
+        // 해시태그 조회
+        QnaTagsDTO qnaTagsDTO = qnaService.findHashTag(id);
+        if (qnaTagsDTO != null) {
+            qnaDTO.setHashTag(qnaTagsDTO.getTag());
+        }
+
 
         return "qna/detail";
     }
@@ -213,6 +274,18 @@ public class QnaController {
             TopicDTO topicDTO = qnaService.findTopic(id);
             model.addAttribute("qna", qnaDTO);
             model.addAttribute("selectedTopic", topicDTO);
+
+            QnaTagsDTO qnaTagsDTO = qnaService.findHashTag(id);
+
+            /* 해시태그 분리 */
+            String tag = "";
+            if (qnaTagsDTO != null && !utils.isStringEmptyOrNull(qnaTagsDTO.getTag())) {
+                tag = utils.hashtagSeparate(qnaTagsDTO.getTag());
+                model.addAttribute("hashTags", tag);
+            }
+
+
+
             return "qna/update";
         }
     }
@@ -221,7 +294,8 @@ public class QnaController {
     @PostMapping("/update")
     public String update(@ModelAttribute QnaDTO qnaDTO,
                          @ModelAttribute QnaTopicDTO qnaTopicDTO,
-                         Model model, HttpSession session) {
+                         Model model, HttpSession session,
+                         @RequestParam(value = "tags", required = false) String tags) {
         QnaDTO updateQnaDTO = qnaService.updateQna(qnaDTO);
 
         String content = updateQnaDTO.getContent();
@@ -233,7 +307,12 @@ public class QnaController {
         model.addAttribute("qna", updateQnaDTO);
         model.addAttribute("topic", updateTopicDTO);
 
+        // 회원 직업
         UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+        JobDTO jobDTO = userService.findJob(sessionUser.getId());
+        model.addAttribute("job", jobDTO.getName());
+
+
         // 답변 불러오기
         List<QnaReplyDTO> qnaReplyDTOList = qnaReplyService.findAll(qnaDTO.getId());
         // enter 처리
@@ -244,6 +323,10 @@ public class QnaController {
             int likeCount = qnaReplyService.likeCount(dto.getId());
             dto.setLikeCount(likeCount);
 
+            JobDTO replyJob = userService.findJob(dto.getUserId());
+            dto.setJobName(replyJob.getName());
+
+
             // 답변에 달린 댓글 가져오기
             List<QnaReplyCommentDTO> qnaReplyCommentDTOList = qnaReplyCommentService.findAll(dto.getId());
             List<QnaReplyCommentDTO> commentList = new ArrayList<>();
@@ -252,6 +335,9 @@ public class QnaController {
                 commentContent = commentContent.replaceAll("<br>", "\n");
                 qnaReplyCommentDTO.setContent(commentContent);
                 commentList.add(qnaReplyCommentDTO);
+
+                JobDTO commentJob = userService.findJob(qnaReplyCommentDTO.getUserId());
+                qnaReplyCommentDTO.setJobName(commentJob.getName());
             }
             dto.setCommentList(commentList);
 
@@ -301,6 +387,17 @@ public class QnaController {
             randomDTO.setReplyCount(qnaReplyService.count(randomDTO.getId()));
         }
         model.addAttribute("randomQnaList", randomQnaList);
+
+        /* 해시태그 저장 */
+        if (!tags.isEmpty()) {
+            String tag = utils.hashtagParse(tags);
+            qnaService.saveHashTag(qnaDTO, tag);
+        }
+        // !!!! 해시태그 조회 (수정 시 태그 안보여지는 오류)
+        QnaTagsDTO qnaTagsDTO = qnaService.findHashTag(qnaDTO.getId());
+        if (qnaTagsDTO != null) {
+            updateQnaDTO.setHashTag(qnaTagsDTO.getTag());
+        }
 
         return "qna/detail";
     }
@@ -446,5 +543,22 @@ public class QnaController {
         return "qna/careerList";
     }
 
+
+    // 게시물 스크랩
+    @PostMapping("/clip")
+    public @ResponseBody void clip(@ModelAttribute QnaClipDTO qnaClipDTO) {
+        qnaService.clip(qnaClipDTO);
+    }
+
+    // 게시물 스크랩 여부 확인
+    @GetMapping("/checkClipYn")
+    public @ResponseBody boolean checkClipYn(@ModelAttribute QnaClipDTO qnaClipDTO) {
+        int count = qnaService.checkClipYn(qnaClipDTO);
+        if (count > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }

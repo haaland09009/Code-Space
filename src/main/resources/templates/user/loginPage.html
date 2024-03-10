@@ -29,7 +29,7 @@
 
                 <div class="row mt-4">
                     <div class="col"></div>
-                    <div class="col-6">
+                    <div class="col-5">
 
                         <div class="row mb-1">
                             <div class="col text-center">
@@ -52,8 +52,7 @@
 
                         <div class="row mt-3">
                             <div class="col d-grid">
-                                <input type="button" class="btn p-2 fs-5" value="로그인하기"
-                                style="background-color: #d1e7dd; color: #198754;"
+                                <input type="button" class="btn p-2 fs-5 mainButton" value="로그인"
                                 onclick="loginProcess()">
                             </div>
                         </div>
@@ -134,57 +133,7 @@
    });
 }
 
-   const getNotificationList = () => {
-        $.ajax({
-         type: "get",
-         url: "/notification/findAll/" + sessionId,
-         success: function(res) {
-            let output = "";
-             if (res.length == 0) {
-                output += '<div class="text-center mb-3"> 읽지 않은 알림이 존재하지 않습니다. </div>';
-            } else {
-              for (let i in res) {
-                output += '<a href="' + res[i].notUrl + '">';
-                output += '<div class="row mt-2">';
-                output += '<div class="col ms-3">';
 
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                if (res[i].fileAttached == 0) {
-                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
-                } else if (res[i].fileAttached == 1) {
-                    output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
-                }
-                output += '</div>';
-                output += '<div class="col ms-2 fw-semibold">' + res[i].sender + '</div>';
-                output += '<div class="col text-end text-secondary me-1">' + formatDateTime(res[i].occurDate) + '</div>';
-                output += '</div>';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                output += '</div>';
-                output += '<div class="col ms-2">' + res[i].sentence + '</div>';
-                output += '</div>';
-
-                output += '<div class="border-bottom mt-2">' + '</div>';
-
-                output += '</div>';
-                output += '</div>';
-                output += '</a>';
-                }
-            }
-            document.getElementById('notification-list').innerHTML = output;
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-window.addEventListener("DOMContentLoaded", function(){
-    getNotificationList();
-
-});
 
 
 </script>

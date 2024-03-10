@@ -70,6 +70,9 @@ public class ProjectCommentController {
 
                 int commentDisLikeCount = projectCommentService.commentDisLikeCount(projectCommentDTO.getId());
                 projectCommentDTO.setDisLikeCount(commentDisLikeCount);
+
+                JobDTO userJob = userService.findJob(projectCommentDTO.getUserId());
+                projectCommentDTO.setJobName(userJob.getName());
             }
             return new ResponseEntity<>(projectCommentDTOList, HttpStatus.OK);
         } else {

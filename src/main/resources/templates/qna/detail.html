@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+
 </head>
 <style>
 .likeStatus:hover {
@@ -33,12 +33,12 @@
 
                     <div class="row">
                         <div class="col">
-                            <button class="btn btn-sm cateButton"
+                            <button class="btn btn-sm cateButton fs-18"
                                     th:if="${topic.name == '기술'}">
                                 <i class="bi bi-pencil text-success fw-semibold"></i>
                                 <span class="ms-1" th:text="${topic.name}"></span>
                             </button>
-                            <button class="btn btn-sm cateButton"
+                            <button class="btn btn-sm cateButton fs-18"
                                     th:if="${topic.name == '커리어'}">
                                 <i class="bi bi-bag fw-semibold" style="color: #712cf9;"></i>
                                 <span class="ms-1" th:text="${topic.name}"></span>
@@ -47,16 +47,16 @@
                     </div>
 
                     <div class="row mt-2">
-                        <div class="col fw-semibold fs-4" th:text="${qna.title}">
+                        <div class="col fw-semibold fs-3" th:text="${qna.title}">
 
                         </div>
                     </div>
 
                     <div class="row mt-2">
                         <div class="col-1"  id="userInfoButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img class="rounded-circle mt-1" style="width: 40px; height: 40px;"
+                            <img class="rounded-circle mt-2" style="width: 60px; height: 60px;"
                                  src="/img/user.jpg" th:if="${qna.fileAttached == 0}">
-                            <img class="rounded-circle mt-1" style="width: 40px; height: 40px;"
+                            <img class="rounded-circle mt-2" style="width: 60px; height: 60px;"
                                  th:src="@{|/upload/${qna.storedFileName}|}" th:if="${qna.fileAttached == 1}">
 
 <!--                            <ul class="dropdown-menu" aria-labelledby="userInfoButton">-->
@@ -78,14 +78,19 @@
                         </div>
                         <div class="col ps-0">
                             <div class="row">
-                                <div class="col-auto fw-semibold" th:text="${qna.writer}">
+                                <div class="col-auto fw-semibold fs-5" th:text="${qna.writer}">
 
                                 </div>
-
                             </div>
 
                             <div class="row">
-                                <div class="col text-secondary">
+                                <div class="col fs-18 text-secondary" th:text="${job}">
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col fs-16 text-secondary">
                                     <span class="date-element" th:text="${qna.regDate}"></span>
 
                                     <span class="ms-1">
@@ -118,7 +123,10 @@
                             </ul>
                         </div>
                         <div class="col text-end pe-0" th:if="${session.userDTO != null and session.userDTO.id != qna.userId}">
-                            <i class="bi bi-bookmark fs-5"></i>
+                            <i class="bi bi-bookmark fs-3 clipBox" style="cursor: pointer;"
+                             th:onclick="toggleQnaClip([[${qna.id}]])" th:if="${clipCount == 0}"></i>
+                            <i class="bi bi-bookmark-fill fs-3 clipBox" style="cursor: pointer;"
+                              th:onclick="toggleQnaClip([[${qna.id}]])" th:if="${clipCount == 1}"></i>
                         </div>
                     </div>
 
@@ -132,6 +140,19 @@
 
                     <div class="row mt-5 mb-4"></div>
 
+                    <div class="row mt-4" th:if="${qna.hashTag != null}">
+                        <div class="col">
+                            <span class="text-secondary">
+                                <button type="button" class="btn btn-outline-dark me-3" th:each="tag, iterStat : ${#strings.replace(qna.hashTag, '\\s*#\\s*', '#').split('#')}" th:if="${!#strings.isEmpty(tag)}">
+                                    <span class="text-danger">#</span>
+                                    <span th:text="${tag}"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3 mb-4"></div>
+
                     <div class="row">
                         <div class="col text-secondary">
                             <span>이 질문이 도움이 되었나요 ?</span>
@@ -139,7 +160,7 @@
                         </div>
                     </div>
 
-                    <div class="row mt-3 text-secondary fw-semibold fs-5">
+                    <div class="row mt-3 text-secondary fw-semibold fs-4">
                         <div class="col-2 likeStatus" th:onclick="isYourQnaForLike([[${qna.id}]])" style="cursor: pointer;"
                         th:if="${isLike == 0}">
                             ↑ 추천해요 <span class="ms-1" th:id="'qnaLike_' + ${qna.id}" th:text="${qna.likeCount}"></span>
@@ -148,11 +169,11 @@
                         th:if="${isLike == 1}">
                             ↑ 추천해요 <span class="ms-1" th:id="'qnaLike_' + ${qna.id}" th:text="${qna.likeCount}"></span>
                         </div>
-                        <div class="col disLikeStatus" th:onclick="isYourQnaForDisLike([[${qna.id}]])" style="cursor: pointer;"
+                        <div class="col px-0 disLikeStatus" th:onclick="isYourQnaForDisLike([[${qna.id}]])" style="cursor: pointer;"
                              th:if="${isDisLike == 0}">
                             ↓ 보충이 필요해요 <span class="ms-1" th:id="'qnaDisLike_' + ${qna.id}" th:text="${qna.dislikeCount}"></span>
                         </div>
-                        <div class="col text-black disLikeStatus" th:onclick="isYourQnaForDisLike([[${qna.id}]])" style="cursor: pointer;"
+                        <div class="col px-0 text-black disLikeStatus" th:onclick="isYourQnaForDisLike([[${qna.id}]])" style="cursor: pointer;"
                              th:if="${isDisLike == 1}">
                             ↓ 보충이 필요해요 <span class="ms-1" th:id="'qnaDisLike_' + ${qna.id}" th:text="${qna.dislikeCount}"></span>
                         </div>
@@ -165,26 +186,26 @@
 
                             <div class="row mt-3 ms-1">
                                 <div class="col-1">
-                                    <img class="rounded-circle" style="width: 45px; height: 45px;"
+                                    <img class="rounded-circle mt-1" style="width: 60px; height: 60px;"
                                          src="/img/user.jpg" th:if="${session.userDTO == null}">
-                                    <img class="rounded-circle" style="width: 45px; height: 45px;"
+                                    <img class="rounded-circle mt-1" style="width: 60px; height: 60px;"
                                          src="/img/user.jpg" th:if="${session.userDTO != null && session.userDTO.fileAttached == 0}">
-                                    <img class="rounded-circle" style="width: 45px; height: 45px;"
+                                    <img class="rounded-circle mt-1" style="width: 60px; height: 60px;"
                                          th:src="@{|/upload/${session.userDTO.storedFileName}|}" th:if="${session.userDTO != null && session.userDTO.fileAttached == 1}">
 
                                 </div>
                                 <div class="col">
                                     <div class="row">
-                                        <div class="col fw-semibold" style="font-size: 18px">답변하기</div>
+                                        <div class="col fw-semibold fs-22">답변하기</div>
                                     </div>
-                                    <div class="row mt-3">
-                                        <div class="col ps-0">
+                                    <div class="row mt-2">
+                                        <div class="col ps-0 fs-18">
                                             <textarea name=""  cols="10" rows="4" id="replyContent"
-                                                     class="form-control form-control-no-border"
+                                                     class="form-control form-control-no-border fs-18"
                                             placeholder="답변으로 나누고 싶은 경험이 있으신가요?"
                                             th:if="${session.userDTO != null}" onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
                                             <textarea name=""  cols="10" rows="4"
-                                                      class="form-control form-control-no-border disabled"
+                                                      class="form-control form-control-no-border fs-18 disabled"
                                                       placeholder="로그인 후 답변을 작성하실 수 있습니다."
                                                       style="pointer-events: none;"
                                             th:if="${session.userDTO == null}"></textarea>
@@ -197,10 +218,10 @@
                                     </div>
                                     <div class="row mt-3 mb-3">
                                         <div class="col text-end">
-                                            <button class="btn mainButton" onclick="replyReq()"
+                                            <button class="btn mainButton fs-5 me-2 px-3 py-2" onclick="replyReq()"
                                                     th:if="${session.userDTO != null}">답변 등록하기
                                             </button>
-                                            <button class="btn mainButton disabled"
+                                            <button class="btn mainButton disabled fs-5 me-2 px-3 py-2 "
                                                     th:if="${session.userDTO == null}">답변 등록하기
                                             </button>
                                         </div>
@@ -212,8 +233,8 @@
                     </div>
 
                     <div class="row mt-4">
-                        <div class="col ms-1 fw-semibold fs-4">
-                            답변 <span id="replyCount" th:text="${replyCount}"></span>
+                        <div class="col ms-1 fw-semibold fs-3">
+                            답변 <span id="replyCount" class="text-primary" th:text="${replyCount}"></span>
                         </div>
                     </div>
 
@@ -240,20 +261,25 @@
                         <div class="col ms-3 border border-1">
 
                             <div class="row mt-4 ms-1">
-                                <div class="col-1">
-                                    <img class="rounded-circle" style="width: 45px; height: 45px;"
+                                <div class="col-1 mt-2">
+                                    <img class="rounded-circle" style="width: 65px; height: 65px;"
                                          src="/img/user.jpg" th:if="${reply.fileAttached == 0}">
-                                    <img class="rounded-circle" style="width: 45px; height: 45px;"
+                                    <img class="rounded-circle" style="width: 65px; height: 65px;"
                                          th:src="@{|/upload/${reply.storedFileName}|}" th:if="${reply.fileAttached == 1}">
                                 </div>
-                                <div class="col ps-1">
+                                <div class="col ps-2">
                                     <div class="row">
-                                        <div class="col fw-semibold" th:text="${reply.writer}">
+                                        <div class="col fw-semibold fs-22" th:text="${reply.writer}">
 
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col text-secondary">
+                                        <div class="col text-secondary fs-18" th:text="${reply.jobName}">
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col text-secondary fs-18">
                                             <span class="date-element" th:text="${reply.regDate}"></span>
                                         </div>
                                     </div>
@@ -287,7 +313,7 @@
                             </div>
 
                             <div class="row mt-4 ms-2 text-secondary fw-semibold">
-                                <div class="col">
+                                <div class="col fs-18">
                                     <span style="cursor: pointer;" th:onclick="isYourReplyForLike([[${reply.id}]])" th:id="'replyLikeSpan_' + ${reply.id}"
                                     th:if="${reply.isLike == 0}" >
                                         <img src="/img/like.png" style="width: 23px; height: 23px;">
@@ -313,11 +339,11 @@
                                     <div class="row">
                                         <div class="col">
                                             <textarea name=""  cols="10" rows="3" th:id="'commentContent_' + ${reply.id}"
-                                                      class="form-control form-control-no-border ps-0" style="resize:none;"
+                                                      class="form-control fs-18 form-control-no-border ps-0" style="resize:none;"
                                                       placeholder="여러분의 소중한 댓글을 남겨주세요."
                                                       th:if="${session.userDTO != null}" onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
                                             <textarea name=""  cols="10" rows="3"
-                                                      class="form-control disabled form-control-no-border ps-0"
+                                                      class="form-control fs-18 disabled form-control-no-border ps-0"
                                                       placeholder="로그인 후 댓글을 작성하실 수 있습니다."
                                                       style="resize:none; pointer-events: none;"
                                                       th:if="${session.userDTO == null}"></textarea>
@@ -325,11 +351,11 @@
                                     </div>
                                     <div class="row mb-2">
                                         <div class="col text-end">
-                                            <button class="btn mainButton text-secondary" th:onclick="writeComment([[${reply.id}]])"
+                                            <button class="btn mainButton text-secondary fs-18" th:onclick="writeComment([[${reply.id}]])"
                                                     th:if="${session.userDTO != null}"
                                                     style="background-color: #e9ecef;"> 등록
                                             </button>
-                                            <button class="btn mainButton disabled text-secondary"
+                                            <button class="btn mainButton disabled text-secondary fs-18"
                                                     th:if="${session.userDTO == null}"
                                                     style="background-color: #e9ecef;">등록
                                             </button>
@@ -349,9 +375,9 @@
 <!--                                        </div>-->
                                         <div class="col-1">
 <!--                                            <img src="/img/replyArrow.png" style="width: 30px; height: 30px;">-->
-                                            <img src="/img/user.jpg" class="rounded-circle" style="width: 40px; height: 40px; position: relative; top: 2px;"
+                                            <img src="/img/user.jpg" class="rounded-circle" style="width: 55px; height: 55px; position: relative; top: 2px;"
                                             th:if="${comment.fileAttached == 0}">
-                                            <img th:src="@{|/upload/${comment.storedFileName}|}" class="rounded-circle" style="width: 40px; height: 40px; position: relative; top: 2px;"
+                                            <img th:src="@{|/upload/${comment.storedFileName}|}" class="rounded-circle" style="width: 55px; height: 55px; position: relative; top: 2px;"
                                                  th:if="${comment.fileAttached == 1}">
                                         </div>
                                         <div class="col px-0">
@@ -362,10 +388,13 @@
 
                                             </div>
                                             <div class="row">
-                                                <div class="col text-secondary likeFont date-element" th:text="${comment.regDate}">
-
+                                                <div class="col text-secondary fs-16">
+                                                    <span th:text="${comment.jobName}"></span>
+                                                    <span>·</span>
+                                                    <span class="date-element"  th:text="${comment.regDate}"></span>
                                                 </div>
                                             </div>
+
                                         </div>
                                         <div class="col-2 text-end dropdown" style="cursor: pointer;"
                                         th:if="${session.userDTO != null and session.userDTO.id == comment.userId}">
@@ -408,7 +437,7 @@
 
                     <div class="row mt-4">
                         <div class="col d-grid pe-0">
-                            <button class="btn fw-semibold fs-5 text-secondary"
+                            <button class="btn fw-semibold fs-22 text-secondary"
                             onclick="location.href='/qna'" style="background-color: #e9ecef;"> 목록으로 </button>
                         </div>
                     </div>
@@ -439,13 +468,13 @@
                 <div class="col-9 py-2 contentDiv">
 
                     <div class="row">
-                        <div class="col" th:text="${random.title}">
+                        <div class="col fw-medium" th:text="${random.title}">
 
                         </div>
                     </div>
 
                     <div class="row mt-2">
-                        <div class="col text-secondary" style="font-size: 15px">
+                        <div class="col text-secondary fs-18">
                             <span>답변</span>
                             <span th:text="${random.replyCount}"></span>
                             <span>·</span>
@@ -572,11 +601,11 @@
                     </div>
                 </div>
 
+                <div class="mt-2"></div>
+
             </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">창닫기</button>
-            </div>
+
 
         </div>
     </div>
@@ -682,774 +711,6 @@
         let selectedReplyId = null;
    /*]]>*/
 
-   // 게시글 삭제 모달
-   const deleteQnaReq = () => {
-     const deleteModal = bootstrap.Modal.getOrCreateInstance("#deleteQnaModal");
-     deleteModal.show();
-   }
-
-     // 게시글 삭제
-   const deleteQna = () => {
-     const deleteModal = bootstrap.Modal.getOrCreateInstance("#deleteQnaModal");
-     deleteModal.hide();
-     location.href = "/qna/delete/" + [[${qna.id}]];
-  }
-
-
-  // 답변 작성
-  const replyReq = () => {
-    const qnaId = [[${qna.id}]];
-    const content = document.querySelector("#replyContent");
-    const userId = sessionId;
-
-    if (content.value.trim() == "") {
-         alert("내용을 입력하세요.");
-         content.focus();
-         return;
-     }
-       $.ajax({
-         type: "post",
-         url: "/qnaReply/save",
-         data: {
-             "qnaId" : qnaId,
-             "userId" : userId,
-             "content" : content.value
-         },
-         success: function(res) {
-             loadReplies(qnaId);
-             updateReplyCount(qnaId);
-             content.value = "";
-         }, error: function(err) {
-             return;
-         }
-      });
-  }
-
-  // 답변 load
-  const loadReplies = (qnaId) => {
-    $.ajax({
-     type: "get",
-     url: "/qnaReply/getReplyList/" + qnaId,
-     success: function(replies) {
-         let output = "";
-         if (replies.length == 0) {
-            output += '<div class="row mt-4">';
-            output += '<div class="col text-center">';
-            output += '<div class="row mt-3">';
-            output += '<div class="col">';
-            output += '<img src="/img/comment.png">';
-            output += '</div>';
-            output += '</div>';
-            output += '<div class="row">';
-            output += '<div class="col text-secondary">' + "아직 작성된 답변이 없습니다." + '</div>';
-            output += '</div>';
-            output += '</div>';
-            output += '</div>';
-         } else {
-          for (let i in replies) {
-            output += '<div class="row mt-4 mb-5">';
-            output += '<div class="col ms-3 border border-1">';
-
-            output += '<div class="row mt-4 ms-1">';
-
-            output += '<div class="col-1">';
-            if (replies[i].fileAttached == 0) {
-                output += '<img class="rounded-circle mt-1" style="width: 45px; height: 45px;" src="/img/user.jpg">';
-            } else if (replies[i].fileAttached == 1) {
-                output += '<img class="rounded-circle mt-1" style="width: 45px; height: 45px;" src="/upload/' + replies[i].storedFileName + '">';
-            }
-            output += '</div>';
-
-            output += '<div class="col ps-1">';
-            output += '<div class="row">';
-            output += '<div class="col fw-semibold">' + replies[i].writer + '</div>';
-            output += '</div>';
-            output += '<div class="row">';
-            output += '<div class="col text-secondary">';
-            output += '<span class="date-element">' + formatDateTime(replies[i].regDate) + '</span>';
-            output += '</div>';
-            output += '</div>';
-            output += '</div>';
-
-            if (sessionId != 0 && sessionId == replies[i].userId) {
-                output += '<div class="col text-end mt-1 ps-0 dropdown" style="cursor: pointer;">';
-                output += '<i class="bi bi-three-dots-vertical" style="height: 10px" id="dropReplyButton" data-bs-toggle="dropdown" aria-expanded="false">' + '</i>';
-                output += '<ul class="dropdown-menu" aria-labelledby="dropReplyButton">';
-                output += '<li>';
-                output += '<a class="dropdown-item">';
-                output += '<i class="bi bi-pencil-square">' + '</i>';
-                output += '<span class="ms-2">' + "수정하기" + '</span>';
-                output += '</a>';
-                output += '</li>';
-                output += '<li>';
-                output += '<a class="dropdown-item"  onclick="deleteReplyPage(' + replies[i].id + ')">';
-                output += '<i class="bi bi-trash3">' + '</i>';
-                output += '<span class="ms-2">' + "삭제하기" + '</span>';
-                output += '</a>';
-                output += '</li>';
-                output += '</ul>';
-                output += '</div>';
-            }
-            output += '</div>';
-
-            output += '<div class="row mt-4 ms-2">';
-            output += '<div class="col-11 boardContent pe-0">' + replies[i].content +  '</div>';
-            output += '</div>';
-
-            output += '<div class="row mt-4 ms-2 text-secondary fw-semibold">';
-            output += '<div class="col">';
-
-            if (replies[i].isLike == 0) {
-                output += '<span style="cursor: pointer;" onclick="isYourReplyForLike(' + replies[i].id + ')" id="replyLikeSpan_' + replies[i].id + '">';
-            } else {
-                output += '<span style="cursor: pointer;" onclick="isYourReplyForLike(' + replies[i].id + ')" class="text-black" id="replyLikeSpan_' + replies[i].id + '">';
-            }
-            output += '<img src="/img/like.png" style="width: 23px; height: 23px; cursor: pointer;">';
-            output += '<span class="ms-1">' + "좋아요" + '</span>';
-            output += '<span class="ms-1 me-1" id="replyLike_' + replies[i].id + '">' + replies[i].likeCount + '</span>';
-            output += '</span>';
-
-            output += '<span style="cursor: pointer;" onclick="toggleReplyInputBox(' + replies[i].id + ')">';
-            output += '<i class="bi bi-chat-left-dots ms-3 me-1" style="position:relative; top:2px">' + '</i>';
-            output += '<span class="ms-1">' + "댓글" + '</span>';
-            output += '<span class="ms-1" id="replyComment_' + replies[i].id + '">' + replies[i].commentCount + '</span>';
-            output += '</span>';
-            output += '</div>';
-            output += '</div>';
-
-            <!-- 댓글 입력 폼 -->
-            output += '<div class="row mt-3" style="display: none;" id="toggleReplyInputBox_' + replies[i].id  + '">';
-            output += '<div class="col-11 ms-4 border border-1" style="position: relative; left: 7px">';
-            output += '<div class="row">';
-            output += '<div class="col">';
-            if (sessionId != 0) {
-                output += '<textarea name=""  cols="10" rows="3" id="commentContent_' + replies[i].id  + '" class="form-control form-control-no-border ps-0" style="resize:none;" placeholder="여러분의 소중한 댓글을 남겨주세요." onkeydown="resize(this)" onkeyup="resize(this)">' + '</textarea>';
-            } else if (sessionId == 0) {
-                output += '<textarea name=""  cols="10" rows="3" id="" class="form-control disabled form-control-no-border ps-0" style="resize:none; pointer-events: none;" placeholder="로그인 후 댓글을 작성하실 수 있습니다." onkeydown="resize(this)" onkeyup="resize(this)">' + '</textarea>';
-            }
-            output += '</div>';
-            output += '</div>';
-            output += '<div class="row mb-2">';
-            output += '<div class="col text-end">';
-            if (sessionId != 0) {
-                output += '<button class="btn mainButton text-secondary" onclick="writeComment(' + replies[i].id + ')" style="background-color: #e9ecef;">' +  "등록" +'</button>';
-            } else if (sessionId == 0) {
-                output += '<button class="btn mainButton disabled text-secondary" onclick="" style="background-color: #e9ecef;">' +  "등록" +'</button>';
-            }
-            output += '</div>';
-            output += '</div>';
-            output += '</div>';
-            output += '</div>';
-            <!-- 댓글 입력 폼 -->
-
-            output += '<div id="comment-list_' + replies[i].id + '">';
-            // 여기 사이에 코드 넣어야함
-            for (let c in replies[i].commentList) {
-                output += '<div class="row mt-4 border-top">';
-                output += '<div class="col ms-5">';
-                output += '<div class="row mt-3">';
-                output += '<div class="col-1">';
-                if (replies[i].commentList[c].fileAttached == 0) {
-                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 40px; height: 40px; position: relative; top: 2px;">';
-                } else {
-                    output += '<img class="rounded-circle" style="width: 40px; height: 40px;" src="/upload/' + replies[i].commentList[c].storedFileName + '">';
-                }
-
-                output += '</div>';
-                output += '<div class="col px-0">';
-                output += '<div class="row">';
-                output += '<div class="col fw-semibold">' + replies[i].commentList[c].writer + '</div>';
-                output += '</div>';
-                output += '<div class="row">';
-                output += '<div class="col text-secondary likeFont">' + formatDateTime(replies[i].commentList[c].regDate) + '</div>';
-                output += '</div>';
-                output += '</div>';
-                if (sessionId == replies[i].commentList[c].userId) {
-                    output += '<div class="col-2 text-end dropdown" style="cursor: pointer;">';
-                    output += '<i class="bi bi-three-dots-vertical" style="height: 10px" id="dropCommentButton" data-bs-toggle="dropdown" aria-expanded="false">' + '</i>';
-                    output += '<ul class="dropdown-menu" aria-labelledby="dropCommentButton">';
-                    output += '<li>';
-                    output += '<a class="dropdown-item">';
-                    output += '<i class="bi bi-pencil-square">' + '</i>';
-                    output += '<span class="ms-2">' +  "수정하기" + '</span>';
-                    output += '</a>';
-                    output += '</li>';
-                    output += '<li>';
-                    output += '<a class="dropdown-item" onclick="deleteCommentPage(' + replies[i].commentList[c].id + ')">';
-                    output += '<i class="bi bi-trash3">' + '</i>';
-                    output += '<span class="ms-2">' +  "삭제하기" + '</span>';
-                    output += '</a>';
-                    output += '</li>';
-                    output += '</ul>';
-                    output += '</div>';
-                }
-                output += '</div>';
-                output += '<div class="row mt-3">';
-                output += '<div class="col-11 ms-1 boardContent">' + replies[i].commentList[c].content + '</div>';
-                output += '</div>';
-                output += '</div>';
-                output += '</div>';
-            }
-            output += '</div>';
-            // 여기 사이에 코드 넣어야함
-
-
-            <!-- 댓글 사이 경계선 -->
-            output += '<div class="row mt-3 mb-1">' + '</div>';
-            <!-- 댓글 사이 경계선 -->
-
-            output += '</div>';
-            output += '</div>';
-            }
-        }
-        document.getElementById('reply-list').innerHTML = output;
-     },
-     error: function(err) {
-         return;
-     }
-     });
-  }
-
-  // 답글 수 업데이트 함수
- const updateReplyCount = (id) => {
-     $.ajax({
-         type: "get",
-         url: "/qnaReply/count/" + id,
-         success: function(res) {
-
-             const replyCount = res; // 서버에서 받아온 답글 수
-             document.querySelector("#replyCount").innerText = replyCount; // 답글 수 업데이트
-         },
-         error: function(err) {
-             return;
-         }
-     });
- }
-
-
-    // 답변 삭제 모달
-    const deleteReplyPage = (id) => {
-        selectedReplyId = id;
-        const deleteReplyModal = bootstrap.Modal.getOrCreateInstance("#deleteReplyModal");
-	    deleteReplyModal.show();
-    }
-
-    // 답변 삭제
-    const deleteReply = () => {
-        const id = selectedReplyId;
-        const qnaId = [[${qna.id}]];
-
-        $.ajax({
-         type: "post",
-         url: "/qnaReply/delete/" + id,
-         success: function(res) {
-          /*<![CDATA[*/  selectedReplyId = null;  /*]]>*/
-          	const deleteReplyModal = bootstrap.Modal.getOrCreateInstance("#deleteReplyModal");
-			deleteReplyModal.hide();
-            loadReplies(qnaId);
-            updateReplyCount(qnaId);
-         },
-         error: function(err) {
-             return;
-         }
-     });
-
-    }
-
-
-
-  const getNotificationList = () => {
-        $.ajax({
-         type: "get",
-         url: "/notification/findAll/" + sessionId,
-         success: function(res) {
-            let output = "";
-             if (res.length == 0) {
-                output += '<div class="text-center mb-3"> 읽지 않은 알림이 존재하지 않습니다. </div>';
-            } else {
-              for (let i in res) {
-                output += '<a href="' + res[i].notUrl + '">';
-                output += '<div class="row mt-2">';
-                output += '<div class="col ms-3">';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                if (res[i].fileAttached == 0) {
-                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
-                } else if (res[i].fileAttached == 1) {
-                    output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
-                }
-                output += '</div>';
-                output += '<div class="col ms-2 fw-semibold">' + res[i].sender + '</div>';
-                output += '<div class="col text-end text-secondary me-1">' + formatDateTime(res[i].occurDate) + '</div>';
-                output += '</div>';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                output += '</div>';
-                output += '<div class="col ms-2">' + res[i].sentence + '</div>';
-                output += '</div>';
-
-                output += '<div class="border-bottom mt-2">' + '</div>';
-
-                output += '</div>';
-                output += '</div>';
-                output += '</a>';
-                }
-            }
-            document.getElementById('notification-list').innerHTML = output;
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-
- // 본인 게시글 좋아요/싫어요 클릭 오류 모달
-    const alertQnaNoLikeModal = () => {
-        const alertQnaNoLikeModal = bootstrap.Modal.getOrCreateInstance("#alertQnaNoLikeModal");
-        alertQnaNoLikeModal.show();
-
-        setTimeout(function() {
-            alertQnaNoLikeModal.hide();
-        }, 2000);
-    }
-
-     //  좋아요/싫어요 클릭 오류 모달
-    const alertQnaLikeCheckModal = () => {
-        const alertQnaLikeCheckModal = bootstrap.Modal.getOrCreateInstance("#alertQnaLikeCheckModal");
-        alertQnaLikeCheckModal.show();
-
-        setTimeout(function() {
-            alertQnaLikeCheckModal.hide();
-        }, 2000);
-    }
-
-
-
-  // 본인이 작성한 게시글인지의 여부 확인 (좋아요)
-  const isYourQnaForLike = (id) => {
-       if (sessionId == 0) {
-           location.href = "/user/loginPage";
-           return;
-       }
-       $.ajax({
-         type: "get",
-         url: "/qna/isYourQna",
-         data: {
-            "id": id,
-            "userId": sessionId
-         },
-         success: function(res) {
-            if (res) {
-            // 반환값 true
-                alertQnaNoLikeModal();
-                return;
-            } else {
-                // 반환값 false
-                checkQnaDisLike(id);
-            }
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-
-    // 게시글 좋아요를 눌렀을 때 싫어요 여부 확인
-   const checkQnaDisLike = (id) => {
-         $.ajax({
-         type: "get",
-         url: "/qna/checkQnaDisLike",
-         data: {
-            "id": id,
-            "userId": sessionId
-         },
-         success: function(res) {
-            if (res > 0) {
-            // 반환값 true
-                alertQnaLikeCheckModal();
-                return;
-            } else {
-                // 반환값 false
-                toggleQnaLike(id);
-            }
-         },
-         error: function(err) {
-             return;
-         }
-     });
-   }
-
-    // 게시글 좋아요
-  const toggleQnaLike = (id) => {
-       $.ajax({
-         type: "post",
-         url: "/qna/like",
-         data: {
-            "qnaId": id,
-            "userId": sessionId
-         },
-         success: function(res) {
-             updateQnaLikeCount(id);
-             // 함수 추가
-             checkQnaLikeForColor(id);
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-
-  // 게시글 좋아요 수 업데이트
-  const updateQnaLikeCount = (id) => {
-       const qnaLikeBox = document.getElementById("qnaLike_" + id);
-       $.ajax({
-         type: "get",
-         url: "/qna/likeCount/" + id,
-         success: function(res) {
-            qnaLikeBox.innerText = res;
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-
-   // 본인이 작성한 게시글인지의 여부 확인 (싫어요)
-  const isYourQnaForDisLike = (id) => {
-       if (sessionId == 0) {
-           location.href = "/user/loginPage";
-           return;
-       }
-       $.ajax({
-         type: "get",
-         url: "/qna/isYourQna",
-         data: {
-            "id": id,
-            "userId": sessionId
-         },
-         success: function(res) {
-            if (res) {
-            // 반환값 true
-                alertQnaNoLikeModal();
-                return;
-            } else {
-                // 반환값 false
-                checkQnaLike(id);
-            }
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-   // 게시글 싫어요를 눌렀을 때 좋아요 여부 확인
-   const checkQnaLike = (id) => {
-         $.ajax({
-         type: "get",
-         url: "/qna/checkQnaLike",
-         data: {
-            "id": id,
-            "userId": sessionId
-         },
-         success: function(res) {
-            if (res > 0) {
-            // 반환값 true
-                alertQnaLikeCheckModal();
-                return;
-            } else {
-                // 반환값 false
-                toggleQnaDisLike(id);
-            }
-         },
-         error: function(err) {
-             return;
-         }
-     });
-   }
-
-  // 게시글 싫어요 클릭
-  const toggleQnaDisLike = (id) => {
-
-       $.ajax({
-         type: "post",
-         url: "/qna/dislike",
-         data: {
-            "qnaId": id,
-            "userId": sessionId
-         },
-         success: function(res) {
-             updateQnaDisLikeCount(id);
-             checkQnaDisLikeForColor(id);
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-// 게시글 싫어요 수 업데이트
-  const updateQnaDisLikeCount = (id) => {
-       const qnaDisLikeBox = document.getElementById("qnaDisLike_" + id);
-       $.ajax({
-         type: "get",
-         url: "/qna/disLikeCount/" + id,
-         success: function(res) {
-            qnaDisLikeBox.innerText = res;
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-  // 사용자가 게시글에 좋아요를 눌렀는지 확인 (색깔 변경 목적)
-  const checkQnaLikeForColor = (id) => {
-    $.ajax({
-         type: "get",
-         url: "/qna/checkQnaLikeForColor/" + id,
-         success: function(res) {
-            if (res) {
-                $(".likeStatus").addClass("text-black");
-            } else {
-                $(".likeStatus").removeClass("text-black");
-            }
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-
-  // 사용자가 게시글에 싫어요를 눌렀는지 확인 (색깔 변경 목적)
-  const checkQnaDisLikeForColor = (id) => {
-
-    $.ajax({
-         type: "get",
-         url: "/qna/checkQnaDisLikeForColor/" + id,
-         success: function(res) {
-            if (res) {
-                $(".disLikeStatus").addClass("text-black");
-            } else {
-                $(".disLikeStatus").removeClass("text-black");
-            }
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-    // 본인 작성 답변 좋아요 x
-    const alertReplyNoLikeModal = () => {
-        const alertReplyNoLikeModal = bootstrap.Modal.getOrCreateInstance("#alertReplyNoLikeModal");
-        alertReplyNoLikeModal.show();
-
-        setTimeout(function() {
-            alertReplyNoLikeModal.hide();
-        }, 2000);
-    }
-
-    // 본인이 작성한 답변인지의 여부 확인 (좋아요)
-    const isYourReplyForLike = (id) => {
-       if (sessionId == 0) {
-           location.href = "/user/loginPage";
-           return;
-       }
-
-       $.ajax({
-         type: "get",
-         url: "/qnaReply/isYourReply",
-         data: {
-            "id": id,
-            "userId": sessionId
-         },
-         success: function(res) {
-            if (res) {
-            // 반환값 true
-                alertReplyNoLikeModal();
-                return;
-            } else {
-                // 반환값 false
-                toggleReplyLike(id);
-            }
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-  // 답변 좋아요
-  const toggleReplyLike = (id) => {
-
-       $.ajax({
-         type: "post",
-         url: "/qnaReply/like",
-         data: {
-            "replyId": id,
-            "userId": sessionId
-         },
-         success: function(res) {
-             updateReplyLikeCount(id);
-             checkReplyLikeForColor(id);
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-  // 답변 좋아요 수 업데이트
-  const updateReplyLikeCount = (id) => {
-       const replyLikeBox = document.getElementById("replyLike_" + id);
-       $.ajax({
-         type: "get",
-         url: "/qnaReply/likeCount/" + id,
-         success: function(res) {
-            replyLikeBox.innerText = res;
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-
- // 사용자가 답변에 좋아요를 눌렀는지 확인 (색깔 변경 목적)
-  const checkReplyLikeForColor = (id) => {
-    const replyLikeSpan = document.getElementById("replyLikeSpan_" + id);
-    $.ajax({
-         type: "get",
-         url: "/qnaReply/checkReplyLikeForColor/" + id,
-         success: function(res) {
-            if (res) {
-                replyLikeSpan.classList.add("text-black");
-            } else {
--                replyLikeSpan.classList.remove("text-black");
-            }
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-
-   // 답글 작성 폼 열고 닫기
- const toggleReplyInputBox = (id) => {
-    const replyBox = document.getElementById("toggleReplyInputBox_" + id);
-    const replyButton = document.getElementById("toggleReplyButton_" + id);
-    if (replyBox.style.display == 'none') {
-        replyBox.style.display = 'block';
-    } else {
-       replyBox.style.display = 'none';
-    }
- }
-
-
-    // 댓글 작성
-    const writeComment = (id) => {
-        const content = document.querySelector("#commentContent_" + id);
-
-        if (sessionId == 0) {
-            location.href = "/user/loginPage";
-            return;
-        }
-
-        if (content.value.trim() == "") {
-            alert("내용을 입력하세요.");
-            content.focus();
-            return;
-        }
-        $.ajax({
-             type: "post",
-             url: "/qnaReplyComment/save",
-             data: {
-                 "replyId" : id,
-                 "userId" : sessionId,
-                 "content" : content.value
-             },
-             success: function(res) {
-                // 댓글 load 함수
-                loadComments(id);
-                // 댓글 수 업데이트 함수
-                updateCommentCount(id);
-                 content.value = "";
-             }, error: function(err) {
-                 return;
-             }
-          });
-    }
-
-    // 답변의 댓글 load
-    const loadComments = (id) => {
-      $.ajax({
-         type: "get",
-         url: "/qnaReplyComment/getCommentList/" + id,
-         success: function(comments) {
-          let output = "";
-          for (let i in comments) {
-            output += '<div class="row mt-4 border-top">';
-            output += '<div class="col ms-5">';
-            output += '<div class="row mt-3">';
-            output += '<div class="col-1">';
-            if (comments[i].fileAttached == 0) {
-                output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 40px; height: 40px; position: relative; top: 2px;">';
-            } else {
-                output += '<img class="rounded-circle" style="width: 40px; height: 40px;" src="/upload/' + comments[i].storedFileName + '">';
-            }
-
-            output += '</div>';
-            output += '<div class="col px-0">';
-            output += '<div class="row">';
-            output += '<div class="col fw-semibold">' + comments[i].writer + '</div>';
-            output += '</div>';
-            output += '<div class="row">';
-            output += '<div class="col text-secondary likeFont">' + formatDateTime(comments[i].regDate) + '</div>';
-            output += '</div>';
-            output += '</div>';
-            if (sessionId == comments[i].userId) {
-                output += '<div class="col-2 text-end dropdown" style="cursor: pointer;">';
-                output += '<i class="bi bi-three-dots-vertical" style="height: 10px" id="dropCommentButton" data-bs-toggle="dropdown" aria-expanded="false">' + '</i>';
-                output += '<ul class="dropdown-menu" aria-labelledby="dropCommentButton">';
-                output += '<li>';
-                output += '<a class="dropdown-item">';
-                output += '<i class="bi bi-pencil-square">' + '</i>';
-                output += '<span class="ms-2">' +  "수정하기" + '</span>';
-                output += '</a>';
-                output += '</li>';
-                output += '<li>';
-                output += '<a class="dropdown-item" onclick="deleteCommentPage(' + comments[i].id + ')">';
-                output += '<i class="bi bi-trash3">' + '</i>';
-                output += '<span class="ms-2">' +  "삭제하기" + '</span>';
-                output += '</a>';
-                output += '</li>';
-                output += '</ul>';
-                output += '</div>';
-            }
-            output += '</div>';
-            output += '<div class="row mt-3">';
-            output += '<div class="col-11 ms-1 boardContent">' + comments[i].content + '</div>';
-            output += '</div>';
-            output += '</div>';
-            output += '</div>';
-          }
-          document.getElementById("comment-list_" + id).innerHTML = output;
-         },
-         error: function(err) {
-             return;
-         }
-      });
-    }
-
 
     /*<![CDATA[*/
         let selectedCommentId = null;
@@ -1460,92 +721,9 @@
     /*]]>*/
 
 
-    // 댓글 삭제 모달
-    const deleteCommentPage = (id) => {
-        selectedCommentId = id;
-        getReplyPk(selectedCommentId);
 
-        const deleteCommentModal = bootstrap.Modal.getOrCreateInstance("#deleteCommentModal");
-	    deleteCommentModal.show();
-
-    }
-
-   // 답변 pk 조회
-    const getReplyPk = (id) => {
-         $.ajax({
-         type: "get",
-         url: "/qnaReplyComment/getReplyPk/" + id,
-         success: function(res) {
-            selectedReplyIdForComment = res;
-         },
-         error: function(err) {
-             return;
-         }
-     });
-    }
-
-     // 댓글 삭제
-    const deleteComment = () => {
-
-        $.ajax({
-         type: "post",
-         url: "/qnaReplyComment/delete/" + selectedCommentId,
-         success: function(res) {
-
-          	const deleteCommentModal = bootstrap.Modal.getOrCreateInstance("#deleteCommentModal");
-			deleteCommentModal.hide();
-
-            updateCommentCount(selectedReplyIdForComment);
-            loadComments(selectedReplyIdForComment);
-
-
-            /*<![CDATA[*/  selectedCommentId = null;  /*]]>*/
-            /*<![CDATA[*/  selectedReplyIdForComment = null;  /*]]>*/
-
-         },
-         error: function(err) {
-             return;
-         }
-     });
-    }
-
-    // 답변에 달린 댓글 수
-    const updateCommentCount = (id) => {
-        const commentCount = document.querySelector("#replyComment_" + id);
-        $.ajax({
-         type: "get",
-         url: "/qnaReplyComment/count/" + id,
-         success: function(res) {
-            commentCount.innerText = res;
-         },
-         error: function(err) {
-             return;
-         }
-     });
-
-    }
-
-
-
-
-
-
-window.addEventListener("DOMContentLoaded", function(){
-    getNotificationList();
-    const dateElements = document.querySelectorAll('.date-element');
-    dateElements.forEach(function (element) {
-         const dateString = element.textContent;
-         const formattedDate = formatDateTime(dateString);
-         element.textContent = formattedDate;
- });
-    if (sessionId != 0) {
-         const replyBox = document.querySelector("#replyBox");
-         replyBox.focus();
-         checkQnaLikeForColor(boardId);
-
-     }
-
-});
 </script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
+<script type="text/javascript" th:src="@{/js/qna/detail.js}"></script>
 </body>
 </html>

@@ -66,6 +66,9 @@ public class ProjectEntity extends BaseEntity {
     private List<ProjectPeriodCategoryLinkEntity> projectPeriodCategoryLinkEntityList
             = new ArrayList<>();
 
+    @OneToMany(mappedBy = "projectEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
+    private List<ProjectClipEntity> projectClipEntityList = new ArrayList<>();
+
 
     public static ProjectEntity toProjectEntity(ProjectDTO projectDTO, UserEntity userEntity) {
         ProjectEntity projectEntity = new ProjectEntity();

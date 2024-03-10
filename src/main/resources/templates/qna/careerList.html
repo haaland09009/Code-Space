@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script type="text/javascript" th:src="@{/js/common.js}"></script>
 </head>
 <style>
 
@@ -33,7 +32,19 @@
                         <!---------------->
                         <div class="col">
 
-                            <div class="row mt-5">
+                            <div class="row mt-2 text-secondary">
+                                <div class="col-auto sort-item">
+                                    <span>•</span> 최신순
+                                </div>
+                                <div class="col-auto sort-item">
+                                    <span>•</span>  답변 많은 순
+                                </div>
+                                <div class="col sort-item">
+                                    <span>•</span> 답변 적은 순
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
                                 <div class="col-11 border-top border-1"></div>
                             </div>
 
@@ -47,9 +58,9 @@
                                             <div class="row mt-1">
                                                 <div class="col">
                                     <span>
-                                        <img class="rounded-circle" style="width: 20px; height: 20px;"
+                                        <img class="rounded-circle" style="width: 30px; height: 30px;"
                                              src="/img/user.jpg" th:if="${qna.fileAttached == 0}">
-                                        <img class="rounded-circle" style="width: 20px; height: 20px;"
+                                        <img class="rounded-circle" style="width: 30px; height: 30px;"
                                              th:src="@{|/upload/${qna.storedFileName}|}" th:if="${qna.fileAttached == 1}">
                                     </span>
 
@@ -69,7 +80,7 @@
 
                                             <div class="row mt-3">
                                                 <a th:href="@{|/qna/${qna.id}|}">
-                                                    <div class="col fw-semibold fs-5" th:text="${qna.title}">
+                                                    <div class="col fw-semibold fs-4" th:text="${qna.title}">
 
                                                     </div>
                                                 </a>
@@ -88,12 +99,12 @@
                                                 <div class="col">
                                                     <div class="row">
                                                         <div class="col">
-                                                            <button class="btn btn-sm cateButton"
+                                                            <button class="btn btn-sm cateButton fs-18"
                                                                     th:if="${qna.categoryName == '기술'}">
                                                                 <i class="bi bi-pencil text-success fw-semibold"></i>
                                                                 <span class="ms-1" th:text="${qna.categoryName}"></span>
                                                             </button>
-                                                            <button class="btn btn-sm cateButton"
+                                                            <button class="btn btn-sm cateButton fs-18"
                                                                     th:if="${qna.categoryName == '커리어'}">
                                                                 <i class="bi bi-bag fw-semibold" style="color: #712cf9;"></i>
                                                                 <span class="ms-1" th:text="${qna.categoryName}"></span>
@@ -102,7 +113,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col text-end text-secondary">
+                                                <div class="col text-end text-secondary fs-18">
                                                     <span> 답변 <span th:text="${qna.replyCount}"></span></span>
                                                     <span class="ms-1"> 댓글 <span th:text="${qna.commentCount}"></span></span>
                                                 </div>
@@ -138,103 +149,8 @@
   /*]]>*/
 
 
-
-  const getNotificationList = () => {
-        $.ajax({
-         type: "get",
-         url: "/notification/findAll/" + sessionId,
-         success: function(res) {
-            let output = "";
-             if (res.length == 0) {
-                output += '<div class="text-center mb-3"> 읽지 않은 알림이 존재하지 않습니다. </div>';
-            } else {
-              for (let i in res) {
-                output += '<a href="' + res[i].notUrl + '">';
-                output += '<div class="row mt-2">';
-                output += '<div class="col ms-3">';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                if (res[i].fileAttached == 0) {
-                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
-                } else if (res[i].fileAttached == 1) {
-                    output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
-                }
-                output += '</div>';
-                output += '<div class="col ms-2 fw-semibold">' + res[i].sender + '</div>';
-                output += '<div class="col text-end text-secondary me-1">' + formatDateTime(res[i].occurDate) + '</div>';
-                output += '</div>';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                output += '</div>';
-                output += '<div class="col ms-2">' + res[i].sentence + '</div>';
-                output += '</div>';
-
-                output += '<div class="border-bottom mt-2">' + '</div>';
-
-                output += '</div>';
-                output += '</div>';
-                output += '</a>';
-                }
-            }
-            document.getElementById('notification-list').innerHTML = output;
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-   // 홈 메뉴
-    document.querySelector('.menu-item1').addEventListener('mouseover', function() {
-        this.classList.add('text-black');
-    });
-    document.querySelector('.menu-item1').addEventListener('mouseout', function() {
-        this.classList.remove('text-black');
-    });
-
-
-    // 기술 메뉴
-    document.querySelector('.menu-item2').addEventListener('mouseover', function() {
-        this.classList.add('text-black');
-    });
-    document.querySelector('.menu-item2').addEventListener('mouseout', function() {
-        this.classList.remove('text-black');
-    });
-
-    // 커리어 메뉴
-    document.querySelector('.menu-item3').addEventListener('mouseover', function() {
-        this.classList.add('text-black');
-    });
-    document.querySelector('.menu-item3').addEventListener('mouseout', function() {
-        this.classList.remove('text-black');
-    });
-
-    // 답변하기 메뉴
-    document.querySelector('.menu-item4').addEventListener('mouseover', function() {
-        this.classList.add('text-black');
-    });
-    document.querySelector('.menu-item4').addEventListener('mouseout', function() {
-        this.classList.remove('text-black');
-    });
-
-
-
-
-window.addEventListener("DOMContentLoaded", function(){
-    getNotificationList();
-    const dateElements = document.querySelectorAll('.date-element');
-    dateElements.forEach(function (element) {
-       const dateString = element.textContent;
-       const formattedDate = formatDateTime(dateString);
-       element.textContent = formattedDate;
-   });
-
-});
-
-
-
 </script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
+<script type="text/javascript" th:src="@{/js/qna/list.js}"></script>
 </body>
 </html>

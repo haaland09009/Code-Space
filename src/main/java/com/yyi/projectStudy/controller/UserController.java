@@ -113,13 +113,48 @@ public class UserController {
     @GetMapping("/articles")
     public String boardList(Model model, HttpSession session) {
         UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
-        Long userId = sessionUser.getId();
-        List<ProjectArticleDTO> projectArticleDTOList = projectService.findArticleList(userId);
-        model.addAttribute("projectArticleList", projectArticleDTOList);
+        if (sessionUser == null) {
+            return "redirect:/user/loginPage";
+        } else {
+            Long userId = sessionUser.getId();
+            List<ProjectArticleDTO> projectArticleDTOList = projectService.findArticleList(userId);
+            model.addAttribute("projectArticleList", projectArticleDTOList);
 
-        List<QnaArticleDTO> qnaArticleDTOList = qnaService.findArticleList(userId);
-        model.addAttribute("qnaArticleList", qnaArticleDTOList);
-        return "user/articles";
+            List<QnaArticleDTO> qnaArticleDTOList = qnaService.findArticleList(userId);
+            model.addAttribute("qnaArticleList", qnaArticleDTOList);
+            return "user/articles";
+        }
+    }
+
+    // 스크랩 목록 조회
+    @GetMapping("/clip")
+    public String clipList(Model model, HttpSession session) {
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+        if (sessionUser == null) {
+            return "redirect:/user/loginPage";
+        } else {
+            Long userId = sessionUser.getId();
+
+            List<ProjectClipDTO> projectClipDTOList = projectService.getClipList(userId);
+            for (ProjectClipDTO projectClipDTO : projectClipDTOList) {
+                ProjectDTO projectDTO = projectService.findById(projectClipDTO.getProjectId());
+                projectClipDTO.setTitle(projectDTO.getTitle());
+                projectClipDTO.setProjectStudy(projectService.findProjectStudyCategory(projectDTO.getId()).getName());
+            }
+            model.addAttribute("projectClipList", projectClipDTOList);
+
+
+            List<QnaClipDTO> qnaClipDTOList = qnaService.getClipList(userId);
+            for (QnaClipDTO qnaClipDTO : qnaClipDTOList) {
+                QnaDTO qnaDTO = qnaService.findById(qnaClipDTO.getQnaId());
+                qnaClipDTO.setTitle(qnaDTO.getTitle());
+                qnaClipDTO.setCategoryName(qnaService.findTopic(qnaDTO.getId()).getName());
+            }
+
+            model.addAttribute("qnaClipList", qnaClipDTOList);
+            return "user/clip";
+        }
+
     }
 
 

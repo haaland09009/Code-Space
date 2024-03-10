@@ -24,11 +24,13 @@ public class ProjectService {
     private final ProjectStudyCategoryRepository projectStudyCategoryRepository;
     private final TechCategoryRepository techCategoryRepository;
     private final ProjectCommentRepository projectCommentRepository;
+    private final ProjectClipRepository projectClipRepository;
 
     private final ProjectPositionCategoryLinkRepository projectPositionCategoryLinkRepository;
     private final ProjectPeriodCategoryLinkRepository projectPeriodCategoryLinkRepository;
     private final ProjectStudyCategoryLinkRepository projectStudyCategoryLinkRepository;
     private final ProjectTechCategoryLinkRepository projectTechCategoryLinkRepository;
+
 
 
 //    // 게시글 작성
@@ -375,5 +377,50 @@ public class ProjectService {
 
         }
         return projectArticleDTOList;
+    }
+
+
+    // 게시물 스크랩
+    public void clip(ProjectClipDTO projectClipDTO) {
+        Optional<ProjectEntity> optionalProjectEntity = projectRepository.findById(projectClipDTO.getProjectId());
+        if (optionalProjectEntity.isPresent()) {
+            ProjectEntity projectEntity = optionalProjectEntity.get();
+            UserEntity userEntity = userRepository.findById(projectClipDTO.getUserId()).get();
+            int clipCount = projectClipRepository.countByProjectEntityAndUserEntity(projectEntity, userEntity);
+            if (clipCount > 0) {
+                ProjectClipEntity projectClipEntity = projectClipRepository.findByProjectEntityAndUserEntity(projectEntity, userEntity).get();
+                projectClipRepository.deleteById(projectClipEntity.getId());
+            } else if (clipCount == 0) {
+                ProjectClipEntity projectClipEntity = ProjectClipEntity.toProjectClipEntity(userEntity, projectEntity);
+                projectClipRepository.save(projectClipEntity);
+            }
+        }
+    }
+
+
+    // 게시물 스크랩 여부 확인
+    public int checkClipYn(ProjectClipDTO projectClipDTO) {
+        ProjectEntity projectEntity = projectRepository.findById(projectClipDTO.getProjectId()).get();
+        UserEntity userEntity = userRepository.findById(projectClipDTO.getUserId()).get();
+        return projectClipRepository.countByProjectEntityAndUserEntity(projectEntity, userEntity);
+    }
+
+    // 스크랩 목록
+    @Transactional
+    public List<ProjectClipDTO> getClipList(Long id) {
+        UserEntity userEntity = userRepository.findById(id).get();
+
+        List<ProjectClipDTO> projectClipList = new ArrayList<>();
+        List<ProjectClipEntity> projectClipEntityList = projectClipRepository.findByUserEntityOrderByIdDesc(userEntity);
+        for (ProjectClipEntity projectClipEntity : projectClipEntityList) {
+            projectClipList.add(ProjectClipDTO.toProjectClipDTO(projectClipEntity));
+        }
+        return projectClipList;
+    }
+
+    // 스크랩 수
+    public int clipCount(Long id) {
+        ProjectEntity projectEntity = projectRepository.findById(id).get();
+        return projectClipRepository.countByProjectEntity(projectEntity);
     }
 }

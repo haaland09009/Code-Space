@@ -90,6 +90,9 @@ public class ProjectController {
             ProjectStudyCategoryDTO projectStudyCategoryDTO = projectService.findProjectStudyCategory(projectDTO.getId());
             projectDTO.setProjectStudy(projectStudyCategoryDTO.getName());
 
+            int clipCount = projectService.clipCount(projectDTO.getId());
+            projectDTO.setClipCount(clipCount);
+
 
             // 나중에 리스트로 변경
 //            projectDTO.setTechList(projectService.findTechCategory(projectDTO.getId()).getName());
@@ -111,7 +114,8 @@ public class ProjectController {
 
     // 게시글 상세보기
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Long id, Model model) {
+    public String findById(@PathVariable("id") Long id, Model model,
+                           HttpSession session) {
 
         // 작성자 정보
         Long userId = projectService.findById(id).getUserId();
@@ -160,6 +164,8 @@ public class ProjectController {
         for (ProjectCommentDTO projectCommentDTO : projectCommentDTOList) {
             int commentLikeCount = projectCommentService.commentLikeCount(projectCommentDTO.getId());
             projectCommentDTO.setLikeCount(commentLikeCount);
+            JobDTO userJob = userService.findJob(projectCommentDTO.getUserId());
+            projectCommentDTO.setJobName(userJob.getName());
         }
         Long commentCount = projectCommentService.count(id);
 
@@ -172,6 +178,16 @@ public class ProjectController {
         // 랜덤 추출 3개
         List<ProjectDTO> randomProjects = projectService.findRandomProjects();
         model.addAttribute("randomProjectList", randomProjects);
+
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+        // 스크랩 여부 확인
+        if (sessionUser != null) {
+            ProjectClipDTO projectClipDTO = new ProjectClipDTO();
+            projectClipDTO.setProjectId(id);
+            projectClipDTO.setUserId(sessionUser.getId());
+            int clipCount = projectService.checkClipYn(projectClipDTO);
+            model.addAttribute("clipCount", clipCount);
+        }
 
         return "project/detail";
     }
@@ -242,7 +258,7 @@ public class ProjectController {
                          @ModelAttribute ProjectPositionCategoryLinkDTO
                                      projectPositionCategoryLinkDTO,
                          @RequestParam(name = "techId", required = false) List<Long> techIdList,
-                         Model model) {
+                         Model model, HttpSession session) {
         ProjectDTO project = projectService.update(projectDTO);
         model.addAttribute("project", project);
 
@@ -263,6 +279,14 @@ public class ProjectController {
         model.addAttribute("periodCategory", periodCategoryDTO);
 
         List<ProjectCommentDTO> projectCommentDTOList = projectCommentService.findAll(projectDTO.getId());
+        for (ProjectCommentDTO projectCommentDTO : projectCommentDTOList) {
+            int commentLikeCount = projectCommentService.commentLikeCount(projectCommentDTO.getId());
+            projectCommentDTO.setLikeCount(commentLikeCount);
+            JobDTO userJob = userService.findJob(projectCommentDTO.getUserId());
+            projectCommentDTO.setJobName(userJob.getName());
+        }
+
+
         Long commentCount = projectCommentService.count(project.getId());
 
 
@@ -278,15 +302,45 @@ public class ProjectController {
         JobDTO job = userService.findJob(userId);
         model.addAttribute("job", job);
 
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+        // 스크랩 여부 확인
+        if (sessionUser != null) {
+            ProjectClipDTO projectClipDTO = new ProjectClipDTO();
+            projectClipDTO.setProjectId(projectDTO.getId());
+            projectClipDTO.setUserId(sessionUser.getId());
+            int clipCount = projectService.checkClipYn(projectClipDTO);
+            model.addAttribute("clipCount", clipCount);
+        }
+
+        // 랜덤 추출 3개
+        List<ProjectDTO> randomProjects = projectService.findRandomProjects();
+        model.addAttribute("randomProjectList", randomProjects);
+
         return "project/detail";
 
     }
 
-//    // 게시글 수정 후 조회
-//    @GetMapping("/renew/{id}")
-//    public String renew(@PathVariable Long id, Model model) {
-//        ProjectDTO projectDTO = projectService.findById(id);
-//        model.addAttribute("project", projectDTO);
-//        return "project/detail";
-//    }
+
+    // 게시물 스크랩
+    @PostMapping("/clip")
+    public @ResponseBody void clip(@ModelAttribute ProjectClipDTO projectClipDTO) {
+        projectService.clip(projectClipDTO);
+    }
+
+    // 게시물 스크랩 여부 확인
+    @GetMapping("/checkClipYn")
+    public @ResponseBody boolean checkClipYn(@ModelAttribute ProjectClipDTO projectClipDTO) {
+        int count = projectService.checkClipYn(projectClipDTO);
+        if (count > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return "project/test";
+    }
+
 }

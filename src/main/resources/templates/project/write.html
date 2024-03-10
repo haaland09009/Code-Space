@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>main</title>
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/project/write.css}">
+
+
 </head>
 <style>
-
 </style>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 <body>
@@ -19,10 +19,6 @@
 
 
     <div class="row">
-<!--        <div class="col-2">-->
-<!--            <div th:include="common/sidemenu :: sidemenu"></div>-->
-<!--        </div>-->
-
         <div class="col">
 
             <div class="row mt-3 mb-4"></div>
@@ -48,7 +44,7 @@
 
                                                 <div class="row mt-2">
                                                     <div class="col">
-                                                        <select class="form-select" id="projectStudyBox" name="projectStudyId">
+                                                        <select class="form-select fs-5" id="projectStudyBox" name="projectStudyId">
                                                             <option selected disabled hidden value="">프로젝트 / 스터디</option>
                                                             <option th:each="option : ${projectStudyCategoryList}"
                                                                     th:value="${option.id}" th:text="${option.name}"></option>
@@ -64,11 +60,13 @@
 
                                                 <div class="row mt-2">
                                                     <div class="col">
-                                                        <select class="form-select" multiple id="techBox" name="techId">
-                                                            <option selected disabled hidden value="">프로젝트 사용 스택</option>
+
+                                                        <select class="form-control fs-5" multiple="multiple"  id="techBox" name="techId">
+
                                                             <option th:each="option : ${techCategoryList}"
                                                                     th:value="${option.id}" th:text="${option.name}"></option>
                                                         </select>
+
                                                     </div>
                                                 </div>
 
@@ -80,7 +78,7 @@
 
                                                 <div class="row mt-2">
                                                     <div class="col">
-                                                        <select class="form-select" id="positionBox" name="positionId">
+                                                        <select class="form-select fs-5" id="positionBox" name="positionId">
                                                             <option selected disabled hidden value="">프론트엔드 / 백엔드</option>
                                                             <option th:each="option : ${positionCategoryList}"
                                                                     th:value="${option.id}" th:text="${option.name}"
@@ -100,7 +98,7 @@
 
                                                 <div class="row mt-2">
                                                     <div class="col">
-                                                        <select class="form-select" id="headCountBox" name="headCount">
+                                                        <select class="form-select fs-5" id="headCountBox" name="headCount">
                                                             <option selected disabled hidden value="">인원 미정 ~ 10명 이상</option>
                                                             <option value="0">인원 미정</option>
                                                             <th:block th:each="count : ${#numbers.sequence(1, 9)}">
@@ -119,7 +117,7 @@
 
                                                 <div class="row mt-2">
                                                     <div class="col">
-                                                        <select class="form-select" id="periodBox" name="periodId">
+                                                        <select class="form-select fs-5" id="periodBox" name="periodId">
                                                             <option value="" selected disabled hidden>기간 미정 ~ 6개월 이상</option>
                                                             <option th:each="option : ${periodCategoryList}"
                                                                     th:value="${option.id}" th:text="${option.name}"></option>
@@ -135,7 +133,7 @@
 
                                                 <div class="row mt-2">
                                                     <div class="col">
-                                                        <input type="date" class="form-control" id="endDateBox" name="endDate">
+                                                        <input type="date" class="form-control fs-5" id="endDateBox" name="endDate">
                                                     </div>
                                                 </div>
                                             </div>
@@ -145,17 +143,19 @@
 
                                         <div class="row">
                                             <div class="col">
-                                                <input type="text" class="form-control mt-2 p-2" placeholder="제목" style="text-indent: 8px"
+                                                <input type="text" class="form-control mt-2 p-2 fs-5" placeholder="제목" style="text-indent: 8px"
                                                 id="title" name="title">
                                             </div>
                                             <div class="col-4 text-end">
-                                                <input type="submit" class="btn mainButton mt-2" value="작성">
+                                                <input type="submit" class="btn mainButton mt-2 fs-5 px-4" value="작성">
                                             </div>
                                         </div>
 
-                                        <div class="row mt-3">
+                                        <div class="row mt-4">
                                             <div class="col">
-                                                <textarea name="content" id="content" cols="30" rows="20" class="form-control"></textarea>
+                                                <textarea name="content" id="content" cols="30" rows="20" class="form-control fs-5"
+                                                          style="resize: none; font-size: 18px"></textarea>
+
                                             </div>
                                         </div>
 
@@ -185,138 +185,21 @@
     </div>
 </div>
 
+
 <script th:inline="javascript">
 
-    /*<![CDATA[*/
-      let sessionId = [[${session.userDTO != null ? session.userDTO.id : 0}]];
-  /*]]>*/
+  /*<![CDATA[*/
+    let sessionId = [[${session.userDTO != null ? session.userDTO.id : 0}]];
+/*]]>*/
 
-   // 이전 날짜 방지
-   const setDateInput = () => {
-       let endDateElement = document.getElementById('endDateBox');
-       let currentDate = new Date();
-       let endDatePos = new Date(currentDate.getTime() - currentDate.getTimezoneOffset() * 60000).toISOString().slice(0, -8);
-
-       endDateElement.value = endDatePos.split('T')[0];
-
-       endDateElement.setAttribute("min", endDatePos.split('T')[0]);
-   };
-
-   // 게시글 작성
-   const writeBoard = () => {
-       const projectStudy = document.querySelector("#projectStudyBox");
-       const tech = document.querySelector("#techBox");
-       const position = document.querySelector("#positionBox");
-       const headCount = document.querySelector("#headCountBox");
-       const period = document.querySelector("#periodBox");
-       const endDate = document.querySelector("#endDateBox");
-
-       const title = document.querySelector("#title");
-       const content = document.querySelector("#content");
-
-       if (projectStudy.value == "") {
-           alert("모집 구분란을 선택해주세요.");
-           projectStudy.focus();
-           return false;
-       }
-
-       if (tech.value == "") {
-           alert("기술 스택을 선택해주세요.");
-           tech.focus();
-           return false;
-       }
-
-       if (position.value == "") {
-           alert("모집 포지션을 선택해주세요.");
-           position.focus();
-           return false;
-       }
-
-       if (headCount.value == "") {
-           alert("모집 인원을 선택해주세요.");
-           headCount.focus();
-           return false;
-       }
-
-       if (period.value == "") {
-           alert("진행 기간을 선택해주세요.");
-           period.focus();
-           return false;
-       }
-       if (endDate.value == "") {
-           alert("모집 마감일을 선택해주세요.");
-           endDate.focus();
-           return false;
-       }
-       if (title.value.trim() == "") {
-           alert("제목을 입력하세요.");
-           title.focus();
-           return false;
-       }
-
-       if (content.value.trim() == "") {
-           alert("내용을 입력하세요.");
-           content.focus();
-           return false;
-       }
-       return true;
-   }
-
-
-  const getNotificationList = () => {
-        $.ajax({
-         type: "get",
-         url: "/notification/findAll/" + sessionId,
-         success: function(res) {
-            let output = "";
-             if (res.length == 0) {
-                output += '<div class="text-center mb-3"> 읽지 않은 알림이 존재하지 않습니다. </div>';
-            } else {
-              for (let i in res) {
-                output += '<a href="' + res[i].notUrl + '">';
-                output += '<div class="row mt-2">';
-                output += '<div class="col ms-3">';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                if (res[i].fileAttached == 0) {
-                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
-                } else if (res[i].fileAttached == 1) {
-                    output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
-                }
-                output += '</div>';
-                output += '<div class="col ms-2 fw-semibold">' + res[i].sender + '</div>';
-                output += '<div class="col text-end text-secondary me-1">' + formatDateTime(res[i].occurDate) + '</div>';
-                output += '</div>';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                output += '</div>';
-                output += '<div class="col ms-2">' + res[i].sentence + '</div>';
-                output += '</div>';
-
-                output += '<div class="border-bottom mt-2">' + '</div>';
-
-                output += '</div>';
-                output += '</div>';
-                output += '</a>';
-                }
-            }
-            document.getElementById('notification-list').innerHTML = output;
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-
-window.addEventListener("DOMContentLoaded", function(){
-   setDateInput();
-   getNotificationList();
-
-});
-
+  /*<![CDATA[*/
+    const techCategoryList = [[${techCategoryList}]];
+/*]]>*/
 </script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script type="text/javascript" th:src="@{/js/project/write.js}"></script>
 </body>
 </html>

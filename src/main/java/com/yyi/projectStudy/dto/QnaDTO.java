@@ -27,6 +27,7 @@ public class QnaDTO {
     private int likeCount;
     private int dislikeCount;
     private int commentCount;
+    private String hashTag;
 
 
 

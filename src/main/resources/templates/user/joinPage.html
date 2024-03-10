@@ -226,8 +226,8 @@
          url: "/notification/findAll/" + sessionId,
          success: function(res) {
             let output = "";
-             if (res.length == 0) {
-                output += '<div class="text-center mb-3"> 읽지 않은 알림이 존재하지 않습니다. </div>';
+             if (res == null) {
+                output += '<div class="text-center mt-3">알림이 존재하지 않습니다.</div>';
             } else {
               for (let i in res) {
                 output += '<a href="' + res[i].notUrl + '">';
@@ -237,9 +237,9 @@
                 output += '<div class="row">';
                 output += '<div class="col-1">';
                 if (res[i].fileAttached == 0) {
-                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
+                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 30px; height: 30px; position: relative; top: 4px">';
                 } else if (res[i].fileAttached == 1) {
-                    output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
+                    output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 30px; height: 30px; position: relative; top: 4px">';
                 }
                 output += '</div>';
                 output += '<div class="col ms-2 fw-semibold">' + res[i].sender + '</div>';
@@ -268,7 +268,9 @@
   }
 
 window.addEventListener("DOMContentLoaded", function(){
+  if (sessionId != 0) {
     getNotificationList();
+    }
 
 });
 

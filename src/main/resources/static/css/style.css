@@ -78,7 +78,7 @@
 }
 body {
   font-family: 'Pretendard';
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .alarmBell:hover {
@@ -136,8 +136,8 @@ textarea {
 }
 
 .mainLanLogo {
-    width: 35px;
-    height: 35px;
+    width: 45px;
+    height: 45px;
 }
 
 #qnaLink:hover {
@@ -168,8 +168,14 @@ textarea {
 .fs-15 {
     font-size: 15px;
 }
+.fs-16 {
+    font-size: 16px;
+}
 .fs-18 {
     font-size: 18px;
+}
+.fs-22 {
+    font-size: 22px;
 }
 
 .bg-gray {
@@ -181,5 +187,25 @@ textarea {
 }
 
 .chatDate {
-    font-size: 14px;
+    font-size: 16px;
 }
+
+  .ck-editor__editable { height: 500px; }
+  .ck-content { font-size: 20px; }
+
+.sort-item {
+    cursor: pointer;
+}
+
+   .redCircle {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background-color: red;
+        color: white;
+        text-align: center;
+        line-height: 24px;
+        font-size: 14px;
+    }
+
+

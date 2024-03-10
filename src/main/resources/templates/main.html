@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+
 </head>
 <style>
 
@@ -53,7 +53,7 @@
                <div class="col-8">
 
                    <div class="row">
-                       <div class="col fw-semibold fs-5">
+                       <div class="col fw-semibold fs-4">
                            Hot 스터디/프로젝트 🔥
                        </div>
                    </div>
@@ -70,7 +70,7 @@
 
                                     <div class="row">
                                         <div class="col">
-                                            <button class="btn btn-sm cateButton">
+                                            <button class="btn btn-sm cateButton fs-16">
                                                 <span th:if="${project.projectStudy == '스터디'}"> ✏️</span>
                                                 <i class="bi bi-pc-display-horizontal me-1 text-secondary"
                                                    th:if="${project.projectStudy == '프로젝트'}"></i>
@@ -78,7 +78,7 @@
                                             </button>
                                         </div>
                                         <div class="col text-end">
-                                            <button class="btn btn-sm btn-outline-danger text-danger me-2 endButton rounded rounded-2">
+                                            <button class="btn btn-sm fs-16 btn-outline-danger text-danger me-2 endButton rounded rounded-2">
                                                 <span>🚨</span>
                                                 <span class="ms-1"> 마감</span>
                                                 <span th:text="${project.remainingDays} + '일전'" th:if="${project.remainingDays != 0}"></span>
@@ -90,13 +90,13 @@
                                     </div>
 
                                     <div class="row mt-3">
-                                        <div class="col text-secondary">
+                                        <div class="col text-secondary fs-18">
                                             마감일 | <span th:text="${#dates.format(project.endDate, 'yyyy-MM-dd')}"></span>
                                         </div>
                                     </div>
 
                                     <div class="row mt-2">
-                                        <div class="col fw-semibold overflow-mainList" th:text="${project.title}">
+                                        <div class="col fs-5 fw-semibold overflow-mainList" th:text="${project.title}">
 
                                         </div>
                                     </div>
@@ -127,11 +127,11 @@
                                     <div class="mt-3 border-bottom mb-2"></div>
 
                                     <div class="row">
-                                        <div class="col fw-semibold">
+                                        <div class="col fw-semibold fs-18">
                                             <i class="bi bi-person"></i>
                                             <span th:text="${project.writer}"></span>
                                         </div>
-                                        <div class="col text-end me-2">
+                                        <div class="col text-end me-2 fs-18">
                                             <i class="bi bi-eye"></i>
                                             <span class="me-2" th:text="${project.readCount}"></span>
                                             <i class="bi bi-chat-left-dots"></i>
@@ -154,7 +154,7 @@
                <div class="col me-4">
 
                    <div class="row">
-                       <div class="col fw-semibold fs-5">
+                       <div class="col fw-semibold fs-4">
                            Q&A 인기글
                        </div>
                    </div>
@@ -171,8 +171,8 @@
                                </div>
                                <div class="col">
                                    <div class="row">
-                                       <div class="col mt-1">
-                                           <span th:text="${qna.writer}"></span>
+                                       <div class="col mt-1 fs-18">
+                                           <span th:text="${qna.writer}" class="fw-medium"></span>
                                            <span class="ms-1">·</span>
                                            <span class="ms-1 date-element" th:text="${qna.regDate}"></span>
                                        </div>
@@ -180,24 +180,24 @@
                                </div>
                            </div>
                            <div class="row mt-2">
-                               <div class="col fw-semibold" style="font-size: 17px" th:text="${qna.title}">
+                               <div class="col fw-semibold fs-5" style="font-size: 17px" th:text="${qna.title}">
 
                                </div>
                            </div>
                            <div class="row mt-2">
                                <div class="col">
-                                   <button class="btn btn-sm cateButton"
+                                   <button class="btn btn-sm cateButton fs-16"
                                            th:if="${qna.topicName == '커리어'}">
                                        <i class="bi bi-bag fw-semibold" style="color: #712cf9;"></i>
                                        <span class="ms-1" th:text="${qna.topicName}"></span>
                                    </button>
-                                   <button class="btn btn-sm cateButton"
+                                   <button class="btn btn-sm cateButton fs-16"
                                            th:if="${qna.topicName == '기술'}">
                                        <i class="bi bi-pencil text-success fw-semibold"></i>
                                        <span class="ms-1" th:text="${qna.topicName}"></span>
                                    </button>
                                </div>
-                               <div class="col text-end" style="position:relative; top: 7px">
+                               <div class="col text-end fs-18" style="position:relative; top: 7px">
                                    <i class="bi bi-hand-thumbs-up"></i>
                                    <span th:text="${qna.likeCount}"></span>
                                    <i class="ms-1 bi bi-chat-dots"></i>
@@ -229,66 +229,7 @@
       let sessionId = [[${session.userDTO != null ? session.userDTO.id : 0}]];
   /*]]>*/
 
-
-  const getNotificationList = () => {
-        $.ajax({
-         type: "get",
-         url: "/notification/findAll/" + sessionId,
-         success: function(res) {
-            let output = "";
-             if (res.length == 0) {
-                output += '<div class="text-center mb-3"> 읽지 않은 알림이 존재하지 않습니다. </div>';
-            } else {
-              for (let i in res) {
-                output += '<a href="' + res[i].notUrl + '">';
-                output += '<div class="row mt-2">';
-                output += '<div class="col ms-3">';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                if (res[i].fileAttached == 0) {
-                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
-                } else if (res[i].fileAttached == 1) {
-                    output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
-                }
-                output += '</div>';
-                output += '<div class="col ms-2 fw-semibold">' + res[i].sender + '</div>';
-                output += '<div class="col text-end text-secondary me-1">' + formatDateTime(res[i].occurDate) + '</div>';
-                output += '</div>';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                output += '</div>';
-                output += '<div class="col ms-2">' + res[i].sentence + '</div>';
-                output += '</div>';
-
-                output += '<div class="border-bottom mt-2">' + '</div>';
-
-                output += '</div>';
-                output += '</div>';
-                output += '</a>';
-                }
-            }
-            document.getElementById('notification-list').innerHTML = output;
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-
-window.addEventListener("DOMContentLoaded", function(){
-    getNotificationList();
-    const dateElements = document.querySelectorAll('.date-element');
-    dateElements.forEach(function (element) {
-         const dateString = element.textContent;
-         const formattedDate = formatDateTime(dateString);
-         element.textContent = formattedDate;
- });
-});
-
-
 </script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
 </body>
 </html>

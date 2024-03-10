@@ -1,12 +1,10 @@
 package com.yyi.projectStudy.controller;
 
-import com.yyi.projectStudy.dto.NotificationDTO;
-import com.yyi.projectStudy.dto.QnaDTO;
-import com.yyi.projectStudy.dto.QnaReplyCommentDTO;
-import com.yyi.projectStudy.dto.QnaReplyDTO;
+import com.yyi.projectStudy.dto.*;
 import com.yyi.projectStudy.service.NotificationService;
 import com.yyi.projectStudy.service.QnaReplyCommentService;
 import com.yyi.projectStudy.service.QnaReplyService;
+import com.yyi.projectStudy.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +20,7 @@ public class QnaReplyCommentController {
     private final QnaReplyCommentService qnaReplyCommentService;
     private final QnaReplyService qnaReplyService;
     private final NotificationService notificationService;
+    private final UserService userService;
 
     // 댓글 작성
     @PostMapping("/save")
@@ -66,6 +65,9 @@ public class QnaReplyCommentController {
                 String content = qnaReplyCommentDTO.getContent();
                 content = content.replaceAll("<br>", "\n");
                 qnaReplyCommentDTO.setContent(content);
+
+                JobDTO commentJob = userService.findJob(qnaReplyCommentDTO.getUserId());
+                qnaReplyCommentDTO.setJobName(commentJob.getName());
             }
             return new ResponseEntity<>(qnaReplyCommentDTOList, HttpStatus.OK);
         } else {

@@ -7,7 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
   <link rel="stylesheet" th:href="@{/css/style.css}">
-  <script type="text/javascript" th:src="@{/js/common.js}"></script>
+
 </head>
 <style>
   .nav-pills .nav-link.active {
@@ -33,12 +33,12 @@
         <div class="col">
 
           <div class="row">
-            <div class="col fs-5 fw-semibold">
+            <div class="col fs-4 fw-semibold">
               활동 내역
             </div>
           </div>
 
-          <div class="row mt-3">
+          <div class="row mt-4 ">
             <div class="col-10">
               <div class="col nav-pills nav-fill">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -72,19 +72,20 @@
                   <!-- 프로젝트 -->
                   <div class="tab-pane fade show active" id="projectList" role="tabpanel"
                        aria-labelledby="project-tab">
-                    <div class="row" th:if="${projectArticleList == null}">
-                      <div class="col text-center">
+                    <div class="row mt-4" th:if="${#lists.isEmpty(projectArticleList)}">
+                      <div class="col text-center text-secondary">
                         활동 내역이 존재하지 않습니다.
                       </div>
+                      <div class="border-bottom mt-4"></div>
                     </div>
 
                     <!-- -->
                    <div class="row contentDiv" th:each="project : ${projectArticleList}">
                      <a th:href="@{|/project/${project.projectId}|}">
                      <div class="col">
-                       <div class="row mt-3">
+                       <div class="row mt-3 fs-18">
                          <div class="col">
-                           <button class="btn cateButton btn-sm">
+                           <button class="btn cateButton btn-sm fs-16">
                              <span th:if="${project.projectStudy == '스터디'}">✏️</span>
                              <i class="bi bi-pc-display-horizontal me-1 text-secondary"
                                 th:if="${project.projectStudy == '프로젝트'}"></i>
@@ -100,19 +101,19 @@
                            </span>
 
                          </div>
-                         <div class="col-3 text-end text-secondary"
+                         <div class="col-3 text-end  text-secondary"
                               th:text="*{#temporals.format(project.regDate, 'yyyy-MM-dd HH:mm:ss')}">
                          </div>
                        </div>
-                       <div class="row mt-1">
-                         <div class="col fs-18 fw-medium" th:text="${project.title}">
+                       <div class="row mt-2">
+                         <div class="col fw-semibold" th:text="${project.title}">
 
                          </div>
                        </div>
                        <div class="row mt-2" th:if="${project.commentId != null}">
                          <div class="col overflow-list">
                            <i class="ms-2  bi bi-arrow-return-right"></i>
-                           <span class="ms-2 fs-14 text-secondary" th:text="${project.commentContent}"></span>
+                           <span class="ms-2 fs-18 text-secondary" th:text="${project.commentContent}"></span>
                          </div>
                        </div>
                      </div>
@@ -129,18 +130,25 @@
                   <div class="tab-pane fade" id="qnaList" role="tabpanel"
                        aria-labelledby="qna-tab">
 
+                    <div class="row mt-4" th:if="${#lists.isEmpty(qnaArticleList)}">
+                      <div class="col text-center text-secondary">
+                        활동 내역이 존재하지 않습니다.
+                      </div>
+                      <div class="border-bottom mt-4"></div>
+                    </div>
+
                     <!-- -->
                     <div class="row contentDiv" th:each="qna : ${qnaArticleList}">
                       <a th:href="@{|/qna/${qna.boardId}|}">
                         <div class="col">
                           <div class="row mt-3">
-                            <div class="col">
-                              <button class="btn btn-sm cateButton"
+                            <div class="col fs-18">
+                              <button class="btn btn-sm cateButton fs-16"
                                       th:if="${qna.categoryName == '기술'}">
                                 <i class="bi bi-pencil text-success fw-semibold"></i>
                                 <span class="ms-1" th:text="${qna.categoryName}"></span>
                               </button>
-                              <button class="btn btn-sm cateButton"
+                              <button class="btn btn-sm cateButton fs-16"
                                       th:if="${qna.categoryName == '커리어'}">
                                 <i class="bi bi-bag fw-semibold" style="color: #712cf9;"></i>
                                 <span class="ms-1" th:text="${qna.categoryName}"></span>
@@ -160,25 +168,25 @@
 
 
                             </div>
-                            <div class="col-3 text-end text-secondary"
+                            <div class="col-3 fs-18 text-end text-secondary"
                                  th:text="*{#temporals.format(qna.regDate, 'yyyy-MM-dd HH:mm:ss')}">
                             </div>
                           </div>
-                          <div class="row mt-1">
-                            <div class="col fs-18 fw-medium" th:text="${qna.title}">
+                          <div class="row mt-2">
+                            <div class="col fw-semibold" th:text="${qna.title}">
 
                             </div>
                           </div>
                           <div class="row mt-2" th:if="${qna.replyId != null}">
                             <div class="col overflow-list">
                               <i class="ms-2  bi bi-arrow-return-right"></i>
-                              <span class="ms-2 fs-14 text-secondary" th:text="${qna.replyContent}"></span>
+                              <span class="ms-2 fs-18 text-secondary" th:text="${qna.replyContent}"></span>
                             </div>
                           </div>
                           <div class="row mt-2" th:if="${qna.commentId != null}">
                             <div class="col overflow-list">
                               <i class="ms-2  bi bi-arrow-return-right"></i>
-                              <span class="ms-2 fs-14 text-secondary" th:text="${qna.commentContent}"></span>
+                              <span class="ms-2 fs-18 text-secondary" th:text="${qna.commentContent}"></span>
                             </div>
                           </div>
                         </div>
@@ -212,69 +220,7 @@
   /*]]>*/
 
 
-
-
-
-  const getNotificationList = () => {
-        $.ajax({
-         type: "get",
-         url: "/notification/findAll/" + sessionId,
-         success: function(res) {
-            let output = "";
-             if (res.length == 0) {
-                output += '<div class="text-center mb-3"> 읽지 않은 알림이 존재하지 않습니다. </div>';
-            } else {
-              for (let i in res) {
-                output += '<a href="' + res[i].notUrl + '">';
-                output += '<div class="row mt-2">';
-                output += '<div class="col ms-3">';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                if (res[i].fileAttached == 0) {
-                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
-                } else if (res[i].fileAttached == 1) {
-                    output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
-                }
-                output += '</div>';
-                output += '<div class="col ms-2 fw-semibold">' + res[i].sender + '</div>';
-                output += '<div class="col text-end text-secondary me-1">' + formatDateTime(res[i].occurDate) + '</div>';
-                output += '</div>';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                output += '</div>';
-                output += '<div class="col ms-2">' + res[i].sentence + '</div>';
-                output += '</div>';
-
-                output += '<div class="border-bottom mt-2">' + '</div>';
-
-                output += '</div>';
-                output += '</div>';
-                output += '</a>';
-                }
-            }
-            document.getElementById('notification-list').innerHTML = output;
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-
-
- window.addEventListener("DOMContentLoaded", function(){
-    getNotificationList();
-     const dateElements = document.querySelectorAll('.date-element');
-     dateElements.forEach(function (element) {
-         const dateString = element.textContent;
-         const formattedDate = formatDateTime(dateString);
-         element.textContent = formattedDate;
-     });
-
-});
-
 </script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
 </body>
 </html>

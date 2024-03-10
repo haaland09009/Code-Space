@@ -18,6 +18,7 @@ public class ProjectCommentDTO {
     private LocalDateTime regDate;
 
     private String writer;
+    private String jobName;
     private int fileAttached;
     private String storedFileName;
     private int likeCount;

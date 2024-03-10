@@ -1,3 +1,5 @@
+
+
     // 로그인 페이지 이동
     const loginPage = () => {
       location.href = "/user/loginPage";
@@ -75,28 +77,64 @@
    }
 
 
+    const getNotificationList = () => {
+            $.ajax({
+             type: "get",
+             url: "/notification/findAll/" + sessionId,
+             success: function(res) {
+                let output = "";
+                 if (res == null) {
+                    output += '<div class="text-center mt-3">알림이 존재하지 않습니다.</div>';
+                } else {
+                  for (let i in res) {
+                    output += '<a href="' + res[i].notUrl + '">';
+                    output += '<div class="row mt-2">';
+                    output += '<div class="col ms-3">';
 
-//const tabClick = (menu) => {
-//
-//    // 모든 탭을 회색으로 초기화
-//    document.getElementById('qnaLink').classList.remove("text-black");
-//    document.getElementById('projectLink').classList.remove("text-black");
-//    document.getElementById('noticeLink').classList.remove("text-black");
-//
-//    // 클릭한 탭의 글씨를 검은색으로 변경
-//    document.getElementById(menu).classList.add("text-black");
-//  }
-//
-//    // 각 탭에 대한 클릭 이벤트 리스너 추가
-//    document.getElementById('qnaLink').addEventListener('click', function () {
-//        tabClick('qnaLink');
-//    });
-//
-//    document.getElementById('projectLink').addEventListener('click', function () {
-//        tabClick('projectLink');
-//    });
-//
-//    document.getElementById('noticeLink').addEventListener('click', function () {
-//        tabClick('noticeLink');
-//    });
-//
+                    output += '<div class="row">';
+                    output += '<div class="col-1">';
+                    if (res[i].fileAttached == 0) {
+                        output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 30px; height: 30px; position: relative; top: 4px">';
+                    } else if (res[i].fileAttached == 1) {
+                        output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 30px; height: 30px; position: relative; top: 4px">';
+                    }
+                    output += '</div>';
+                    output += '<div class="col ms-2 fw-semibold">' + res[i].sender + '</div>';
+                    output += '<div class="col text-end text-secondary me-1">' + formatDateTime(res[i].occurDate) + '</div>';
+                    output += '</div>';
+
+                    output += '<div class="row">';
+                    output += '<div class="col-1">';
+                    output += '</div>';
+                    output += '<div class="col ms-2">' + res[i].sentence + '</div>';
+                    output += '</div>';
+
+                    output += '<div class="border-bottom mt-2">' + '</div>';
+
+                    output += '</div>';
+                    output += '</div>';
+                    output += '</a>';
+                    }
+                }
+                document.getElementById('notification-list').innerHTML = output;
+             },
+             error: function(err) {
+                 return;
+             }
+         });
+      }
+
+
+window.addEventListener("DOMContentLoaded", function(){
+    if (sessionId != 0) {
+        getNotificationList();
+    }
+    const dateElements = document.querySelectorAll('.date-element');
+        dateElements.forEach(function (element) {
+           const dateString = element.textContent;
+           const formattedDate = formatDateTime(dateString);
+           element.textContent = formattedDate;
+       });
+
+
+});

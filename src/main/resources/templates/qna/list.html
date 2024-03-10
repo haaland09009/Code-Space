@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>main</title>
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script type="text/javascript" th:src="@{/js/common.js}"></script>
 </head>
 <style>
 
@@ -33,7 +31,7 @@
                         <!---------------->
                         <div class="col">
                             <div class="row">
-                                <div class="col fs-5 fw-semibold ps-0 pe-0">
+                                <div class="col fs-4 fw-semibold ps-0 pe-0">
                                     오늘의 질문
                                 </div>
                             </div>
@@ -44,17 +42,17 @@
 
                             <div class="row mb-2 py-2 contentDiv" th:each="qnaBestDTO : ${bestQnaList}">
                                 <div class="col-1 d-grid ps-0 pe-0">
-                                    <button class="btn cateButton"
+                                    <button class="btn cateButton fs-5"
                                             th:if="${qnaBestDTO.topicName == '커리어'}">
                                         <i class="bi bi-bag fw-semibold" style="color: #712cf9;"></i>
                                     </button>
-                                    <button class="btn cateButton"
+                                    <button class="btn cateButton fs-5"
                                             th:if="${qnaBestDTO.topicName == '기술'}">
                                         <i class="bi bi-pencil text-success fw-semibold"></i>
                                     </button>
                                 </div>
 
-                                <div class="col-10">
+                                <div class="col-10 ms-1">
                                     <a th:href="@{|/qna/${qnaBestDTO.id}|}">
                                     <div class="row">
                                         <div class="col fw-semibold overflow" style="width: 130px" th:text="${qnaBestDTO.title}">
@@ -62,12 +60,12 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col text-secondary" style="font-size: 14px">
+                                        <div class="col text-secondary fs-16">
                                             <span>답변</span> <span class="ms-1" th:text="${qnaBestDTO.replyCount}"></span>
-                                            <span class="ms-1">
+                                            <span>
                                                  <i class="bi bi-dot"></i>
                                             </span>
-                                            <span class="ms-1">추천해요</span> <span class="ms-1" th:text="${qnaBestDTO.likeCount}"></span>
+                                            <span>추천해요</span> <span class="ms-1" th:text="${qnaBestDTO.likeCount}"></span>
                                         </div>
                                     </div>
                                     </a>
@@ -82,7 +80,7 @@
                         <!---------------->
                         <div class="col">
                             <div class="row">
-                                <div class="col fs-5 ps-0 fw-semibold">
+                                <div class="col fs-4 ps-0 fw-semibold">
                                     베스트 답변
                                 </div>
                             </div>
@@ -93,17 +91,17 @@
 <!--                            <div class="row mb-4" th:each="i : ${#numbers.sequence(0, 4)}">-->
                                 <div class="row mb-2 contentDiv py-2" th:each="qnaBestReply : ${bestReplyList}">
                                 <div class="col-1 d-grid ps-0 pe-0">
-                                    <button class="btn btn-sm cateButton"
+                                    <button class="btn btn-sm cateButton fs-5"
                                             th:if="${qnaBestReply.topicName == '커리어'}">
                                         <i class="bi bi-bag fw-semibold" style="color: #712cf9;"></i>
                                     </button>
-                                    <button class="btn btn-sm cateButton"
+                                    <button class="btn btn-sm cateButton fs-5"
                                             th:if="${qnaBestReply.topicName == '기술'}">
                                         <i class="bi bi-pencil text-success fw-semibold"></i>
                                     </button>
                                 </div>
 
-                                <div class="col-10">
+                                <div class="col-10 ms-1">
                                     <a th:href="@{|/qna/${qnaBestReply.id}|}">
                                     <div class="row">
                                         <div class="col fw-semibold overflow" style="width: 130px" th:text="${qnaBestReply.title}">
@@ -111,12 +109,12 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col text-secondary" style="font-size: 14px">
+                                        <div class="col text-secondary fs-16">
                                             <span>답변</span> <span th:text="${qnaBestReply.replyCount}"></span>
-                                            <span class="ms-1">
+                                            <span>
                                                  <i class="bi bi-dot"></i>
                                             </span>
-                                            <span class="ms-1">답변 좋아요</span><span class="ms-1" th:text="${qnaBestReply.likeCount}"></span>
+                                            <span>답변 좋아요</span><span class="ms-1" th:text="${qnaBestReply.likeCount}"></span>
                                         </div>
                                     </div>
                                     </a>
@@ -143,13 +141,13 @@
                                     <div class="row mt-1">
                                         <div class="col">
                                     <span>
-                                        <img class="rounded-circle" style="width: 20px; height: 20px;"
+                                        <img class="rounded-circle" style="width: 30px; height: 30px;"
                                              src="/img/user.jpg" th:if="${qna.fileAttached == 0}">
-                                        <img class="rounded-circle" style="width: 20px; height: 20px;"
+                                        <img class="rounded-circle" style="width: 30px; height: 30px;"
                                              th:src="@{|/upload/${qna.storedFileName}|}" th:if="${qna.fileAttached == 1}">
                                     </span>
 
-                                            <span class="ms-1 fw-semibold" th:text="${qna.writer}"></span>
+                                            <span class="ms-2 fw-semibold" th:text="${qna.writer}"></span>
                                             <span class="ms-1">·</span>
                                             <!--                                                    <span class="ms-1 text-secondary" th:text="*{#temporals.format(project.regDate, 'yyyy-MM-dd HH:mm:ss')}"></span>-->
                                             <span class="ms-1 text-secondary date-element" th:text="${qna.regDate}"></span>
@@ -165,7 +163,7 @@
 
                                     <div class="row mt-3">
                                         <a th:href="@{|/qna/${qna.id}|}">
-                                            <div class="col fw-semibold fs-5" th:text="${qna.title}">
+                                            <div class="col fw-semibold fs-4" th:text="${qna.title}">
 
                                             </div>
                                         </a>
@@ -180,16 +178,27 @@
                                         </a>
                                     </div>
 
+                                    <div class="row mt-3" th:if="${qna.hashTag != null}">
+                                        <div class="col">
+                                            <span class="text-secondary">
+                                                    <span th:each="tag, iterStat : ${#strings.replace(qna.hashTag, '\\s*#\\s*', '#').split('#')}" th:if="${!#strings.isEmpty(tag)}">
+                                                        <span th:text="'# ' + ${tag}" class="me-3"></span>
+                                                        <span th:if="${!iterStat.last}"> </span>
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+
                                     <div class="row mt-3 mb-2">
                                         <div class="col">
                                             <div class="row">
                                                 <div class="col">
-                                                    <button class="btn btn-sm cateButton"
+                                                    <button class="btn btn-sm cateButton fs-18"
                                                     th:if="${qna.categoryName == '기술'}">
                                                         <i class="bi bi-pencil text-success fw-semibold"></i>
                                                         <span class="ms-1" th:text="${qna.categoryName}"></span>
                                                     </button>
-                                                    <button class="btn btn-sm cateButton"
+                                                    <button class="btn btn-sm cateButton fs-18"
                                                             th:if="${qna.categoryName == '커리어'}">
                                                         <i class="bi bi-bag fw-semibold" style="color: #712cf9;"></i>
                                                         <span class="ms-1" th:text="${qna.categoryName}"></span>
@@ -198,7 +207,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col text-end text-secondary">
+                                        <div class="col mt-1 text-end text-secondary fs-18">
                                            <span> 답변 <span th:text="${qna.replyCount}"></span></span>
                                             <span class="ms-1"> 댓글 <span th:text="${qna.commentCount}"></span></span>
                                         </div>
@@ -229,104 +238,9 @@
       let sessionId = [[${session.userDTO != null ? session.userDTO.id : 0}]];
   /*]]>*/
 
-
-
-  const getNotificationList = () => {
-        $.ajax({
-         type: "get",
-         url: "/notification/findAll/" + sessionId,
-         success: function(res) {
-            let output = "";
-             if (res.length == 0) {
-                output += '<div class="text-center mb-3"> 읽지 않은 알림이 존재하지 않습니다. </div>';
-            } else {
-              for (let i in res) {
-                output += '<a href="' + res[i].notUrl + '">';
-                output += '<div class="row mt-2">';
-                output += '<div class="col ms-3">';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                if (res[i].fileAttached == 0) {
-                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
-                } else if (res[i].fileAttached == 1) {
-                    output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
-                }
-                output += '</div>';
-                output += '<div class="col ms-2 fw-semibold">' + res[i].sender + '</div>';
-                output += '<div class="col text-end text-secondary me-1">' + formatDateTime(res[i].occurDate) + '</div>';
-                output += '</div>';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                output += '</div>';
-                output += '<div class="col ms-2">' + res[i].sentence + '</div>';
-                output += '</div>';
-
-                output += '<div class="border-bottom mt-2">' + '</div>';
-
-                output += '</div>';
-                output += '</div>';
-                output += '</a>';
-                }
-            }
-            document.getElementById('notification-list').innerHTML = output;
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-   // 홈 메뉴
-    document.querySelector('.menu-item1').addEventListener('mouseover', function() {
-        this.classList.add('text-black');
-    });
-    document.querySelector('.menu-item1').addEventListener('mouseout', function() {
-        this.classList.remove('text-black');
-    });
-
-
-    // 기술 메뉴
-    document.querySelector('.menu-item2').addEventListener('mouseover', function() {
-        this.classList.add('text-black');
-    });
-    document.querySelector('.menu-item2').addEventListener('mouseout', function() {
-        this.classList.remove('text-black');
-    });
-
-    // 커리어 메뉴
-    document.querySelector('.menu-item3').addEventListener('mouseover', function() {
-        this.classList.add('text-black');
-    });
-    document.querySelector('.menu-item3').addEventListener('mouseout', function() {
-        this.classList.remove('text-black');
-    });
-
-    // 답변하기 메뉴
-    document.querySelector('.menu-item4').addEventListener('mouseover', function() {
-        this.classList.add('text-black');
-    });
-    document.querySelector('.menu-item4').addEventListener('mouseout', function() {
-        this.classList.remove('text-black');
-    });
-
-
-
-
-window.addEventListener("DOMContentLoaded", function(){
-    getNotificationList();
-    const dateElements = document.querySelectorAll('.date-element');
-    dateElements.forEach(function (element) {
-       const dateString = element.textContent;
-       const formattedDate = formatDateTime(dateString);
-       element.textContent = formattedDate;
-   });
-
-});
-
-
-
 </script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
+<script type="text/javascript" th:src="@{/js/qna/list.js}"></script>
 </body>
 </html>

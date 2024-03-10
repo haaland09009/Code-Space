@@ -32,6 +32,7 @@ public class ProjectDTO {
     private List<String> techList = new ArrayList<>();
 //    private String techList;
     private String projectStudy;
+    private int clipCount;
 
     private Long remainingDays;
 

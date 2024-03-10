@@ -1,10 +1,7 @@
 package com.yyi.projectStudy.controller;
 
 import com.yyi.projectStudy.dto.*;
-import com.yyi.projectStudy.service.NotificationService;
-import com.yyi.projectStudy.service.QnaReplyCommentService;
-import com.yyi.projectStudy.service.QnaReplyService;
-import com.yyi.projectStudy.service.QnaService;
+import com.yyi.projectStudy.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +20,7 @@ public class QnaReplyController {
     private final QnaReplyCommentService qnaReplyCommentService;
     private final QnaService qnaService;
     private final NotificationService notificationService;
+    private final UserService userService;
 
     // 답변 작성
     @PostMapping("/save")
@@ -41,6 +39,9 @@ public class QnaReplyController {
                 String replyContent = dto.getContent();
                 replyContent = replyContent.replaceAll("<br>", "\n");
                 dto.setContent(replyContent);
+
+                JobDTO replyJob = userService.findJob(dto.getUserId());
+                dto.setJobName(replyJob.getName());
             }
 
             // 답변 작성 - 알림 넣기
@@ -73,6 +74,10 @@ public class QnaReplyController {
                 String replyContent = dto.getContent();
                 replyContent = replyContent.replaceAll("<br>", "\n");
                 dto.setContent(replyContent);
+
+                JobDTO replyJob = userService.findJob(dto.getUserId());
+                dto.setJobName(replyJob.getName());
+
                 // 좋아요 수
                 int likeCount = qnaReplyService.likeCount(dto.getId());
                 dto.setLikeCount(likeCount);
@@ -84,6 +89,10 @@ public class QnaReplyController {
                     String commentContent = qnaReplyCommentDTO.getContent();
                     commentContent = commentContent.replaceAll("<br>", "\n");
                     qnaReplyCommentDTO.setContent(commentContent);
+
+                    JobDTO commentJob = userService.findJob(qnaReplyCommentDTO.getUserId());
+                    qnaReplyCommentDTO.setJobName(commentJob.getName());
+
                     commentList.add(qnaReplyCommentDTO);
                 }
                 dto.setCommentList(commentList);

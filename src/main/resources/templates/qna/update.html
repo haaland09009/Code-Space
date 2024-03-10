@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
 </head>
 <style>
 
@@ -35,7 +38,7 @@
 
                         <div class="row mt-2">
                             <div class="col">
-                                <select class="form-select py-2" name="topicId" id="topicBox" style="text-indent: 6px;">
+                                <select class="form-select py-2 fs-5" name="topicId" id="topicBox" style="text-indent: 6px;">
                                     <option selected disabled hidden value="">토픽을 선택해주세요.</option>
                                     <option th:each="topic : ${topicList}"
                                             th:value="${topic.id}" th:text="${topic.name}"
@@ -45,41 +48,45 @@
                         </div>
 
                         <div class="row mt-4">
-                            <div class="col fw-semibold ms-1">
+                            <div class="col fw-semibold ms-1 fs-5">
                                 제목
                             </div>
                         </div>
 
                         <div class="row mt-2">
                             <div class="col">
-                                <input type="text" class="form-control py-2" placeholder="제목을 입력해주세요." style="text-indent: 6px;"
+                                <input type="text" class="form-control py-2 fs-5" placeholder="제목을 입력해주세요." style="text-indent: 6px;"
                                        name="title" id="title" th:value="${qna.title}">
                             </div>
                         </div>
 
                         <div class="row mt-4">
                             <div class="col fw-semibold ms-1">
-                                태그 (필수 입력)
+                                태그 입력 (최대 <span class="text-primary">5개</span>까지만 등록 가능합니다)
                             </div>
                         </div>
 
                         <div class="row mt-2">
                             <div class="col">
-                                <input type="text" class="form-control py-2" placeholder="태그를 입력해주세요." style="text-indent: 6px;">
+                                <input name="tags" class="tags" placeholder='해시태그를 입력해보세요.'
+                                th:value="${hashTags}" th:if="${hashTags != null}">
+                                <input name="tags" class="tags" placeholder='해시태그를 입력해보세요.'
+                                    th:if="${hashTags == null}">
                             </div>
                         </div>
 
+
                         <div class="row mt-4">
                             <div class="col">
-                                <textarea name="content" id="content" cols="30" rows="15" class="form-control"
+                                <textarea name="content" id="content" cols="30" rows="15" class="form-control fs-5"
                                 th:utext="${qna.content}" style="resize: none;"></textarea>
                             </div>
                         </div>
 
                         <div class="row mt-3">
                             <div class="col text-end">
-                                <a href="/qna" class="btn btn-outline-dark">취소</a>
-                                <button class="btn ms-1 mainButton">등록</button>
+                                <a href="/qna" class="btn btn-outline-dark fs-5">취소</a>
+                                <button class="btn ms-1 mainButton fs-5">등록</button>
                             </div>
                         </div>
                     </form>
@@ -144,6 +151,23 @@
       let sessionId = [[${session.userDTO != null ? session.userDTO.id : 0}]];
   /*]]>*/
 
+    /* 해시태그 입력창 */
+    var input = document.querySelector('input[name="tags"]');
+    var whitelist = ["백엔드","프론트엔드","안드로이드","Java", "JavaScript",
+                 "Spring", "Spring Boot", "React","Vue", "C", "C++", "Python", "NodeJs",
+                  "Swift", "Kotlin", "Flutter", "TypeScript", "자바","스프링", "HTML","CSS","AWS","딥러닝","AI"];
+    var tagify = new Tagify(input, {
+        whitelist: whitelist,
+        maxTags: 5,
+        dropdown: {
+            maxItems: 20,
+            classname: "tags-look",
+            enabled: 0,
+            closeOnSelect: false
+        }
+    })
+
+
   const updateQna = () => {
 
     const topic = document.querySelector("#topicBox");
@@ -174,14 +198,14 @@
 
 
 
-  const getNotificationList = () => {
+ const getNotificationList = () => {
         $.ajax({
          type: "get",
          url: "/notification/findAll/" + sessionId,
          success: function(res) {
             let output = "";
-             if (res.length == 0) {
-                output += '<div class="text-center mb-3"> 읽지 않은 알림이 존재하지 않습니다. </div>';
+             if (res == null) {
+                output += '<div class="text-center mt-3">알림이 존재하지 않습니다.</div>';
             } else {
               for (let i in res) {
                 output += '<a href="' + res[i].notUrl + '">';
@@ -191,9 +215,9 @@
                 output += '<div class="row">';
                 output += '<div class="col-1">';
                 if (res[i].fileAttached == 0) {
-                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
+                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 30px; height: 30px; position: relative; top: 4px">';
                 } else if (res[i].fileAttached == 1) {
-                    output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 28px; height: 28px; position: relative; bottom: 1px">';
+                    output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 30px; height: 30px; position: relative; top: 4px">';
                 }
                 output += '</div>';
                 output += '<div class="col ms-2 fw-semibold">' + res[i].sender + '</div>';
@@ -221,9 +245,10 @@
      });
   }
 
-
 window.addEventListener("DOMContentLoaded", function(){
-    getNotificationList();
+    if (sessionId != 0) {
+        getNotificationList();
+    }
 
 });
 </script>

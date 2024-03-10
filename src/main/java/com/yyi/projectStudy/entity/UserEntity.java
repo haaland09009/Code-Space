@@ -84,6 +84,12 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "sender", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
     private List<ChatEntity> chatEntityList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
+    private List<QnaClipEntity> qnaClipEntityList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
+    private List<ProjectClipEntity> projectClipEntityList = new ArrayList<>();
+
 
 
     // DTO -> Entity

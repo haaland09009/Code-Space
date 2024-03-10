@@ -20,7 +20,7 @@ public class QnaReplyCommentDTO {
     private String writer;
     private int fileAttached;
     private String storedFileName;
-
+    private String jobName;
     public static QnaReplyCommentDTO toQnaReplyCommentDTO(QnaReplyCommentEntity qnaReplyCommentEntity) {
         QnaReplyCommentDTO qnaReplyCommentDTO = new QnaReplyCommentDTO();
         qnaReplyCommentDTO.setId(qnaReplyCommentEntity.getId());
