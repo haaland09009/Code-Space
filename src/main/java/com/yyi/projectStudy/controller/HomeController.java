@@ -1,9 +1,11 @@
 package com.yyi.projectStudy.controller;
 
 import com.yyi.projectStudy.dto.*;
+import com.yyi.projectStudy.service.ChatService;
 import com.yyi.projectStudy.service.ProjectCommentService;
 import com.yyi.projectStudy.service.ProjectService;
 import com.yyi.projectStudy.service.QnaService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,7 @@ public class HomeController {
     private final ProjectService projectService;
     private final ProjectCommentService projectCommentService;
     private final QnaService qnaService;
+    private final ChatService chatService;
     @GetMapping("/")
     public String mainPage(Model model) {
 
@@ -37,10 +40,10 @@ public class HomeController {
             }
             projectDTO.setTechList(techList);
 
-            Date endDate = projectDTO.getEndDate();
+            Date startDate = projectDTO.getStartDate();
 
             long currentTime = System.currentTimeMillis();
-            long remainingTimeMillis = endDate.getTime() - currentTime;
+            long remainingTimeMillis = startDate.getTime() - currentTime;
 
             long remainingDays = remainingTimeMillis / (1000 * 60 * 60 * 24);
 

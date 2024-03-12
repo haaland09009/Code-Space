@@ -3,116 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>main</title>
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script type="text/javascript" th:src="@{/js/common.js}"></script>
-
-<!--    <script type="text/javascript" th:src="@{/js/summernote/summernote-lite.js}"></script>-->
-<!--    <script type="text/javascript" th:src="@{/js/summernote/ang/summernote-ko-KR.js}"></script>-->
-<!--    <link rel="stylesheet" th:href="@{/css/summernote/summernote-lite.css}">-->
-    <link rel="stylesheet" th:href="@{/css/plugins/select2.min.css}">
-    <script type="text/javascript" th:src="@{/js/plugins/select2.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <!--  datepicker -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <!-- 토스트 에디터 -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <link rel="stylesheet" th:href="@{/css/project/write.css}">
 
 
 </head>
 <style>
-    .select2-search__field {
-        padding: 5px; /* 검색창의 폰트와 마우스 커서 조절 */
-        margin-top: -5px; /* 검색창을 위로 올리는 조절값 (설정 가능) */
-         line-height: 1.5; /* 간격을 조절하여 글자의 가려짐을 최소화 */
-    }
-    .select2-container {
-         width: 100% !important;
-         box-sizing: border-box;
-         margin-top: 8px;
-         font-family: "Pretendard", sans-serif;
-     }
-
-      .select2-selection {
-          height: calc(1.5em + 1rem + 2px);
-          border: 1px solid #ced4da;
-          border-radius: .25rem;
-          padding: .375rem .75rem;
-          line-height: 1.5;
-          background-color: #fff;
-          color : black;
-          background-clip: padding-box;
-          cursor: pointer;
-      }
-
-      .select2-selection__arrow {
-          height: calc(1.5em + 1rem + 2px);
-          border-top: .3em solid #000;
-          border-right: .3em solid transparent;
-          border-left: .3em solid transparent;
-      }
-
-    .select2-selection--multiple .select2-selection__rendered:before {
-        content: "프로젝트 사용 스택";
-        font-family: "Pretendard", sans-serif; /* 플레이스홀더 글꼴 설정 */
-    }
-
-
-
-
-      .select2-selection--multiple {
-          height: auto;
-      }
-
-      .select2-container--bootstrap4 .select2-selection--multiple {
-          height: auto;
-      }
-
-      .select2-selection__choice {
-          background-color: #007bff;
-          border: 1px solid #007bff;
-          border-radius: .25rem;
-          color: black;
-          margin: 2px 5px 2px 0;
-          padding: 2px 5px;
-      }
-
-      .select2-container--bootstrap4 .select2-selection__choice {
-          background-color: #007bff;
-          border: 1px solid #007bff;
-          border-radius: .25rem;
-          color: #fff;
-          margin: 2px 5px 2px 0;
-          padding: 2px 5px;
-      }
-
-      .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
-          background-color: #007bff;
-          border: 1px solid #007bff;
-          border-radius: .25rem;
-          color: #fff;
-          margin: 2px 5px 2px 0;
-          padding: 2px 5px;
-      }
-   .select2-container--open .select2-selection--multiple .select2-selection__rendered:before {
-        content: "";
-    }
-
-    .select2-container--open .select2-selection--single .select2-selection__rendered:before {
-        content: "";
-    }
-
-    .select2-selection--multiple .select2-selection__rendered:not(:empty):before {
-        content: "";
-    }
-      .select2-search--inline .select2-search__field {
-        font-family: "Pretendard", sans-serif; /* 검색 폰트 설정 */
-    }
-    .select2-search.select2-search--inline {
-        margin-top: -10px; /* 조절 가능한 값으로 변경 */
-    }
-
-
-        .select2-dropdown {
-        margin-top: 10px; /* 드롭다운 메뉴의 위치 조절 */
-    }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 <body>
@@ -120,25 +24,31 @@
     <div th:include="common/header :: header"></div>
 
 
-    <div class="row">
-<!--        <div class="col-2">-->
-<!--            <div th:include="common/sidemenu :: sidemenu"></div>-->
-<!--        </div>-->
+    <div class="row d-flex justify-content-center bg-light">
+        <div class="col-9">
 
-        <div class="col">
-
-            <div class="row mt-3 mb-4"></div>
+            <div class="row mt-2 mb-3"></div>
             <div class="row">
                 <div class="col ms-5">
 
-                    <div class="row mt-4">
+                    <div class="row mt-1">
+                        <a href="/project">
+                            <div class="col">
+                                <button class="btn btn-light">
+                                    <i class="bi bi-arrow-left fs-3"></i>
+                                </button>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="row mt-3">
                         <!-- 게시판 영역 -->
                         <div class="col bg-white ms-2 border border-1 rounded-2">
 
-                            <div class="row mt-4">
-                                <div class="col ms-3">
+                            <div class="row mt-4 d-flex justify-content-center">
+                                <div class="col-11">
 
-                                    <form action="/project/write" method="post" onsubmit="return writeBoard();">
+                                    <form id="writeForm" action="/project/write" method="post" onsubmit="return writeBoard();">
                                         <input type="hidden" name="userId" th:value="${session.userDTO.id}">
                                         <div class="row">
                                             <div class="col">
@@ -167,7 +77,7 @@
                                                 <div class="row mt-2">
                                                     <div class="col">
 
-                                                        <select class="form-select fs-5" multiple="multiple" id="techBox" name="techId">
+                                                        <select class="form-control fs-5" multiple="multiple"  id="techBox" name="techId">
 
                                                             <option th:each="option : ${techCategoryList}"
                                                                     th:value="${option.id}" th:text="${option.name}"></option>
@@ -239,7 +149,8 @@
 
                                                 <div class="row mt-2">
                                                     <div class="col">
-                                                        <input type="date" class="form-control fs-5" id="endDateBox" name="endDate">
+<!--                                                        <input type="date" class="form-control fs-5" id="startDateBox" name="startDate">-->
+                                                        <input type="text" class="fs-5 datePicker form-control" id="startDateBox" name="startDate">
                                                     </div>
                                                 </div>
                                             </div>
@@ -247,9 +158,15 @@
 
                                         <div class="row mt-2 mb-3"></div>
 
-                                        <div class="row">
+                                        <div class="row mt-4">
+                                            <div class="col fs-3 fw-semibold">
+                                                📢 프로젝트 / 스터디에 대해 소개해주세요.
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-3">
                                             <div class="col">
-                                                <input type="text" class="form-control mt-2 p-2 fs-5" placeholder="제목" style="text-indent: 8px"
+                                                <input type="text" class="form-control mt-2 p-2 fs-5" placeholder="제목을 입력해주세요." style="text-indent: 8px"
                                                 id="title" name="title">
                                             </div>
                                             <div class="col-4 text-end">
@@ -259,9 +176,8 @@
 
                                         <div class="row mt-4">
                                             <div class="col">
-                                                <textarea name="content" id="content" cols="30" rows="20" class="form-control fs-5"
-                                                          style="resize: none; font-size: 18px"></textarea>
-
+                                                <div id="content"></div>
+                                                <input type="hidden" id="contentInput" name="content" value="">
                                             </div>
                                         </div>
 
@@ -271,13 +187,11 @@
 
 
                                 </div>
-                                <div class="col-1"></div>
                             </div>
 
 
                         </div>
                         <!-- 게시판 영역 -->
-                        <div class="col-4"></div>
                     </div>
 
                     <div class="row mt-4 mb-3"></div>
@@ -298,156 +212,17 @@
     let sessionId = [[${session.userDTO != null ? session.userDTO.id : 0}]];
 /*]]>*/
 
-
-    $(document).ready(function () {
-        $('#techBox').select2({
-            allowClear: true, // 선택 취소 옵션을 추가할 경우
-        });
-
-        // 선택이 변경될 때 이벤트 핸들링
-        $('#techBox').on('change', function () {
-            var selectedOptions = $(this).val();
-
-            // 선택된 옵션이 없을 때만 플레이스홀더 텍스트를 표시
-            $(this).siblings('.select2-container').find('.select2-selection--multiple .select2-selection__rendered:before, .select2-selection--single .select2-selection__rendered:before').css('content', selectedOptions && selectedOptions.length > 0 ? '' : '프로젝트 사용 스택');
-        });
-        $('#techBox').on('select2:open', function (e) {
-            $('.select2-search__field').css('margin-top', '-10px'); /* 조절 가능한 값으로 변경 */
-        });
-    });
-
-
-
-
-
-
- // 이전 날짜 방지
- const setDateInput = () => {
-     let endDateElement = document.getElementById('endDateBox');
-     let currentDate = new Date();
-     let endDatePos = new Date(currentDate.getTime() - currentDate.getTimezoneOffset() * 60000).toISOString().slice(0, -8);
-
-     endDateElement.value = endDatePos.split('T')[0];
-
-     endDateElement.setAttribute("min", endDatePos.split('T')[0]);
- };
-
- // 게시글 작성
- const writeBoard = () => {
-     const projectStudy = document.querySelector("#projectStudyBox");
-     const tech = document.querySelector("#techBox");
-     const position = document.querySelector("#positionBox");
-     const headCount = document.querySelector("#headCountBox");
-     const period = document.querySelector("#periodBox");
-     const endDate = document.querySelector("#endDateBox");
-
-     const title = document.querySelector("#title");
-     const content = document.querySelector("#content");
-
-     if (projectStudy.value == "") {
-         alert("모집 구분란을 선택해주세요.");
-         projectStudy.focus();
-         return false;
-     }
-
-     if (tech.value == "") {
-         alert("기술 스택을 선택해주세요.");
-         tech.focus();
-         return false;
-     }
-
-     if (position.value == "") {
-         alert("모집 포지션을 선택해주세요.");
-         position.focus();
-         return false;
-     }
-
-     if (headCount.value == "") {
-         alert("모집 인원을 선택해주세요.");
-         headCount.focus();
-         return false;
-     }
-
-     if (period.value == "") {
-         alert("진행 기간을 선택해주세요.");
-         period.focus();
-         return false;
-     }
-     if (endDate.value == "") {
-         alert("모집 마감일을 선택해주세요.");
-         endDate.focus();
-         return false;
-     }
-     if (title.value.trim() == "") {
-         alert("제목을 입력하세요.");
-         title.focus();
-         return false;
-     }
-
-     if (content.value.trim() == "") {
-         alert("내용을 입력하세요.");
-         content.focus();
-         return false;
-     }
-     return true;
- }
-
-
-const getNotificationList = () => {
-      $.ajax({
-       type: "get",
-       url: "/notification/findAll/" + sessionId,
-       success: function(res) {
-          let output = "";
-           if (res == null) {
-              output += '<div class="text-center mt-3">알림이 존재하지 않습니다.</div>';
-          } else {
-            for (let i in res) {
-              output += '<a href="' + res[i].notUrl + '">';
-              output += '<div class="row mt-2">';
-              output += '<div class="col ms-3">';
-
-              output += '<div class="row">';
-              output += '<div class="col-1">';
-              if (res[i].fileAttached == 0) {
-                  output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 30px; height: 30px; position: relative; top: 4px">';
-              } else if (res[i].fileAttached == 1) {
-                  output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 30px; height: 30px; position: relative; top: 4px">';
-              }
-              output += '</div>';
-              output += '<div class="col ms-2 fw-semibold">' + res[i].sender + '</div>';
-              output += '<div class="col text-end text-secondary me-1">' + formatDateTime(res[i].occurDate) + '</div>';
-              output += '</div>';
-
-              output += '<div class="row">';
-              output += '<div class="col-1">';
-              output += '</div>';
-              output += '<div class="col ms-2">' + res[i].sentence + '</div>';
-              output += '</div>';
-
-              output += '<div class="border-bottom mt-2">' + '</div>';
-
-              output += '</div>';
-              output += '</div>';
-              output += '</a>';
-              }
-          }
-          document.getElementById('notification-list').innerHTML = output;
-       },
-       error: function(err) {
-           return;
-       }
-   });
-}
-
-window.addEventListener("DOMContentLoaded", function(){
- setDateInput();
- if (sessionId != 0) {
-  getNotificationList();
- }
-
-});
-
+  /*<![CDATA[*/
+    const techCategoryList = [[${techCategoryList}]];
+/*]]>*/
 </script>
+
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<!-- 토스트 UI - JS -->
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script type="text/javascript" th:src="@{/js/project/write.js}"></script>
+
 </body>
 </html>

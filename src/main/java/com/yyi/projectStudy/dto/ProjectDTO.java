@@ -22,19 +22,22 @@ public class ProjectDTO {
     private int readCount;
     private int headCount;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date endDate;
+    private Date startDate;
     private LocalDateTime regDate;
+    private String status;
 
     private String writer;
     private int fileAttached;
     private String storedFileName;
     private Long commentCount;
+    private List<String> positionList = new ArrayList<>();
     private List<String> techList = new ArrayList<>();
 //    private String techList;
     private String projectStudy;
     private int clipCount;
 
     private Long remainingDays;
+
 
     public static ProjectDTO toProjectDTO(ProjectEntity projectEntity) {
         ProjectDTO projectDTO = new ProjectDTO();
@@ -44,7 +47,8 @@ public class ProjectDTO {
         projectDTO.setReadCount(projectEntity.getReadCount());
         projectDTO.setHeadCount(projectEntity.getHeadCount()); //
         projectDTO.setRegDate(projectEntity.getRegDate());
-        projectDTO.setEndDate(projectEntity.getEndDate()); //
+        projectDTO.setStartDate(projectEntity.getStartDate()); //
+        projectDTO.setStatus(projectEntity.getStatus());
 
         projectDTO.setUserId(projectEntity.getUserEntity().getId());
         projectDTO.setWriter(projectEntity.getUserEntity().getNickname());

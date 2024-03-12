@@ -125,8 +125,47 @@
       }
 
 
+  // 현재 페이지의 URL에서 path 부분을 추출
+    const path = window.location.pathname;
+
+    // 모든 메뉴 항목에서 'active' 클래스 제거
+    document.querySelectorAll('.tab-link').forEach(function (element) {
+        element.classList.remove('text-black');
+    });
+
+    // 현재 페이지에 해당하는 메뉴 항목에 'active' 클래스 추가
+     if (path.startsWith('/qna')) {
+         document.querySelector('#qnaLink').classList.add('text-black');
+     } else if (path.startsWith('/project')) {
+         document.querySelector('#projectLink').classList.add('text-black');
+     }
+
+
+    /*  안 읽은 채팅 개수  */
+    const notReadChatCount = (id) => {
+       const notReadChatBox = document.querySelector("#notReadChatBox");
+       const notReadChatCount = document.querySelector("#notReadChatCount");
+       $.ajax({
+         url: "/chat/notReadCount/" + id,
+         success: function(res) {
+            if (res > 0) {
+                notReadChatBox.style.display = "block";
+                notReadChatCount.innerText = res;
+             } else {
+                notReadChatBox.style.display = "none";
+             }
+
+         }, error: function(err) {
+             return;
+         }
+      });
+    }
+
+
+
 window.addEventListener("DOMContentLoaded", function(){
     if (sessionId != 0) {
+        notReadChatCount(sessionId);
         getNotificationList();
     }
     const dateElements = document.querySelectorAll('.date-element');

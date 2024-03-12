@@ -15,6 +15,7 @@
         }
     })
 
+  /*  게시글 작성  */
   const writeQna = () => {
 
     const topic = document.querySelector("#topicBox");
@@ -36,6 +37,7 @@
         content.focus();
         return false;
     }
-
     return true;
-}
+  }
+
+

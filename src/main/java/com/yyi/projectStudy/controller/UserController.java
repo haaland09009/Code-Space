@@ -25,6 +25,7 @@ public class UserController {
     // 로그인 페이지 이동
     @GetMapping("/loginPage")
     public String loginPage() {
+
         return "user/loginPage";
     }
 
@@ -33,6 +34,7 @@ public class UserController {
     public String joinPage(Model model) {
         List<JobDTO> jobDTOList = userService.findAllJobs();
         model.addAttribute("jobList", jobDTOList);
+
         return "user/joinPage";
     }
 
@@ -81,7 +83,6 @@ public class UserController {
             List<JobDTO> jobDTOList = userService.findAllJobs();
             model.addAttribute("jobList", jobDTOList);
 
-
             return "user/myPage";
         }
     }
@@ -105,6 +106,8 @@ public class UserController {
             Long userId = sessionUser.getId();
             List<ChatDTO> chatDTOList = chatService.findRecentChats(userId);
             model.addAttribute("chatRoomList", chatDTOList);
+
+
             return "user/message";
         }
     }
@@ -122,6 +125,7 @@ public class UserController {
 
             List<QnaArticleDTO> qnaArticleDTOList = qnaService.findArticleList(userId);
             model.addAttribute("qnaArticleList", qnaArticleDTOList);
+
             return "user/articles";
         }
     }
@@ -152,6 +156,7 @@ public class UserController {
             }
 
             model.addAttribute("qnaClipList", qnaClipDTOList);
+
             return "user/clip";
         }
 

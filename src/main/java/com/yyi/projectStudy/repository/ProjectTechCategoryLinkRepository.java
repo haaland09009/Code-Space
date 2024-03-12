@@ -16,6 +16,7 @@ public interface ProjectTechCategoryLinkRepository extends JpaRepository<Project
     // !!! 나중에 리스트 형태로 수정해야함.
     List<ProjectTechCategoryLinkEntity> findByProjectEntity_Id(Long id);
 
+    /* 기술스택 삭제 */
     void deleteByProjectEntity(ProjectEntity projectEntity);
 
     int countByProjectEntityAndTechCategoryEntity(ProjectEntity projectEntity, TechCategoryEntity techCategoryEntity);

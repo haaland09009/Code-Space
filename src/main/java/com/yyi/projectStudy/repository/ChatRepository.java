@@ -77,4 +77,24 @@ public interface ChatRepository extends JpaRepository<ChatEntity, Long> {
     @Modifying
     @Query(value = "update ChatEntity c set c.readDate = sysdate where id = :id")
     void readChat(@Param("id") Long id);
+
+
+    // 안 읽은 채팅 총 개수
+//    SELECT COUNT(*) FROM chat_table ct
+//    JOIN chat_room_table cr ON ct.room_id = cr.id
+//    WHERE ct.sender_id != 43 AND
+//            (cr.sender_id = 43 OR cr.receiver_id = 43)
+//    AND ct.read_date IS NULL
+
+//    select count(*) from ChatEntity ct
+//    JOIN ChatRoomEntity cr
+//    WHERE ct.sender != userEntity AND
+//            (cr.sender = :userEntity OR cr.receiver = :userEntity)
+//    AND ct.readDate is null
+    @Query(value = "select count(*) from ChatEntity ct\n" +
+            "join ct.chatRoomEntity cr\n" +
+            "where ct.sender != :userEntity and\n" +
+            "(cr.sender = :userEntity or cr.receiver = :userEntity)\n" +
+            "and ct.readDate is null")
+    int notReadCount(UserEntity userEntity);
 }

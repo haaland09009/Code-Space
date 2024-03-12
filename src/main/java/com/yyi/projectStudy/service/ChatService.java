@@ -186,7 +186,7 @@ public class ChatService {
         }
     }
 
-    // 채팅방 접속 - 채팅읽기
+    /* 채팅방 접속 - 채팅읽기 */
     @Transactional
     public void readChat(Long roomId, Long sessionId) {
         List<ChatEntity> chatEntityList = chatRepository.checkChatIsNotRead(roomId, sessionId);
@@ -195,44 +195,16 @@ public class ChatService {
         }
     }
 
-    // 채팅 삭제
+    /* 채팅 삭제 */
     public void deleteById(Long id) {
         chatRepository.deleteById(id);
     }
 
-
-//    @Transactional
-//    public List<ChatRoomDTO> findAllChatRoom(Long id) {
-//        UserEntity sender = userRepository.findById(id).get();
-//        UserEntity receiver = userRepository.findById(id).get();
-//
-//        List<ChatRoomDTO> chatRoomDTOList = new ArrayList<>();
-//
-//        // 모든 채팅방 찾기
-//        List<ChatRoomEntity> chatRoomEntityList = chatRoomRepository.findBySenderOrReceiver(sender, receiver);
-//        for (ChatRoomEntity chatRoomEntity : chatRoomEntityList) {
-//            ChatRoomDTO chatRoomDTO = ChatRoomDTO.toChatRoomDTO(chatRoomEntity);
-//
-//            // 채팅방에 표시할 상대방의 정보를 조회 (프로필 사진, 이름)
-//            if (!id.equals(chatRoomDTO.getSenderId())) {
-//                chatRoomDTO.setWriter(chatRoomEntity.getSender().getNickname());
-//                chatRoomDTO.setFileAttached(chatRoomEntity.getSender().getFileAttached());
-//                if (chatRoomEntity.getSender().getFileAttached() == 1) {
-//                    chatRoomDTO.setStoredFileName(chatRoomEntity.getSender().getUserImageFileEntityList().get(0).getStoredFileName());
-//                }
-//            } else if (!id.equals(chatRoomDTO.getReceiverId())) {
-//                chatRoomDTO.setWriter(chatRoomEntity.getReceiver().getNickname());
-//                chatRoomDTO.setFileAttached(chatRoomEntity.getReceiver().getFileAttached());
-//                if (chatRoomEntity.getReceiver().getFileAttached() == 1) {
-//                    chatRoomDTO.setStoredFileName(chatRoomEntity.getReceiver().getUserImageFileEntityList().get(0).getStoredFileName());
-//                }
-//            }
-//            ///////////////////////
-//            chatRoomDTOList.add(chatRoomDTO);
-//        }
-//        return chatRoomDTOList;
-//    }
-
+    /* 안 읽은 채팅의 총 개수 */
+    public int notReadCount(Long id) {
+        UserEntity userEntity = userRepository.findById(id).get();
+        return chatRepository.notReadCount(userEntity);
+    }
 
 
     }

@@ -31,13 +31,11 @@ public class ProjectPositionCategoryLinkEntity {
     @JoinColumn(name = "position_id")
     private PositionCategoryEntity positionCategoryEntity;
 
-    public static ProjectPositionCategoryLinkEntity toProjectPositionCategoryLinkEntity
-            (ProjectPositionCategoryLinkDTO projectPositionCategoryLinkDTO,
+    public static ProjectPositionCategoryLinkEntity toProjectPositionCategoryLinkEntity(
              ProjectEntity projectEntity,
              PositionCategoryEntity positionCategoryEntity) {
         ProjectPositionCategoryLinkEntity projectPositionCategoryLinkEntity
                 = new ProjectPositionCategoryLinkEntity();
-        projectPositionCategoryLinkEntity.setId(projectPositionCategoryLinkDTO.getId());
         projectPositionCategoryLinkEntity.setProjectEntity(projectEntity);
         projectPositionCategoryLinkEntity.setPositionCategoryEntity(positionCategoryEntity);
         return projectPositionCategoryLinkEntity;

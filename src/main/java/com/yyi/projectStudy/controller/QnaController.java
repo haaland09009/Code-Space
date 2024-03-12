@@ -23,9 +23,10 @@ public class QnaController {
     private final QnaReplyCommentService qnaReplyCommentService;
     private final UserService userService;
     private final utils utils;
+    private final ChatService chatService;
     // 메인 페이지 - 기술, 커리어, 기타 모두 조회
     @GetMapping("")
-    public String mainPage(Model model) {
+    public String mainPage(Model model, HttpSession session) {
         List<QnaDTO> qnaDTOList = qnaService.findAll();
         // 기술, 커리어, 기타 카테고리 여부 dto에 저장
         for (QnaDTO qnaDTO : qnaDTOList) {
@@ -55,7 +56,6 @@ public class QnaController {
             if (qnaTagsDTO != null) {
                 qnaDTO.setHashTag(qnaTagsDTO.getTag());
             }
-
         }
         model.addAttribute("qnaList", qnaDTOList);
 
@@ -67,6 +67,7 @@ public class QnaController {
         List<QnaBestDTO> qnaBestDTOList = qnaService.findBestQnaList();
         model.addAttribute("bestQnaList", qnaBestDTOList);
 
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
 
         return "qna/list";
     }
@@ -80,6 +81,7 @@ public class QnaController {
         } else {
             List<TopicDTO> topicDTOList =  qnaService.findAllTopic();
             model.addAttribute("topicList", topicDTOList);
+
             return "qna/write";
         }
     }
@@ -109,24 +111,6 @@ public class QnaController {
 
         return "redirect:/qna/" + savedId;
     }
-
-//    // 게시글 작성
-//    @PostMapping("/write")
-//    public String write(@ModelAttribute QnaTopicDTO qnaTopicDTO,
-//                        @ModelAttribute QnaDTO qnaDTO) {
-//
-//        // enter 처리
-//        String content = qnaDTO.getContent();
-//        content = content.replaceAll("\r\n", "<br>");
-//        qnaDTO.setContent(content);
-//        // 게시글 저장 후 pk 가져오기
-//        Long savedId = qnaService.saveQna(qnaDTO);
-//        // qna - topic insert
-//        QnaDTO dto = qnaService.findById(savedId);
-//        TopicDTO topicDTO = qnaService.findByIdForTopic(qnaTopicDTO.getTopicId());
-//        qnaService.saveQnaTopic(dto, topicDTO);
-//        return "redirect:/qna/" + savedId;
-//    }
 
 
     // 게시글 상세보기
@@ -284,8 +268,6 @@ public class QnaController {
                 model.addAttribute("hashTags", tag);
             }
 
-
-
             return "qna/update";
         }
     }
@@ -399,6 +381,7 @@ public class QnaController {
             updateQnaDTO.setHashTag(qnaTagsDTO.getTag());
         }
 
+
         return "qna/detail";
     }
 
@@ -482,7 +465,7 @@ public class QnaController {
 
     // 기술 탭
     @GetMapping("/tech")
-    public String techList(Model model) {
+    public String techList(Model model, HttpSession session) {
         List<QnaDTO> qnaDTOList = qnaService.findAllByTopic(1L);
         for (QnaDTO qnaDTO : qnaDTOList) {
             String content = qnaDTO.getContent();
@@ -508,13 +491,16 @@ public class QnaController {
 
         }
         model.addAttribute("qnaList", qnaDTOList);
+
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+
         return "qna/techList";
     }
 
 
     // 기술 탭
     @GetMapping("/career")
-    public String careerList(Model model) {
+    public String careerList(Model model, HttpSession session) {
         List<QnaDTO> qnaDTOList = qnaService.findAllByTopic(2L);
         for (QnaDTO qnaDTO : qnaDTOList) {
             String content = qnaDTO.getContent();
@@ -540,6 +526,7 @@ public class QnaController {
 
         }
         model.addAttribute("qnaList", qnaDTOList);
+
         return "qna/careerList";
     }
 

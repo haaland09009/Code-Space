@@ -2,6 +2,11 @@
     width: 515px;
 }
 
+/* 날짜 설정 - 마우스 커서 설정 */
+.datePicker {
+    cursor: pointer;
+}
+
 .select2-container .select2-search--inline .select2-search__field {
     height: 30px!important;
     vertical-align: middle!important;
@@ -14,8 +19,36 @@
     border: 1px solid #dee2e6!important;
 }
 
+/*
+--tags-disabled-bg: #F1F1F1;
+    --tags-border-color: #DDD;
+    --tags-hover-border-color: #CCC;
+    --tags-focus-border-color: #3595f6;
+    --tag-border-radius: 3px;
+    --tag-bg: #E5E5E5;
+    --tag-hover: #D3E2E2;
+    --tag-text-color: black;
+    --tag-text-color--edit: black;
+    --tag-pad: 0.3em 0.5em;
+    --tag-inset-shadow-size: 1.1em;
+    --tag-invalid-color: #D39494;
+    --tag-invalid-bg: rgba(211, 148, 148, 0.5);
+    --tag--min-width: 1ch;
+    --tag--max-width: 100%;
+    --tag-hide-transition: 0.3s;
+    --tag-remove-bg: rgba(211, 148, 148, 0.3);
+    --tag-remove-btn-color: black;
+    --tag-remove-btn-bg: none;
+    --tag-remove-btn-bg--hover: #c77777;
+    --input-color: inherit;
+    --placeholder-color: rgba(0, 0, 0, 0.4);
+    --placeholder-color-focus: rgba(0, 0, 0, 0.25);
+    --loader-size: .8em;
+    --readonly-striped: 1;
+*/
+
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
-    background-color: #D3E2E2!important;
+    background-color: #E5E5E5!important;
     /* border: 1px solid #aaa; */
     border-radius: 4px;
     box-sizing: border-box;
@@ -32,3 +65,19 @@
     font-family: 'Pretendard'!important;
 }
 
+.toastui-editor-contents p {
+  font-size: 20px;
+  font-family: 'Pretendard';
+}
+
+.ProseMirror {
+    font-size: 20px;
+    font-family: 'Pretendard';
+}
+
+.toastui-editor md-mode {
+    min-height: 500px;
+}
+.toastui-editor-contents {
+   font-family: 'Pretendard';
+}

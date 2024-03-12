@@ -10,7 +10,10 @@
 
 </head>
 <style>
-
+    .custom-border {
+            border-right: 2px solid #ddd; /* 원하는 경계선 스타일 및 색상으로 조절 가능 */
+            padding-right: 15px; /* 옵션: 오른쪽 여백 추가 */
+        }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 <body>
@@ -19,13 +22,22 @@
 
 
     <div class="row">
-
-
         <div class="col bg-light">
-
             <div class="row mt-3 mb-4"></div>
-            <div class="row">
-                <div class="col ms-5">
+            <div class="row d-flex justify-content-center">
+                <div class="col">
+                    <div class="row mt-3 ms-5">
+                        <a href="/project">
+                            <div class="col-4 mt-2 ms-5 rounded border">
+                                <button class="btn">
+                                    <i class="bi bi-arrow-left fs-1 ms-1"></i>
+                                </button>
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="col-8">
 
                     <div class="row mt-4">
                         <div class="col ms-2 bg-white rounded border border-1 px-3" style="min-height: 300px">
@@ -67,8 +79,14 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="row mt-2">
-                                        <div class="col fs-3 fw-semibold" th:text="${project.title}">
+                                    <div class="row mt-3">
+                                        <div class="col-auto">
+                                            <button class="btn recruitButton rounded-4 fs-5 btn-sm"
+                                                    th:if="${project.status == '모집중'}">
+                                                모집중
+                                            </button>
+                                        </div>
+                                        <div class="col ps-0 fs-3 fw-semibold" th:text="${project.title}">
 
                                         </div>
 
@@ -97,9 +115,7 @@
                                                     <div class="row mt-1 text-secondary">
                                                         <div class="col">
 
-
-                                                            <span class="date-element" th:text="${project.regDate}"></span>
-<!--                                                            <span th:text="formatDateTime([[${project.regDate}]])"></span>-->
+                                                            <span th:text="*{#temporals.format(project.regDate, 'yyyy-MM-dd a hh:mm')}"></span>
                                                             <span class="ms-1">
                                                                 <i class="bi bi-eye"></i>
                                                             </span>
@@ -135,10 +151,6 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-<!--                                                <div class="col-1 mt-1 ps-0 me-2" style="cursor: pointer;"-->
-<!--                                                     th:if="${session.userDTO != null and session.userDTO.id != project.userId}">-->
-<!--                                                    <i class="bi bi-bookmark fs-5"></i>-->
-<!--                                                </div>-->
                                             </div>
 
                                         </div>
@@ -149,106 +161,40 @@
                                     <div class="row mt-2 mb-2"></div>
 
                                     <div class="row mt-4">
-                                        <div class="col fw-semibold fs-4">
-                                            모집 구분
-                                        </div>
-                                        <div class="col fw-semibold fs-4">
-                                            모집 역할
-                                        </div>
+                                       <div class="col rounded border border-2 ms-3 me-3">
+
+                                           <div class="row">
+                                               <!-- 모집 유형 -->
+                                                <div class="col custom-border">
+                                                    <div class="row mt-2">
+                                                        <div class="col fs-4 ms-2">
+                                                            모집 유형
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                               <!-- 모집 인원 -->
+                                               <div class="col custom-border">
+                                                   <div class="row mt-2">
+                                                       <div class="col fs-4 ms-2">
+                                                           모집 인원
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                               <!-- 시작 예정일 -->
+                                               <div class="col">
+                                                   <div class="row mt-2">
+                                                       <div class="col fs-4 ms-2">
+                                                           시작 예정일
+                                                       </div>
+                                                   </div>
+                                               </div>
+
+                                           </div>
+                                       </div>
                                     </div>
 
-                                    <div class="row mt-3 fs-5">
-                                        <div class="col">
-                                            <button class="btn btn-sm cateButton rounded rounded-4 fs-5">
-                                                <span th:if="${projectStudyCategory.name == '스터디'}">✏️</span>
-                                                <i class="bi bi-pc-display-horizontal me-1 text-secondary" th:if="${projectStudyCategory.name == '프로젝트'}"></i>
-                                            </button>
-                                            <span class="ms-1 fs-5" th:text="${projectStudyCategory.name}"></span>
-                                        </div>
-                                        <div class="col">
-                                            <button class="btn btn-sm cateButton rounded rounded-4 fs-5" th:if="${positionCategory.name == '프론트엔드'}">
-                                                <i class="bi bi-laptop text-success"></i>
-                                            </button>
-                                            <span class="ms-1 fs-5" th:if="${positionCategory.name == '프론트엔드'}">프론트엔드</span>
-                                            <button class="btn btn-sm cateButton rounded rounded-4 fs-5" th:if="${positionCategory.name == '백엔드'}">
-                                                <i class="bi bi-hdd text-success"></i>
-                                            </button>
-                                            <span class="ms-1 fs-5" th:if="${positionCategory.name == '백엔드'}">백엔드</span>
-                                        </div>
 
-                                    </div>
-
-
-
-                                    <div class="row mt-5">
-                                        <div class="col fw-semibold fs-4">
-                                            모집 인원
-                                        </div>
-                                        <div class="col fw-semibold fs-4">
-                                            사용 언어
-                                        </div>
-                                    </div>
-
-                                    <div class="row mt-3 fs-5">
-                                        <div class="col">
-                                            <button class="btn btn-sm cateButton rounded rounded-4 fs-5">
-                                                <i class="bi bi-people"></i>
-                                            </button>
-                                            <span class="ms-1" th:text="${project.headCount == 0 ? '인원 미정' : project.headCount == 10 ? '10명 이상' : project.headCount + '명'}"></span>
-                                        </div>
-                                        <div class="col">
-                                             <span th:each="tech: ${techCategoryList}">
-                                                <img src="/img/language/java.svg" class="lanLogo me-1" th:if="${tech.name == 'Java'}">
-                                                <img src="/img/language/spring.svg" class="lanLogo me-1" th:if="${tech.name == 'Spring'}">
-                                                <img src="/img/language/springboot.png" class="lanLogo me-1" th:if="${tech.name == 'Spring Boot'}">
-                                                <img src="/img/language/aws.svg" class="lanLogo me-1" th:if="${tech.name == 'AWS'}">
-                                                 <img src="/img/language/c.svg" class="lanLogo me-1" th:if="${tech.name == 'C'}">
-                                                 <img src="/img/language/docker.svg" class="lanLogo me-1" th:if="${tech.name == 'Docker'}">
-                                                 <img src="/img/language/git.svg" class="lanLogo me-1" th:if="${tech.name == 'Git'}">
-                                                 <img src="/img/language/javascript.svg" class="lanLogo me-1" th:if="${tech.name == 'JavaScript'}">
-                                                 <img src="/img/language/kotlin.png" class="lanLogo me-1" th:if="${tech.name == 'Kotlin'}">
-                                                 <img src="/img/language/mysql.svg" class="lanLogo me-1" th:if="${tech.name == 'MySQL'}">
-                                                 <img src="/img/language/nodejs.svg" class="lanLogo me-1" th:if="${tech.name == 'NodeJS'}">
-                                                 <img src="/img/language/python.svg" class="lanLogo me-1" th:if="${tech.name == 'Python'}">
-                                                 <img src="/img/language/swift.svg" class="lanLogo me-1" th:if="${tech.name == 'Swift'}">
-                                                 <img src="/img/language/typescript.png" class="lanLogo me-1" th:if="${tech.name == 'TypeScript'}">
-                                                 <img src="/img/language/vue.svg" class="lanLogo me-1" th:if="${tech.name == 'Vue'}">
-                                                 <img src="/img/language/react.svg" class="lanLogo me-1" th:if="${tech.name == 'React'}">
-                                                 <img src="/img/language/flutter.svg" class="lanLogo me-1" th:if="${tech.name == 'Flutter'}">
-                                             </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="row mt-5">
-                                        <div class="col fw-semibold fs-4">
-                                            진행 기간
-                                        </div>
-                                        <div class="col fw-semibold fs-4">
-                                            모집 마감일
-                                        </div>
-                                    </div>
-
-                                    <div class="row mt-3 fs-5">
-                                        <div class="col">
-                                            <button class="btn btn-sm cateButton rounded rounded-4 fs-5">
-                                                <i class="bi bi-clock"></i>
-                                            </button>
-                                            <span class="ms-1" th:text="${periodCategory.name}"></span>
-                                        </div>
-                                        <div class="col">
-                                            <button class="btn btn-sm cateButton rounded rounded-4 fs-5">
-                                                <i class="bi bi-calendar-check"></i>
-                                            </button>
-
-                                            <span class="ms-1" th:text="${#dates.format(project.endDate, 'yyyy-MM-dd')}"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="row mt-5">
-                                        <div class="col fs-4 fw-semibold">
-                                            <span class="ms-1">소개</span>
-                                        </div>
-                                    </div>
 
                                     <!-- 내용 -->
                                     <div class="row mt-3">
@@ -440,115 +386,21 @@
                                     <div class="row mt-3 mb-3"></div>
 
 
-
-
-
-                                </div>
-                            </div>
-
-
-
-
-                        </div>
-                        <div class="col-4">
-                            <div class="row">
-                                <div class="col-9 ms-5 bg-white border border-1" style="min-height: 300px">
-                                    <div class="row mt-5">
-                                        <div class="col d-flex justify-content-center">
-                                           <img src="/img/user.jpg" class="rounded-circle" style="width: 140px; height: 140px;"
-                                                th:if="${writerInfo.fileAttached == 0}">
-                                           <img th:src="@{|/upload/${writerInfo.storedFileName}|}" class="rounded-circle" style="width: 140px; height: 140px;"
-                                                th:if="${writerInfo.fileAttached == 1}">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mt-3">
-                                        <div class="col fw-semibold fs-4 d-flex justify-content-center" th:text="${writerInfo.nickname}"></div>
-                                    </div>
-
-                                    <div class="row mt-2">
-                                        <div class="col d-flex justify-content-center text-secondary" th:text="${job.name}"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-9 ms-5 d-grid ps-0 pe-0">
-                                    <button class="btn mt-3 mainButton p-2 fs-5" style="font-size: 18px"
-                                    onclick="sendMessageModal()" th:if="${session.userDTO != null}">채팅하기</button>
-                                    <button class="btn mt-3 mainButton p-2 fs-5" style="font-size: 18px"
-                                            onclick="location.href='/user/loginPage'" th:if="${session.userDTO == null}">채팅하기</button>
-                                    <button class="btn mt-2 btn-outline-dark p-2 fs-5"
-                                     th:onclick="toggleProjectClip(([[${project.id}]]))">
-                                        <i class="bi bi-bookmark clipBox" th:if="${clipCount == 0}"></i>
-                                        <i class="bi bi-bookmark-fill clipBox" th:if="${clipCount == 1}"></i>
-                                        <span style="font-size: 18px">스크랩</span>
-                                    </button>
-                                </div>
-                            </div>
-
-
-                            <div class="row mt-4">
-                                <div class="col-9 ms-5 bg-white rounded border border-1" style="min-height: 300px">
-                                    <div class="row mt-2">
-                                        <div class="col ms-2">
-
-                                            <div class="row mt-1">
-                                                <div class="col-1">
-                                                    <i class="bi bi-dot" style="color: #ff6f0f;"></i>
-                                                </div>
-                                                <div class="col px-1 fw-semibold">
-                                                    이런 프로젝트 / 스터디는 어떠신가요?
-                                                </div>
-                                            </div>
-
-                                            <!-- -->
-                                            <div class="row mt-4" th:each="randomProject: ${randomProjectList}">
-                                                <div class="col">
-
-                                                    <div class="row">
-                                                        <div class="col-1">
-                                                            <img class="rounded-circle" style="width: 30px; height: 30px"
-                                                                 src="/img/user.jpg" th:if="${randomProject.fileAttached == 0}">
-                                                            <img class="rounded-circle" style="width: 30px; height: 30px"
-                                                                 th:src="@{|/upload/${randomProject.storedFileName}|}" th:if="${randomProject.fileAttached == 1}">
-                                                        </div>
-                                                        <div class="col ms-1 fs-18 text-secondary fw-semibold"
-                                                             th:text="${randomProject.writer}">
-
-                                                        </div>
-                                                    </div>
-
-
-                                                    <div class="row mt-1">
-                                                        <a th:href="@{|/project/${randomProject.id}|}">
-                                                            <div class="col fw-semibold overflow fs-18" style="width: 400px"
-                                                                 th:text="${randomProject.title}">
-                                                            </div>
-                                                        </a>
-                                                    </div>
-
-                                                </div>
-                                                <div class="mb-2"></div>
-                                            </div>
-                                            <!-- -->
-                                            <div class="mb-4"></div>
-                                        </div>
-                                    </div>
-
                                 </div>
                             </div>
 
                         </div>
+
                     </div>
 
                 </div>
+                <!--- -->
+                <div class="col"></div>
             </div>
-
-
 
         </div>
     </div>
+
 </div>
 
 
@@ -708,6 +560,7 @@
                                     <div class="col" th:text="${job.name}"></div>
                                 </div>
                                 <div class="row mt-1">
+
                                     <div class="col text-secondary" th:text="${project.title}"></div>
                                 </div>
                             </div>

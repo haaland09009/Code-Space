@@ -18,9 +18,9 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
 
     // 게시글 수정
     @Modifying
-    @Query(value = "update ProjectEntity p set p.title = :title, p.content = :content, p.endDate = :endDate, p.headCount = :headCount where p.id = :id")
+    @Query(value = "update ProjectEntity p set p.title = :title, p.content = :content, p.startDate = :startDate, p.headCount = :headCount where p.id = :id")
     void updateProject(@Param("title") String title, @Param("content") String content,
-                       @Param("endDate") Date endDate, @Param("headCount") int headCount, @Param("id") Long id);
+                       @Param("startDate") Date startDate, @Param("headCount") int headCount, @Param("id") Long id);
 
 
     // 랜덤 추출 3개
@@ -47,6 +47,34 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
             ")\n" +
             "ORDER BY reg_date DESC", nativeQuery = true)
     List<Object[]> getProjectArticles(@Param("userId") Long userId);
+
+
+//    SELECT user_id, SUM(count) AS total_count
+//    FROM (
+//            SELECT user_id, COUNT(*) AS count
+//    FROM project_table
+//    GROUP BY user_id
+//    UNION ALL
+//    SELECT user_id, COUNT(*) AS count
+//    FROM qna_table
+//    GROUP BY user_id
+//)
+//    GROUP BY user_id
+//    ORDER BY total_count DESC
+    @Query(value = "SELECT user_id, SUM(count) AS total_count\n" +
+            "FROM (\n" +
+            "    SELECT user_id, COUNT(*) AS count\n" +
+            "    FROM project_table\n" +
+            "    GROUP BY user_id\n" +
+            "    UNION ALL\n" +
+            "    SELECT user_id, COUNT(*) AS count\n" +
+            "    FROM qna_table\n" +
+            "    GROUP BY user_id\n" +
+            ")\n" +
+            "GROUP BY user_id\n" +
+            "ORDER BY total_count DESC", nativeQuery = true)
+    List<Object[]> getTopWriters();
+
 
 
 }

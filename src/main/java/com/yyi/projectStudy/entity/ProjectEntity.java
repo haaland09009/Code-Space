@@ -41,7 +41,10 @@ public class ProjectEntity extends BaseEntity {
     private int headCount;
 
     @Column(nullable = false)
-    private Date endDate;
+    private Date startDate;
+
+    @Column
+    private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -76,7 +79,8 @@ public class ProjectEntity extends BaseEntity {
         projectEntity.setTitle(projectDTO.getTitle());
         projectEntity.setContent(projectDTO.getContent());
         projectEntity.setHeadCount(projectDTO.getHeadCount()); //
-        projectEntity.setEndDate(projectDTO.getEndDate()); //
+        projectEntity.setStartDate(projectDTO.getStartDate()); //
+        projectEntity.setStatus("모집중");
         projectEntity.setReadCount(0);
 
         projectEntity.setUserEntity(userEntity);

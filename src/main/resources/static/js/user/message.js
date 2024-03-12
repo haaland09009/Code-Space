@@ -80,7 +80,7 @@
                 getUserInfo(roomId);
                 getRecentChatList(sessionId);
                 loadChatList(roomId);
-
+                notReadChatCount(sessionId);
 
          }, error: function(err) {
              return;

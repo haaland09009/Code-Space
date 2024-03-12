@@ -1,32 +1,94 @@
-
-
 $('#techBox').select2 ({
     placeholder: '기술스택을 선택하세요.',
-    maximumSelectionLength: 5
+    maximumSelectionLength: 5,
+   "language": {
+          "noResults": function(){
+              return "검색 결과가 없습니다.";
+          },
+          maximumSelected: function (e) {
+                  var t = "최대 " + e.maximum + "개까지 선택하실 수 있습니다.";
+                  /*e.maximum != 1 && (t += "s");*/
+                  return t;
+          }
+      },
+   escapeMarkup: function (markup) {
+       return markup;
+   }
 });
 
- // 이전 날짜 방지
+$('#positionBox').select2 ({
+    placeholder: '모집 포지션을 선택하세요.',
+    maximumSelectionLength: 3,
+   "language": {
+          "noResults": function(){
+              return "검색 결과가 없습니다.";
+          },
+           maximumSelected: function (e) {
+                var t = "최대 " + e.maximum + "개까지 선택하실 수 있습니다.";
+                /*e.maximum != 1 && (t += "s");*/
+                return t;
+        }
+      },
+   escapeMarkup: function (markup) {
+       return markup;
+   }
+});
+
+
+
+
+
+
+    $(document).ready(function() {
+        // 3️⃣ datepicker를 적용할 input 요소에 대해 datepicker를 호출
+        $(".datePicker").datepicker();
+    });
+
+// 생성 시 옵션 설정
+$( ".datePicker" ).datepicker({ minDate: 0});
+
+$(".datepicker").datepicker({
+    dateFormat: "yyyy-mm-dd",
+    minDate: new Date(),
+    maxDate: "+1M"
+});
+    $.datepicker.setDefaults({
+        dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+        monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+        monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+        yearSuffix: '년',
+        dateFormat: 'yy-mm-dd',
+        showMonthAfterYear:true,
+        constrainInput: true
+    });
+
+
+
+ /* 이전 날짜 입력 방지 */
  const setDateInput = () => {
-     let endDateElement = document.getElementById('endDateBox');
+     let startDateElement = document.querySelector('#startDateBox');
      let currentDate = new Date();
-     let endDatePos = new Date(currentDate.getTime() - currentDate.getTimezoneOffset() * 60000).toISOString().slice(0, -8);
+     let startDatePos = new Date(currentDate.getTime() - currentDate.getTimezoneOffset() * 60000).toISOString().slice(0, -8);
 
-     endDateElement.value = endDatePos.split('T')[0];
-
-     endDateElement.setAttribute("min", endDatePos.split('T')[0]);
+     startDateElement.value = startDatePos.split('T')[0];
+     startDateElement.setAttribute("min", startDatePos.split('T')[0]);
  };
 
- // 게시글 작성
+ /* 게시글 작성 */
  const writeBoard = () => {
      const projectStudy = document.querySelector("#projectStudyBox");
      const tech = document.querySelector("#techBox");
      const position = document.querySelector("#positionBox");
      const headCount = document.querySelector("#headCountBox");
      const period = document.querySelector("#periodBox");
-     const endDate = document.querySelector("#endDateBox");
+     const startDate = document.querySelector("#startDateBox");
 
      const title = document.querySelector("#title");
      const content = document.querySelector("#content");
+
+     // 폼 제출 전에 에디터 내용을 갱신
+     setContentInputValue();
 
      if (projectStudy.value == "") {
          alert("모집 구분란을 선택해주세요.");
@@ -57,8 +119,8 @@ $('#techBox').select2 ({
          period.focus();
          return false;
      }
-     if (endDate.value == "") {
-         alert("모집 마감일을 선택해주세요.");
+     if (startDate.value == "") {
+         alert("시작 예정일을 선택해주세요.");
          endDate.focus();
          return false;
      }
@@ -75,6 +137,44 @@ $('#techBox').select2 ({
      }
      return true;
  }
+
+
+  /* 토스트 에디터 불러오기 */
+   const editor = new toastui.Editor({
+        el: document.querySelector('#content'), // 에디터를 적용할 요소 (컨테이너)
+        height: '500px',                        // 에디터 영역의 높이 값 (OOOpx || auto)
+        initialEditType: 'markdown',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
+//        placeholder: '내용을 입력해 주세요.',     // 내용의 초기 값으로, 반드시 마크다운 문자열 형태여야 함
+        previewStyle: 'vertical',                // 마크다운 프리뷰 스타일 (tab || vertical)
+    });
+
+     const ToastEditor__escape = (origin) => {
+        return origin
+            .replaceAll("<t-script", "<script")
+            .replaceAll("</t-script", "</script");
+    }
+
+
+    // 폼 참조
+    const writeForm = document.querySelector('#writeForm');
+
+    // 에디터 내용을 폼의 hidden 필드에 할당하는 함수
+    const setContentInputValue = () => {
+        const contentInput = document.querySelector('#contentInput');
+        contentInput.value = editor.getHTML(); // 또는 editor.getHTML()을 사용하여 HTML 내용을 가져올 수 있습니다.
+    }
+
+    // 폼 제출 전에 에디터 내용을 갱신
+    writeForm.addEventListener('submit', function () {
+        setContentInputValue();
+    });
+
+
+
+
+
+
+
 
 
 

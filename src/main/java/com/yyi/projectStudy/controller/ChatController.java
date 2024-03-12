@@ -117,5 +117,11 @@ public class ChatController {
     }
 
 
+    /* 안 읽은 총 채팅 개수 */
+    @GetMapping("/notReadCount/{id}")
+    public @ResponseBody int notReadCount(@PathVariable("id") Long id) {
+        return chatService.notReadCount(id);
+    }
+
 
 }
