@@ -39,7 +39,10 @@ Code Space는 개발자들을 위한 커뮤니티 웹 애플리케이션입니�
     <table>
         <thead>
             <tr>
-                <th style='text-align:left;'>![메인페이지1](https://github.com/haaland09009/ToyProject_study/assets/87968927/af6fbf15-b619-451a-bf32-b8e1bbcd2732, style="width: 300px; height: 300px;") </th>
+                <th style='text-align:left;'>
+                 <img src="![메인페이지1](https://github.com/haaland09009/ToyProject_study/assets/87968927/eaf6cafa-73c5-415f-8cad-1758a8ddef39)",
+                  style="width: 200px; height: 200px">
+                </th>
                 <th style='text-align:center;' >Title2</th>
                 <th style='text-align:right;' >Title3</th>
             </tr>
