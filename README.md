@@ -1,5 +1,5 @@
 ## 개발자들의 공간, Code-space
-주위에 있는 개발자들과 소통하며 함께 교류해보세요 !
+프로젝트 / 스터디 인원 모집부터 기술과 커리어 분야에 대한 Q&A 서비스까지
 
 
 
@@ -45,7 +45,7 @@ Code Space는 개발자들을 위한 커뮤니티 웹 애플리케이션입니�
 |글작성 페이지|게시글 보기|목록 페이지|
 
 ### Q&A Menu
-|<img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/6ee1bf67-5978-4f41-b20c-54d00e48f161" width="200" height="100">|<img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/b64951f4-0d5e-466c-bf03-b6c50fb7ae2b" width="280" height="420">|<img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/41e4237a-8ca1-4854-9562-e85709bb0dc5" width="250" height="330">| 
+|<img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/6ee1bf67-5978-4f41-b20c-54d00e48f161" width="200" height="100">|<img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/c95275ef-b697-4f65-9f34-07c9bf6204a2" width="280" height="420">|<img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/41e4237a-8ca1-4854-9562-e85709bb0dc5" width="250" height="330">| 
 |--|--|--|
 |글작성 페이지|게시글 보기|목록 페이지|
 
