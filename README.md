@@ -35,27 +35,12 @@ Code Space는 개발자들을 위한 커뮤니티 웹 애플리케이션입니�
 
 
 ## 💻 화면 구성
-<figure>
-    <table>
-        <thead>
-            <tr>
-                <th style='text-align:left;'>
-                 <img src="![메인페이지1](https://github.com/haaland09009/ToyProject_study/assets/87968927/eaf6cafa-73c5-415f-8cad-1758a8ddef39)",
-                  style="width: 200px; height: 200px">
-                </th>
-                <th style='text-align:center;' >Title2</th>
-                <th style='text-align:right;' >Title3</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td style='text-align:left;' >content1</td>
-                <td style='text-align:center;' >content2</td>
-                <td style='text-align:right;' >content3</td>
-            </tr>
-        </tbody>
-    </table>
-</figure>
+
+
+| <img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/cc7c6ca5-942b-4da0-a732-4b5a54fbc743" width="300" height="300"> | <img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/090eb0e3-b9fa-4711-b51a-f56787f9d981" width="300" height="300"> |<img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/006a93b5-ba63-43d9-a864-23c429423f58" width="300" style="300"> | <img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/ecffc94e-3abd-4d30-81b2-dde04b06a550" width="300" style="300"> |
+|----------|----------|----------|----------|
+
+
 
 
 
