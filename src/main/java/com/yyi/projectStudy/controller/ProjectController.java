@@ -25,10 +25,9 @@ public class ProjectController {
     private final ProjectService projectService;
     private final ProjectCommentService projectCommentService;
     private final UserService userService;
-    private final ChatService chatService;
 
 
-    // 글쓰기 폼
+   /* 게시글 작성 페이지 이동 */
     @GetMapping("/write")
     public String writeForm(HttpSession session, Model model) {
 
@@ -36,21 +35,27 @@ public class ProjectController {
         if (sessionUser == null) {
             return "redirect:/user/loginPage";
         } else {
+            /*  진행기간 카테고리 조회 */
             List<PeriodCategoryDTO> periodCategoryList = projectService.findAllPeriodCategoryDTOList();
-            List<PositionCategoryDTO> positionCategoryList = projectService.findAllPositionCategoryDTOList();
-            List<ProjectStudyCategoryDTO> projectStudyCategoryList = projectService.findAllProjectStudyCategoryDTOList();
-            List<TechCategoryDTO> techCategoryList = projectService.findAllTechCategoryDTOList();
-
             model.addAttribute("periodCategoryList", periodCategoryList);
+
+            /* 모집 포지션 카테고리 조회 */
+            List<PositionCategoryDTO> positionCategoryList = projectService.findAllPositionCategoryDTOList();
             model.addAttribute("positionCategoryList", positionCategoryList);
+
+            /* 프로젝트/스터디 카테고리 조회 */
+            List<ProjectStudyCategoryDTO> projectStudyCategoryList = projectService.findAllProjectStudyCategoryDTOList();
             model.addAttribute("projectStudyCategoryList", projectStudyCategoryList);
+
+            /* 기술스택 카테고리 조회 */
+            List<TechCategoryDTO> techCategoryList = projectService.findAllTechCategoryDTOList();
             model.addAttribute("techCategoryList", techCategoryList);
 
             return "project/write";
         }
     }
 
-    // 게시글 작성
+    /*  게시글 작성  */
     @PostMapping("/write")
     public String write(@ModelAttribute ProjectDTO projectDTO,
                         @ModelAttribute ProjectPeriodCategoryLinkDTO
@@ -59,94 +64,72 @@ public class ProjectController {
                                 projectStudyCategoryLinkDTO,
                         @RequestParam(name = "positionId", required = false) List<Long> positionIdList,
                         @RequestParam(name = "techId", required = false) List<Long> techIdList) {
-        // 내용 enter 처리
-        String content = projectDTO.getContent().replaceAll("\r\n", "<br>");
+
+        /* 작성 내용 줄바꿈 후 dto에 저장 */
+        String content = projectDTO.getContent().replaceAll("\n", "<br>");
         projectDTO.setContent(content);
 
+        /* 게시글 작성 후 해당 게시글의 pk 반환 */
         Long savedId = projectService.save(projectDTO);
-
+        /* 위에서 얻은 게시글 pk로 게시글 dto 조회 */
         ProjectDTO dto = projectService.findById(savedId);
 
-        // 프로젝트 - 포지션 T
+        /*  모집 포지션 목록 저장 */
         projectService.saveProjectPosition(dto, positionIdList);
-        // 프로젝트 - 진행기간 T
+        /*  진행기간 저장 */
         projectService.saveProjectPeriod(dto, projectPeriodCategoryLinkDTO);
-        // 프로젝트 - 기술스택 T
+        /* 사용 언어 (기술 스택) 목록 저장 */
         projectService.saveProjectTech(dto, techIdList);
-        // 프로젝트 - 스터디 T
+        /* 프로젝트, 스터디 여부 저장 */
         projectService.saveProjectStudy(dto, projectStudyCategoryLinkDTO);
-
 
         return "redirect:/project/" + savedId;
     }
 
 
-/*    @PostMapping("/write")
-    public String write(@ModelAttribute ProjectDTO projectDTO,
-                        @ModelAttribute ProjectPeriodCategoryLinkDTO
-                                projectPeriodCategoryLinkDTO,
-                        @ModelAttribute ProjectStudyCategoryLinkDTO
-                                projectStudyCategoryLinkDTO,
-                        @ModelAttribute ProjectPositionCategoryLinkDTO
-                                projectPositionCategoryLinkDTO,
-                        @RequestParam(name = "techId", required = false) List<Long> techIdList) {
-        // 내용 enter 처리
-        String content = projectDTO.getContent().replaceAll("\r\n", "<br>");
-        projectDTO.setContent(content);
-
-        Long savedId = projectService.save(projectDTO);
-
-        ProjectDTO dto = projectService.findById(savedId);
-
-        // 프로젝트 - 포지션 T
-        projectService.saveProjectPosition(dto, projectPositionCategoryLinkDTO);
-        // 프로젝트 - 진행기간 T
-        projectService.saveProjectPeriod(dto, projectPeriodCategoryLinkDTO);
-        // 프로젝트 - 기술스택 T
-        projectService.saveProjectTech(dto, techIdList);
-        // 프로젝트 - 스터디 T
-        projectService.saveProjectStudy(dto, projectStudyCategoryLinkDTO);
-
-
-        return "redirect:/project/" + savedId;
-    }*/
-
-    // 게시글 리스트
+    /* 게시글 목록 조회 */
     @GetMapping("")
     public String boardList(Model model,
-                            @RequestParam(name = "category", required = false) String category
-                            ) {
+                            @RequestParam(name = "category", required = false) String category) {
 
+        /* 게시글 목록 불러오기 */
         List<ProjectDTO> projectDTOList;
+        /* 프로젝트 메뉴를 클릭할 경우 */
         if ("pro".equals(category)) {
             projectDTOList = projectService.findProjectStudyInListPage(1L);
-        } else if ("study".equals(category)) {
+        } /* 스터디 메뉴를 선택할 경우 */
+        else if ("study".equals(category)) {
             projectDTOList = projectService.findProjectStudyInListPage(2L);
         } else {
             projectDTOList = projectService.findAll();
         }
 
+        /* 게시글 목록 반복문 */
         for (ProjectDTO projectDTO : projectDTOList) {
             String content = projectDTO.getContent().replace("<br>", "\n");
 
-            /* html 태그 제거 */
+            /* 목록 조회 화면에 html 태그 제거 */
             content = content.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "");
             content = content.replaceAll("<[^>]*>", " ");
             projectDTO.setContent(content);
 
+            /* 게시글 당 댓글 수 조회 */
             projectDTO.setCommentCount(projectCommentService.count(projectDTO.getId()));
 
+            /* 게시글 당 프로젝트, 스터디 여부 조회 */
             ProjectStudyCategoryDTO projectStudyCategoryDTO = projectService.findProjectStudyCategory(projectDTO.getId());
             projectDTO.setProjectStudy(projectStudyCategoryDTO.getName());
 
+            /* 게시글 당 스크랩 수 조회 */
             int clipCount = projectService.clipCount(projectDTO.getId());
             projectDTO.setClipCount(clipCount);
 
-            // 진행 상태
+
+            //////////////////////////////////////////
+            /* !!! 추후에 진행상태 저장하는 코드 추가할 것 !!*/
 
 
-            // 나중에 리스트로 변경
-//            projectDTO.setTechList(projectService.findTechCategory(projectDTO.getId()).getName());
+             /* 게시글 당 사용 언어 목록 조회 */
             List<TechCategoryDTO> techCategoryDTOList = projectService.findTechCategory(projectDTO.getId());
             List<String> techList = new ArrayList<>();
             for (TechCategoryDTO techCategoryDTO : techCategoryDTOList) {
@@ -156,15 +139,12 @@ public class ProjectController {
         }
         model.addAttribute("projectList", projectDTOList);
 
-        // 랜덤 추출 3개
-        List<ProjectDTO> randomProjects = projectService.findRandomProjects();
-        model.addAttribute("randomProjectList", randomProjects);
 
-        // Top writers
+        /* Top writer s*/
         List<TopWritersDTO> topWritersDTOList = projectService.getTopWriters();
         model.addAttribute("topWriters", topWritersDTOList);
 
-        // 인기글
+        /* 인기글 */
         List<ProjectDTO> topProjectDTOList = projectService.findAllInMainPage();
         for (ProjectDTO projectDTO : topProjectDTOList) {
             UserDTO userDTO = userService.findById(projectDTO.getUserId());
@@ -175,33 +155,33 @@ public class ProjectController {
         }
         model.addAttribute("topProjectList", topProjectDTOList);
 
-
         return "project/list";
     }
 
-    // 게시글 상세보기
+    /* 게시글 상세보기 */
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Long id, Model model,
                            HttpSession session) {
 
-        // 작성자 정보
+       /* 게시글 pk로 해당 게시글 작성자 정보 조회 */
         Long userId = projectService.findById(id).getUserId();
         UserDTO userDTO = userService.findById(userId);
         model.addAttribute("writerInfo", userDTO);
 
-        // 작성자 직군 조회
+        /* 작성자의 직군 조회 */
         JobDTO job = userService.findJob(userId);
         model.addAttribute("job", job);
 
+        /* 클릭 시 조회수 증가 */
         projectService.updateReadCount(id);
-        ProjectDTO projectDTO = projectService.findById(id);
-        /* enter 처리 */
-        String content = projectDTO.getContent().replace("<br>", "\n");
-        projectDTO.setContent(content);
 
+        /* enter 처리 */
+        ProjectDTO projectDTO = projectService.findById(id);
+        String content = projectDTO.getContent().replaceAll("<br>", "\n");
+        projectDTO.setContent(content);
         model.addAttribute("project", projectDTO);
 
-       /* 프로젝트 / 스터디 여부 조회 */
+        /* 프로젝트, 스터디 여부 조회 */
         ProjectStudyCategoryDTO projectStudyCategoryDTO = projectService.findProjectStudyCategory(id);
         model.addAttribute("projectStudyCategory", projectStudyCategoryDTO);
 
@@ -209,7 +189,7 @@ public class ProjectController {
         List<PositionCategoryDTO> positionCategoryDTOList = projectService.findPositionCategory(id);
         model.addAttribute("positionCategoryList", positionCategoryDTOList);
 
-        /* 기술스택 조회 */
+        /* 사용 언어 조회 */
         List<TechCategoryDTO> techCategoryDTOList = projectService.findTechCategory(id);
         model.addAttribute("techCategoryList", techCategoryDTOList);
 
@@ -217,40 +197,42 @@ public class ProjectController {
         PeriodCategoryDTO periodCategoryDTO = projectService.findPeriodCategory(id);
         model.addAttribute("periodCategory", periodCategoryDTO);
 
-
+        /* 게시글에 작성된 댓글 목록 조회 */
         List<ProjectCommentDTO> projectCommentDTOList = projectCommentService.findAll(id);
         for (ProjectCommentDTO projectCommentDTO : projectCommentDTOList) {
+            /* 댓글 당 좋아요 수 조회 */
             int commentLikeCount = projectCommentService.commentLikeCount(projectCommentDTO.getId());
             projectCommentDTO.setLikeCount(commentLikeCount);
+
+            /* 댓글 당 싫어요 수 조회 */
+            int commentDisLikeCount = projectCommentService.commentDisLikeCount(projectCommentDTO.getId());
+            projectCommentDTO.setDisLikeCount(commentDisLikeCount);
+
+            /* 댓글 작성자의 직군 조회 */
             JobDTO userJob = userService.findJob(projectCommentDTO.getUserId());
             projectCommentDTO.setJobName(userJob.getName());
         }
+        /* 게시글에 작성된 총 댓글 수 조회 */
         Long commentCount = projectCommentService.count(id);
-
 
         model.addAttribute("commentList", projectCommentDTOList);
         model.addAttribute("commentCount", commentCount);
-        /* 나중에 삭제처리 -> 인터셉트 처리해야함 projectDTO가 NULL일 경우 (추후에 예정) */
 
 
-        /* 랜덤 추출 3개 */
-        List<ProjectDTO> randomProjects = projectService.findRandomProjects();
-        model.addAttribute("randomProjectList", randomProjects);
-
+        /* 회원 당 게시글 스크랩 여부 확인 */
         UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
-        /* 스크랩 여부 확인 */
         if (sessionUser != null) {
             ProjectClipDTO projectClipDTO = new ProjectClipDTO();
             projectClipDTO.setProjectId(id);
             projectClipDTO.setUserId(sessionUser.getId());
+            /* 스크랩 여부 조회 */
             int clipCount = projectService.checkClipYn(projectClipDTO);
             model.addAttribute("clipCount", clipCount);
         }
-
         return "project/detail";
     }
 
-    // 게시글 삭제
+    /* 게시글 삭제 처리 */
     @GetMapping("/delete/{id}")
     public String deleteById(@PathVariable Long id, HttpSession session) {
         UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
@@ -262,7 +244,7 @@ public class ProjectController {
         }
     }
 
-    // 게시글 수정 폼
+    /* 게시글 수정 페이지 이동 */
     @GetMapping("/update/{id}")
     public String updateForm(@PathVariable("id") Long id, Model model, HttpSession session) {
 
@@ -270,21 +252,24 @@ public class ProjectController {
         if (sessionUser == null) {
             return "redirect:/user/loginPage";
         } else {
+            /* 선택할 카테고리 모두 조회 */
             List<PeriodCategoryDTO> periodCategoryList = projectService.findAllPeriodCategoryDTOList();
-            List<PositionCategoryDTO> positionCategoryList = projectService.findAllPositionCategoryDTOList();
-            List<ProjectStudyCategoryDTO> projectStudyCategoryList = projectService.findAllProjectStudyCategoryDTOList();
-            List<TechCategoryDTO> techCategoryList = projectService.findAllTechCategoryDTOList();
-
             model.addAttribute("periodCategoryList", periodCategoryList);
+
+            List<PositionCategoryDTO> positionCategoryList = projectService.findAllPositionCategoryDTOList();
             model.addAttribute("positionCategoryList", positionCategoryList);
+
+            List<ProjectStudyCategoryDTO> projectStudyCategoryList = projectService.findAllProjectStudyCategoryDTOList();
             model.addAttribute("projectStudyCategoryList", projectStudyCategoryList);
+
+            List<TechCategoryDTO> techCategoryList = projectService.findAllTechCategoryDTOList();
             model.addAttribute("techCategoryList", techCategoryList);
 
-            // 프로젝트 / 스터디 여부 조회
+            /* 게시글 작성 시 선택했던 프로젝트, 스터디 여부 조회 */
             ProjectStudyCategoryDTO projectStudyCategoryDTO = projectService.findProjectStudyCategory(id);
             model.addAttribute("selectedProjectStudyId", projectStudyCategoryDTO.getId());
 
-            // 모집 포지션 조회
+            /* 게시글 작성 시 선택했던 모집 포지션 조회 */
             List<PositionCategoryDTO> positionCategoryDTOList = projectService.findPositionCategory(id);
             List<Long> selectedPositionIdList = new ArrayList<>();
             for (PositionCategoryDTO positionCategoryDTO : positionCategoryDTOList) {
@@ -292,7 +277,7 @@ public class ProjectController {
             }
             model.addAttribute("selectedPositionIdList", selectedPositionIdList);
 
-            // 기술스택 조회
+            /* 게시글 작성 시 선택했던 사용 언어 조회 */
             List<TechCategoryDTO> techCategoryDTOList = projectService.findTechCategory(id);
             List<Long> selectedTechIdList = new ArrayList<>();
             for (TechCategoryDTO techCategoryDTO : techCategoryDTOList) {
@@ -300,15 +285,15 @@ public class ProjectController {
             }
             model.addAttribute("selectedTechIdList", selectedTechIdList);
 
-            // 진행기간 조회
+            /* 게시글 작성 시 선택했던 진행 기간 조회 */
             PeriodCategoryDTO periodCategoryDTO = projectService.findPeriodCategory(id);
             model.addAttribute("selectedPeriodId", periodCategoryDTO.getId());
 
+            /* 줄바꿈 처리 */
             ProjectDTO projectDTO = projectService.findById(id);
             String content = projectDTO.getContent();
             content = content.replaceAll("<br>", "\n");
             projectDTO.setContent(content);
-
 
             model.addAttribute("project", projectDTO);
 
@@ -317,7 +302,7 @@ public class ProjectController {
     }
 
 
-    // 게시글 수정
+    /* 게시글 수정 처리 → 수정된 데이터 조회 */
     @PostMapping("/update")
     public String update(@ModelAttribute ProjectDTO projectDTO,
                          @ModelAttribute ProjectPeriodCategoryLinkDTO
@@ -327,54 +312,61 @@ public class ProjectController {
                          @RequestParam(name = "positionId", required = false) List<Long> positionIdList,
                          @RequestParam(name = "techId", required = false) List<Long> techIdList,
                          Model model, HttpSession session) {
+
+        /* 게시글 수정 처리 후 dto 반환 */
         ProjectDTO project = projectService.update(projectDTO);
         model.addAttribute("project", project);
 
-        // 내용 enter 처리
-        String content = projectDTO.getContent().replaceAll("\r\n", "<br>");
+        /* enter 처리 */
+//        String content = projectDTO.getContent().replaceAll("\r\n", "<br>");
+        String content = projectDTO.getContent().replaceAll("\n", "<br>");
         projectDTO.setContent(content);
 
-        // 포지션
+        /* 수정된 카테고리 코두 조회 */
         List<PositionCategoryDTO> positionCategoryDTOList = projectService.updatePosition(projectDTO, positionIdList);
         model.addAttribute("positionCategoryList", positionCategoryDTOList);
 
-        // 프로젝트 / 스터디
         ProjectStudyCategoryDTO projectStudyCategoryDTO = projectService.updateProjectStudy(projectDTO, projectStudyCategoryLinkDTO);
         model.addAttribute("projectStudyCategory", projectStudyCategoryDTO);
 
-        // 기술스택
         List<TechCategoryDTO> techCategoryDTOList = projectService.updateTech(projectDTO, techIdList);
         model.addAttribute("techCategoryList", techCategoryDTOList);
 
-        // 진행기간 조회
         PeriodCategoryDTO periodCategoryDTO = projectService.updatePeriod(projectDTO, projectPeriodCategoryLinkDTO);
         model.addAttribute("periodCategory", periodCategoryDTO);
 
+        /* 게시글에 작성된 모든 댓글 목록 조회 */
         List<ProjectCommentDTO> projectCommentDTOList = projectCommentService.findAll(projectDTO.getId());
         for (ProjectCommentDTO projectCommentDTO : projectCommentDTOList) {
+            /* 댓글 당 좋아요 수 조회 */
             int commentLikeCount = projectCommentService.commentLikeCount(projectCommentDTO.getId());
             projectCommentDTO.setLikeCount(commentLikeCount);
+
+            /* 댓글 당 싫어요 수 조회 */
+            int commentDisLikeCount = projectCommentService.commentDisLikeCount(projectCommentDTO.getId());
+            projectCommentDTO.setDisLikeCount(commentDisLikeCount);
+
+            /* 댓글 작성자의 직군 조회  */
             JobDTO userJob = userService.findJob(projectCommentDTO.getUserId());
             projectCommentDTO.setJobName(userJob.getName());
         }
-
-
+        /* 게시글에 작성된 총 댓글 수 조회  */
         Long commentCount = projectCommentService.count(project.getId());
-
 
         model.addAttribute("commentList", projectCommentDTOList);
         model.addAttribute("commentCount", commentCount);
 
-        // 작성자 정보
+        /* 게시글 작성자 정보  */
         Long userId = projectService.findById(projectDTO.getId()).getUserId();
         UserDTO userDTO = userService.findById(userId);
         model.addAttribute("writerInfo", userDTO);
 
-        // 작성자 직군 조회
+        /* 게시글 작성자의 직군 조회  */
         JobDTO job = userService.findJob(userId);
         model.addAttribute("job", job);
 
-        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+
+     /*   UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
         // 스크랩 여부 확인
         if (sessionUser != null) {
             ProjectClipDTO projectClipDTO = new ProjectClipDTO();
@@ -383,24 +375,20 @@ public class ProjectController {
             int clipCount = projectService.checkClipYn(projectClipDTO);
             model.addAttribute("clipCount", clipCount);
 
-        }
-
-        // 랜덤 추출 3개
-        List<ProjectDTO> randomProjects = projectService.findRandomProjects();
-        model.addAttribute("randomProjectList", randomProjects);
+        }*/
 
         return "project/detail";
 
     }
 
 
-    // 게시물 스크랩
+    /* 게시물 스크랩 클릭 */
     @PostMapping("/clip")
     public @ResponseBody void clip(@ModelAttribute ProjectClipDTO projectClipDTO) {
         projectService.clip(projectClipDTO);
     }
 
-    // 게시물 스크랩 여부 확인
+    /* 게시물 스크랩 여부 확인 */
     @GetMapping("/checkClipYn")
     public @ResponseBody boolean checkClipYn(@ModelAttribute ProjectClipDTO projectClipDTO) {
         int count = projectService.checkClipYn(projectClipDTO);

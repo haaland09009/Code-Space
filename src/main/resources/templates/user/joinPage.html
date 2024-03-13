@@ -6,7 +6,7 @@
   <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
   <link rel="stylesheet" th:href="@{/css/style.css}">
-  <script type="text/javascript" th:src="@{/js/common.js}"></script>
+
 </head>
 <style>
 
@@ -171,110 +171,11 @@
       let sessionId = [[${session.userDTO != null ? session.userDTO.id : 0}]];
   /*]]>*/
 
-   // 회원가입 프로세스
-   const checkValueAndSubmit = () => {
 
-       const email = document.querySelector("#userEmail");
-       const nickname = document.querySelector("#userNickname");
-       const job = document.querySelector("#jobBox");
-       const password = document.querySelector("#userPassword");
-       const passwordCheck = document.querySelector("#userPasswordCheck");
-
-       if (email.value.trim() == "") {
-         alert("이메일을 입력해주세요.");
-         email.focus();
-         return;
-       } else if (nickname.value.trim() == "") {
-         alert("닉네임을 입력해주세요.");
-         nickname.focus();
-         return;
-       }  else if (job.value.trim() == "") {
-         alert("직군을 선택해주세요.");
-         job.focus();
-         return;
-       } else if (password.value.trim() == "") {
-         alert("비밀번호를 입력해주세요.");
-         password.focus();
-         return;
-       } else if (passwordCheck.value.trim() == "") {
-         alert("비밀번호 확인란을 입력해주세요.");
-         passwordCheck.focus();
-         return;
-       } else if (password.value != passwordCheck.value) {
-         alert("비밀번호가 일치하지 않습니다.");
-         passwordCheck.value = "";
-         passwordCheck.focus();
-         return;
-       } else {
-         const frm = document.querySelector("#frm");
-         frm.submit();
-
-         const joinSuccessModal = bootstrap.Modal.getOrCreateInstance("#joinSuccessModal");
-         joinSuccessModal.show();
-
-         setTimeout(function() {
-            joinSuccessModal.hide();
-         }, 5000);
-
-   }
- }
-
-
-   const getNotificationList = () => {
-        $.ajax({
-         type: "get",
-         url: "/notification/findAll/" + sessionId,
-         success: function(res) {
-            let output = "";
-             if (res == null) {
-                output += '<div class="text-center mt-3">알림이 존재하지 않습니다.</div>';
-            } else {
-              for (let i in res) {
-                output += '<a href="' + res[i].notUrl + '">';
-                output += '<div class="row mt-2">';
-                output += '<div class="col ms-3">';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                if (res[i].fileAttached == 0) {
-                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 30px; height: 30px; position: relative; top: 4px">';
-                } else if (res[i].fileAttached == 1) {
-                    output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 30px; height: 30px; position: relative; top: 4px">';
-                }
-                output += '</div>';
-                output += '<div class="col ms-2 fw-semibold">' + res[i].sender + '</div>';
-                output += '<div class="col text-end text-secondary me-1">' + formatDateTime(res[i].occurDate) + '</div>';
-                output += '</div>';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                output += '</div>';
-                output += '<div class="col ms-2">' + res[i].sentence + '</div>';
-                output += '</div>';
-
-                output += '<div class="border-bottom mt-2">' + '</div>';
-
-                output += '</div>';
-                output += '</div>';
-                output += '</a>';
-                }
-            }
-            document.getElementById('notification-list').innerHTML = output;
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
-window.addEventListener("DOMContentLoaded", function(){
-  if (sessionId != 0) {
-    getNotificationList();
-    }
-
-});
 
 
 </script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
+<script type="text/javascript" th:src="@{/js/user/joinPage.js}"></script>
 </body>
 </html>

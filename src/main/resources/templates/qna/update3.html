@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+</head>
+<style>
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+<body>
+<div class="container-fluid">
+    <div th:include="common/header :: header"></div>
+
+
+    <div class="row d-flex justify-content-center">
+        <div class="mt-3 mb-4"></div>
+        <div class="row mt-1">
+            <a href="/project">
+                <div class="col">
+                    <button class="btn btn-light">
+                        <i class="bi bi-arrow-left fs-3"></i>
+                    </button>
+                </div>
+            </a>
+        </div>
+        <div class="col-9 rounded rounded-1 border">
+            <div class="row mt-3 mb-3"></div>
+
+            <div class="row">
+                <div class="col"></div>
+                <div class="col-11">
+                    <form action="/qna/update" method="post" onsubmit="return updateQna();">
+                        <input type="hidden" name="id" th:value="${qna.id}">
+                        <div class="row">
+                            <div class="col ms-1 fw-semibold">
+                                토픽
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col">
+                                <select class="form-select py-2 fs-5" name="topicId" id="topicBox" style="text-indent: 6px;">
+                                    <option selected disabled hidden value="">토픽을 선택해주세요.</option>
+                                    <option th:each="topic : ${topicList}"
+                                            th:value="${topic.id}" th:text="${topic.name}"
+                                            th:selected="${topic.id == selectedTopic.id}"></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col fw-semibold ms-1 fs-5">
+                                제목
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col">
+                                <input type="text" class="form-control py-2 fs-5" placeholder="제목을 입력해주세요." style="text-indent: 6px;"
+                                       name="title" id="title" th:value="${qna.title}">
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col fw-semibold ms-1">
+                                태그 입력 (최대 <span class="text-primary">5개</span>까지만 등록 가능합니다)
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col">
+                                <input name="tags" class="tags" placeholder='해시태그를 입력해보세요.'
+                                th:value="${hashTags}" th:if="${hashTags != null}">
+                                <input name="tags" class="tags" placeholder='해시태그를 입력해보세요.'
+                                    th:if="${hashTags == null}">
+                            </div>
+                        </div>
+
+
+                        <div class="row mt-4">
+                            <div class="col">
+                                <textarea name="content" id="content" cols="30" rows="15" class="form-control fs-5"
+                                th:utext="${qna.content}" style="resize: none;"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col text-end">
+                                <a href="/qna" class="btn btn-outline-dark fs-5">취소</a>
+                                <button class="btn ms-1 mainButton fs-5">등록</button>
+                            </div>
+                        </div>
+                    </form>
+
+
+                </div>
+                <div class="col"></div>
+            </div>
+
+
+
+            <div class="row mt-3 mb-3"></div>
+
+
+
+        </div>
+
+    </div>
+    <div class="row mt-3 mb-3"></div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+      let sessionId = [[${session.userDTO != null ? session.userDTO.id : 0}]];
+  /*]]>*/
+
+
+</script>
+</body>
+</html>

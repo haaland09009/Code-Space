@@ -178,8 +178,6 @@
                     <div class="row mt-3">
                         <div class="col">
                             <button class="btn btn-sm cateButton fs-18">
-                            <span th:if="${project.projectStudy == '스터디'}">✏️</span>
-                                <i class="bi bi-pc-display-horizontal me-1 text-secondary" th:if="${project.projectStudy == '프로젝트'}"></i>
                                 <span th:text="${project.projectStudy}"></span>
                             </button>
                             <button class="btn btn-sm cateButton me-1 fs-18" th:each="tech: ${project.techList}">

@@ -123,9 +123,21 @@ body {
 }
 
 .boardContent {
+    white-space: pre-line;
+    font-family: 'Pretendard';
+    font-size: 22px;
+}
+
+p {
+    font-size: 24px;
+}
+
+boardContent p {
  /*  white-space: pre-line;*/
     font-family: 'Pretendard';
+    font-size: 24px;
 }
+
 
 
 // textarea 높이 조절 설정

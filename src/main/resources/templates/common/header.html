@@ -26,7 +26,7 @@
                 </div>
                 <div class="col ms-4 mt-1">
                     <div class="row mt-4 fw-semibold">
-                        <div class="col">
+                        <div class="col fs-22">
                             <a href="/project" class="text-secondary tab-link" id="projectLink" >프로젝트 / 스터디 찾기</a>
                             <a href="/qna" id="qnaLink" class="ms-4 text-secondary tab-link" >Q&A</a>
                             <a class="ms-4 text-secondary tab-link" id="noticeLink" > 공지사항</a>
@@ -60,30 +60,30 @@
 
                         </div>
                         <div class="col-auto text-secondary">
-                            <i class="bi bi-bell alarmBell fs-2 ms-1" style="cursor:pointer;"
-                            id="dropAlarmButton" data-bs-toggle="dropdown" aria-expanded="false"></i>
-                            <div class="dropdown-menu row bg-light Small shadow" aria-labelledby="dropAlarmButton" style="width: 520px">
-                                <div class="col">
+                            <div style="position: relative;">
+                                <i class="bi bi-bell alarmBell fs-2 ms-1" style="cursor:pointer;"
+                                id="dropAlarmButton" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                                <div class="dropdown-menu row bg-light Small shadow" aria-labelledby="dropAlarmButton" style="width: 520px">
+                                    <div class="col">
 
-                                    <div class="row">
-                                        <div class="col p-1 fw-semibold border-bottom border-1">
-                                            <span class="ms-3 fs-18" style="position: relative; bottom: 3px;"> 알림 </span>
+                                        <div class="row">
+                                            <div class="col p-1 fw-semibold border-bottom border-1">
+                                                <span class="ms-3 fs-18" style="position: relative; bottom: 3px;"> 알림 </span>
+                                            </div>
                                         </div>
-                                    </div>
+                                        <div class="row">
+                                            <div class="col fs-18 bg-white">
+                                                <div class="row mt-2 mb-2"></div>
+                                                <!---->
+                                                <div id="notification-list"></div>
 
-                                    <div class="row">
-                                        <div class="col fs-18 bg-white">
-
-                                          <div class="row mt-2 mb-2"></div>
-
-                                            <!---->
-                                            <div id="notification-list"></div>
-
-
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
+
                          </div>
                         <div class="col-auto">
                             <a href="/user/myPage">

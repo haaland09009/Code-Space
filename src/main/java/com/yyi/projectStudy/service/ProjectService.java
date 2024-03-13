@@ -195,7 +195,7 @@ public class ProjectService {
     public List<TechCategoryDTO> findTechCategory(Long projectId) {
         // 나중에 리스트 형태로 수정 !!!!!!
        List<ProjectTechCategoryLinkEntity> projectTechCategoryLinkEntityList
-                = projectTechCategoryLinkRepository.findByProjectEntity_Id(projectId);
+                = projectTechCategoryLinkRepository.findByProjectEntity_IdOrderByIdAsc(projectId);
        List<TechCategoryDTO> techCategoryDTOList = new ArrayList<>();
        for (ProjectTechCategoryLinkEntity projectTechCategoryLinkEntity : projectTechCategoryLinkEntityList) {
            Long techId = projectTechCategoryLinkEntity.getTechCategoryEntity().getId();
@@ -293,7 +293,7 @@ public class ProjectService {
                     projectEntity, techCategoryEntity));
         }
         List<TechCategoryDTO> techCategoryDTOList = new ArrayList<>();
-        List<ProjectTechCategoryLinkEntity> entityList = projectTechCategoryLinkRepository.findByProjectEntity_Id(projectDTO.getId());
+        List<ProjectTechCategoryLinkEntity> entityList = projectTechCategoryLinkRepository.findByProjectEntity_IdOrderByIdAsc(projectDTO.getId());
         for (ProjectTechCategoryLinkEntity entity : entityList) {
             Long techId = entity.getTechCategoryEntity().getId();
             TechCategoryEntity techCategoryEntity = techCategoryRepository.findById(techId).get();

@@ -22,7 +22,8 @@
 <div class="container-fluid">
     <div th:include="common/header :: header"></div>
 
-    <div class="row mt-3 mb-4"></div>
+    <div class="mt-5 mb-4"></div>
+
     <div class="row">
         <div class="col ms-5 rounded rounded-1 border">
             <div class="row mt-3 mb-3"></div>
@@ -143,7 +144,8 @@
                     <div class="row mt-4" th:if="${qna.hashTag != null}">
                         <div class="col">
                             <span class="text-secondary">
-                                <button type="button" class="btn btn-outline-dark me-3" th:each="tag, iterStat : ${#strings.replace(qna.hashTag, '\\s*#\\s*', '#').split('#')}" th:if="${!#strings.isEmpty(tag)}">
+                                <button type="button" class="btn btn-outline-dark me-3"
+                                        th:each="tag, iterStat : ${#strings.replace(qna.hashTag, '\\s*#\\s*', '#').split('#')}" th:if="${!#strings.isEmpty(tag)}">
                                     <span class="text-danger">#</span>
                                     <span th:text="${tag}"></span>
                                 </button>
@@ -458,7 +460,7 @@
         <div class="col-4 ms-4">
 
             <div class="row">
-                <div class="col fw-semibold fs-5">
+                <div class="col fw-semibold fs-4">
                     추천 질문
                 </div>
             </div>
@@ -490,7 +492,7 @@
 
             <div class="mt-5 mb-5"></div>
 
-            <div class="row">
+        <!--    <div class="row">
                 <div class="col fw-semibold fs-5">
                     키워드로 질문 검색하기
                 </div>
@@ -519,7 +521,7 @@
 
 
                 </div>
-            </div>
+            </div>-->
 
 
         </div>

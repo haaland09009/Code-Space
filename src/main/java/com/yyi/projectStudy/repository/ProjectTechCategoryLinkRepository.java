@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface ProjectTechCategoryLinkRepository extends JpaRepository<ProjectTechCategoryLinkEntity, Long> {
     // !!! 나중에 리스트 형태로 수정해야함.
-    List<ProjectTechCategoryLinkEntity> findByProjectEntity_Id(Long id);
+    List<ProjectTechCategoryLinkEntity> findByProjectEntity_IdOrderByIdAsc(Long id);
 
     /* 기술스택 삭제 */
     void deleteByProjectEntity(ProjectEntity projectEntity);
