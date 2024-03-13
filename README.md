@@ -35,11 +35,9 @@ Code Space는 개발자들을 위한 커뮤니티 웹 애플리케이션입니�
 
 
 ## 💻 화면 구성
-
-
-| <img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/cc7c6ca5-942b-4da0-a732-4b5a54fbc743" width="300" height="300"> | <img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/090eb0e3-b9fa-4711-b51a-f56787f9d981" width="300" height="300"> |<img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/006a93b5-ba63-43d9-a864-23c429423f58" width="300" style="300"> | <img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/ecffc94e-3abd-4d30-81b2-dde04b06a550" width="300" style="300"> |
-|----------|----------|----------|----------|
-
+|<img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/cc7c6ca5-942b-4da0-a732-4b5a54fbc743" width="400" height="200">|<img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/f1eb5f0b-c537-4c14-95e8-91aa073aee0c" width="400" height="200">|<img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/af91a45c-93d5-4344-98de-6ff93e6274bb" width="400" height="200">|<img src="https://github.com/haaland09009/ToyProject_study/assets/87968927/bf02229a-9c77-4707-9aa7-7bc6741b3d94" width="400" height="200">|   
+|--|--|--|--|
+|메인 페이지|로그인|회원가입|마이페이지|
 
 
 
