@@ -161,6 +161,43 @@
       });
     }
 
+   /* 사용자 정보 모달 클릭 */
+  const clickUserInfoModal = (id) => {
+    selectedUserInfoId = id;
+    getModalUserInfo(id);
+  }
+
+   /*  사용자 정보 확인  */
+  const getModalUserInfo = (id) => {
+     const userModalImg = document.querySelector("#userModalImg");
+     const userModalNickname = document.querySelector("#userModalNickname");
+     const userModalJob = document.querySelector("#userModalJob");
+     $.ajax({
+       url: "/user/getUserInfo/" + id,
+       success: function(res) {
+          if (res.fileAttached == 0) {
+              userModalImg.src = "/img/user.jpg";
+          } else if (res.fileAttached == 1) {
+              userModalImg.src = "/upload/" + res.storedFileName;
+          }
+          userModalNickname.innerText = res.nickname;
+          userModalJob.innerText = res.jobName;
+         /* 모달 열기 */
+          userInfoModal();
+       }, error: function(err) {
+           return;
+       }
+    });
+  }
+
+  /* 사용자 정보 모달  */
+  const userInfoModal = () => {
+        const userInfoModal = bootstrap.Modal.getOrCreateInstance("#userInfoModal");
+        userInfoModal.show();
+  }
+
+
+
 
 
 window.addEventListener("DOMContentLoaded", function(){

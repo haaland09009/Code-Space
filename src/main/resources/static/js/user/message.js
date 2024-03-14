@@ -268,4 +268,8 @@
             beforeChatScreen.style.display = "block";
         }
 
+    /*    setInterval(getRecentChatList(sessionId), 1000);*/
+
+
+
   });

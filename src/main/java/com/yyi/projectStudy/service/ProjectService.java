@@ -33,14 +33,7 @@ public class ProjectService {
     private final ProjectTechCategoryLinkRepository projectTechCategoryLinkRepository;
 
 
-
-//    // 게시글 작성
-//    public void save(ProjectDTO projectDTO) {
-//        UserEntity userEntity = userRepository.findById(projectDTO.getUserId()).get();
-//        projectRepository.save(ProjectEntity.toProjectEntity(projectDTO, userEntity));
-//    }
-
-    // 진행기간 카테고리 조회
+    /* 진행기간 카테고리 조회 */
     public List<PeriodCategoryDTO> findAllPeriodCategoryDTOList() {
         List<PeriodCategoryEntity> periodCategoryEntityList
                 = periodCategoryRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
@@ -51,7 +44,7 @@ public class ProjectService {
         return periodCategoryDTOList;
     }
 
-    // 포지션 카테고리 조회
+    /* 포지션 카테고리 조회 */
     public List<PositionCategoryDTO> findAllPositionCategoryDTOList() {
         List<PositionCategoryEntity> positionCategoryEntityList = positionCategoryRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
         List<PositionCategoryDTO> positionCategoryDTOList = new ArrayList<>();
@@ -61,7 +54,7 @@ public class ProjectService {
         return positionCategoryDTOList;
     }
 
-    // 프로젝트 / 스터디 카테고리 조회
+    /* 프로젝트, 스터디 카테고리 조회 */
     public List<ProjectStudyCategoryDTO> findAllProjectStudyCategoryDTOList() {
         List<ProjectStudyCategoryEntity> projectStudyCategoryEntityList = projectStudyCategoryRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
         List<ProjectStudyCategoryDTO> projectStudyCategoryDTOList = new ArrayList<>();
@@ -71,7 +64,7 @@ public class ProjectService {
         return projectStudyCategoryDTOList;
     }
 
-    // 기술스택 카테고리 조회
+    /* 사용 언어 카테고리 조회 */
     public List<TechCategoryDTO> findAllTechCategoryDTOList() {
         List<TechCategoryEntity> techCategoryEntityList = techCategoryRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
         List<TechCategoryDTO> techCategoryDTOList = new ArrayList<>();
@@ -82,7 +75,7 @@ public class ProjectService {
     }
 
 
-    // 게시글 작성
+    /* 게시글 작성 */
     @Transactional
     public Long save(ProjectDTO projectDTO) {
         UserEntity userEntity = userRepository.findById(projectDTO.getUserId()).get();
@@ -90,7 +83,7 @@ public class ProjectService {
         return ProjectDTO.toProjectDTO(projectEntity).getId();
     }
 
-    // 프로젝트 - 포지션 카테고리 T 데이터 추가
+    /* 저장될 게시글의 모집 포지션 데이터 */
     public void saveProjectPosition(ProjectDTO dto, List<Long> positionIdList) {
         ProjectEntity projectEntity = projectRepository.findById(dto.getId()).get();
         for (Long positionId : positionIdList) {
@@ -100,14 +93,7 @@ public class ProjectService {
     }
 
 
-/*    public void saveProjectPosition(ProjectDTO dto, ProjectPositionCategoryLinkDTO projectPositionCategoryLinkDTO) {
-        ProjectEntity projectEntity = projectRepository.findById(dto.getId()).get();
-        PositionCategoryEntity positionCategoryEntity = positionCategoryRepository.findById(projectPositionCategoryLinkDTO.getPositionId()).get();
-        projectPositionCategoryLinkRepository.save(ProjectPositionCategoryLinkEntity.toProjectPositionCategoryLinkEntity(projectPositionCategoryLinkDTO,
-                projectEntity, positionCategoryEntity));
-    }*/
-
-    // 프로젝트 - 진행기간 카테고리 T 데이터 추가
+    /* 저장될 게시글의 진행기간 데이터 */
     public void saveProjectPeriod(ProjectDTO dto, ProjectPeriodCategoryLinkDTO projectPeriodCategoryLinkDTO) {
         ProjectEntity projectEntity = projectRepository.findById(dto.getId()).get();
         PeriodCategoryEntity periodCategoryEntity = periodCategoryRepository.findById(projectPeriodCategoryLinkDTO.getPeriodId()).get();
@@ -116,7 +102,7 @@ public class ProjectService {
                         projectEntity, periodCategoryEntity));
     }
 
-    // 프로젝트 - 기술스택 카테고리 T 데이터 추가
+    /* 저장될 게시글의 사용 언어 데이터 */
     public void saveProjectTech(ProjectDTO dto, List<Long> techIdList) {
         ProjectEntity projectEntity = projectRepository.findById(dto.getId()).get();
         for (Long techId : techIdList) {
@@ -126,16 +112,7 @@ public class ProjectService {
         }
     }
 
-//    public void saveProjectTech(ProjectDTO dto, ProjectTechCategoryLinkDTO projectTechCategoryLinkDTO) {
-//        ProjectEntity projectEntity = projectRepository.findById(dto.getId()).get();
-//        TechCategoryEntity techCategoryEntity = techCategoryRepository.findById(projectTechCategoryLinkDTO.getTechId()).get();
-//        projectTechCategoryLinkRepository.save(
-//                ProjectTechCategoryLinkEntity.toProjectTechCategoryLinkEntity(projectTechCategoryLinkDTO,
-//                        projectEntity, techCategoryEntity));
-//
-//    }
-
-    // 프로젝트 - 스터디 카테고리 T 데이터 추가
+    /* 저장될 게시글의 프로젝트, 스터디 여부 데이터 */
     public void saveProjectStudy(ProjectDTO dto, ProjectStudyCategoryLinkDTO projectStudyCategoryLinkDTO) {
         ProjectEntity projectEntity = projectRepository.findById(dto.getId()).get();
         ProjectStudyCategoryEntity projectStudyCategoryEntity =
@@ -147,7 +124,7 @@ public class ProjectService {
 
 
 
-    // 게시글 목록 조회
+    /* 게시글 목록 조회  */
     @Transactional
     public List<ProjectDTO> findAll() {
         List<ProjectEntity> projectEntityList = projectRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
@@ -158,7 +135,7 @@ public class ProjectService {
         return projectDTOList;
     }
 
-    // 게시글 상세보기
+    /* 게시글 상세 보기 */
     @Transactional
     public ProjectDTO findById(Long id) {
         Optional<ProjectEntity> optionalProjectEntity = projectRepository.findById(id);
@@ -169,7 +146,7 @@ public class ProjectService {
         }
     }
 
-    // 게시글 - 프로젝트 / 스터디 여부 조회
+    /* 해당 게시글의 프로젝트, 스터디 여부 조회 */
     public ProjectStudyCategoryDTO findProjectStudyCategory(Long projectId) {
         ProjectStudyCategoryLinkEntity projectStudyCategoryLinkEntity =
                 projectStudyCategoryLinkRepository.findByProjectEntity_Id(projectId).get();
@@ -178,7 +155,7 @@ public class ProjectService {
         return ProjectStudyCategoryDTO.toProjectStudyCategoryDTO(projectStudyCategoryEntity);
     }
 
-    // 게시글 - 포지션 조회
+    /* 해당 게시글의 모집 포지션 조회 */
     public List<PositionCategoryDTO> findPositionCategory(Long projectId) {
         List<ProjectPositionCategoryLinkEntity> projectPositionCategoryLinkEntityList =
                 projectPositionCategoryLinkRepository.findByProjectEntity_Id(projectId);
@@ -191,9 +168,8 @@ public class ProjectService {
         return positionCategoryDTOList;
     }
 
-    // 게시글 - 기술스택 조회
+    /* 해당 게시글의 프로젝트, 스터디 사용 언어 조회 */
     public List<TechCategoryDTO> findTechCategory(Long projectId) {
-        // 나중에 리스트 형태로 수정 !!!!!!
        List<ProjectTechCategoryLinkEntity> projectTechCategoryLinkEntityList
                 = projectTechCategoryLinkRepository.findByProjectEntity_IdOrderByIdAsc(projectId);
        List<TechCategoryDTO> techCategoryDTOList = new ArrayList<>();
@@ -205,16 +181,7 @@ public class ProjectService {
         return techCategoryDTOList;
     }
 
-//    public TechCategoryDTO findTechCategory(Long projectId) {
-//        // 나중에 리스트 형태로 수정 !!!!!!
-//        ProjectTechCategoryLinkEntity projectTechCategoryLinkEntity
-//                = projectTechCategoryLinkRepository.findByProjectEntity_Id(projectId).get();
-//        Long techId = projectTechCategoryLinkEntity.getTechCategoryEntity().getId();
-//        TechCategoryEntity techCategoryEntity = techCategoryRepository.findById(techId).get();
-//        return TechCategoryDTO.toTechCategoryDTO(techCategoryEntity);
-//    }
-
-    // 게시글 - 진행기간 조회
+    /* 해당 게시글의 프로젝트, 스터디 진행기간 조회 */
     public PeriodCategoryDTO findPeriodCategory(Long projectId) {
         ProjectPeriodCategoryLinkEntity projectPeriodCategoryLinkEntity
                 = projectPeriodCategoryLinkRepository.findByProjectEntity_Id(projectId).get();
@@ -223,37 +190,42 @@ public class ProjectService {
         return PeriodCategoryDTO.toPeriodCategoryDTO(periodCategoryEntity);
     }
 
-    // 게시글 조회수 증가
+    /* 게시글 클릭 시 조회수 증가 */
     @Transactional
     public void updateReadCount(Long id) {
         projectRepository.updateReadCount(id);
     }
 
-    // 게시글 삭제
+    /* 게시글 삭제 */
     public void deleteById(Long id) {
         projectRepository.deleteById(id);
     }
 
 
-    // 게시글 수정
+    /* 게시글 수정 */
     @Transactional
     public ProjectDTO update(ProjectDTO projectDTO) {
-        projectRepository.updateProject(projectDTO.getTitle(), projectDTO.getContent(), projectDTO.getStartDate(), projectDTO.getHeadCount(), projectDTO.getId());
+        projectRepository.updateProject(projectDTO.getTitle(),
+                projectDTO.getContent(), projectDTO.getStartDate(),
+                projectDTO.getHeadCount(), projectDTO.getId());
         ProjectEntity projectEntity = projectRepository.findById(projectDTO.getId()).get();
         return ProjectDTO.toProjectDTO(projectEntity);
     }
 
-    // 포지션 수정
+    /* 모집 포지션 수정 */
     @Transactional
     public List<PositionCategoryDTO> updatePosition(ProjectDTO projectDTO,
                                               List<Long> positionIdList) {
         ProjectEntity projectEntity = projectRepository.findById(projectDTO.getId()).get();
+        /* 기존에 저장된 포지션 삭제 */
         projectPositionCategoryLinkRepository.deleteByProjectEntity(projectEntity);
+        /* 새로 저장될 포지션 목록 저장 */
         for (Long positionId : positionIdList) {
             PositionCategoryEntity positionCategoryEntity = positionCategoryRepository.findById(positionId).get();
             projectPositionCategoryLinkRepository.save(ProjectPositionCategoryLinkEntity.toProjectPositionCategoryLinkEntity(
                     projectEntity, positionCategoryEntity));
         }
+        /* 새로 저장된 포지션 목록 조회 */
         List<PositionCategoryDTO> positionCategoryDTOList = new ArrayList<>();
         List<ProjectPositionCategoryLinkEntity> entityList = projectPositionCategoryLinkRepository.findByProjectEntity_Id(projectDTO.getId());
         for (ProjectPositionCategoryLinkEntity entity : entityList) {
@@ -263,17 +235,8 @@ public class ProjectService {
         }
         return positionCategoryDTOList;
     }
-   /* @Transactional
-    public PositionCategoryDTO updatePosition(ProjectDTO projectDTO,
-                                   ProjectPositionCategoryLinkDTO projectPositionCategoryLinkDTO) {
-        projectPositionCategoryLinkRepository.updatePosition(projectPositionCategoryLinkDTO.getPositionId(),
-                projectDTO.getId());
 
-        PositionCategoryEntity positionCategoryEntity = projectPositionCategoryLinkRepository.findByProjectEntity_Id(projectDTO.getId()).get().getPositionCategoryEntity();
-        return PositionCategoryDTO.toPositionCategoryDTO(positionCategoryEntity);
-    }*/
-
-    // 진행기간 수정
+    /* 진행기간 수정 */
     @Transactional
     public PeriodCategoryDTO updatePeriod(ProjectDTO projectDTO,
                                           ProjectPeriodCategoryLinkDTO projectPeriodCategoryLinkDTO) {
@@ -282,16 +245,19 @@ public class ProjectService {
         return PeriodCategoryDTO.toPeriodCategoryDTO(periodCategoryEntity);
     }
 
-    // 기술스택 수정
+    /* 사용 언어 목록 수정 */
     @Transactional
     public List<TechCategoryDTO> updateTech(ProjectDTO projectDTO, List<Long> techIdList) {
         ProjectEntity projectEntity = projectRepository.findById(projectDTO.getId()).get();
+        /* 기존에 저장된 사용 언어 데이터 삭제 */
         projectTechCategoryLinkRepository.deleteByProjectEntity(projectEntity);
+        /* 새로 저장될 사용 언어 목록 저장 */
         for (Long techId : techIdList) {
             TechCategoryEntity techCategoryEntity = techCategoryRepository.findById(techId).get();
             projectTechCategoryLinkRepository.save(ProjectTechCategoryLinkEntity.toProjectTechCategoryLinkEntity(
                     projectEntity, techCategoryEntity));
         }
+        /* 새로 저장된 사용 언어 목록 조회 */
         List<TechCategoryDTO> techCategoryDTOList = new ArrayList<>();
         List<ProjectTechCategoryLinkEntity> entityList = projectTechCategoryLinkRepository.findByProjectEntity_IdOrderByIdAsc(projectDTO.getId());
         for (ProjectTechCategoryLinkEntity entity : entityList) {
@@ -302,34 +268,8 @@ public class ProjectService {
         return techCategoryDTOList;
     }
 
-//    List<ProjectTechCategoryLinkEntity> projectTechCategoryLinkEntityList
-//            = projectTechCategoryLinkRepository.findByProjectEntity_Id(projectId);
-//    List<TechCategoryDTO> techCategoryDTOList = new ArrayList<>();
-//       for (ProjectTechCategoryLinkEntity projectTechCategoryLinkEntity : projectTechCategoryLinkEntityList) {
-//        Long techId = projectTechCategoryLinkEntity.getTechCategoryEntity().getId();
-//        TechCategoryEntity techCategoryEntity = techCategoryRepository.findById(techId).get();
-//        techCategoryDTOList.add(TechCategoryDTO.toTechCategoryDTO(techCategoryEntity));
-//    }
-//        return techCategoryDTOList;
 
-    // 기술스택 수정 (나중에 리스트 형태로 수정해야함)
-//    @Transactional
-//    public TechCategoryDTO updateTech(ProjectDTO projectDTO,
-//                                      ProjectTechCategoryLinkDTO projectTechCategoryLinkDTO) {
-//        projectTechCategoryLinkRepository.updateTech(projectTechCategoryLinkDTO.getTechId(), projectDTO.getId());
-//        TechCategoryEntity techCategoryEntity = projectTechCategoryLinkRepository.findByProjectEntity_Id(projectDTO.getId()).get().getTechCategoryEntity();
-//        return TechCategoryDTO.toTechCategoryDTO(techCategoryEntity);
-//    }
-
-//    @Transactional
-//    public TechCategoryDTO updateTech(ProjectDTO projectDTO,
-//                                      ProjectTechCategoryLinkDTO projectTechCategoryLinkDTO) {
-//        projectTechCategoryLinkRepository.updateTech(projectTechCategoryLinkDTO.getTechId(), projectDTO.getId());
-//        TechCategoryEntity techCategoryEntity = projectTechCategoryLinkRepository.findByProjectEntity_Id(projectDTO.getId()).get().getTechCategoryEntity();
-//        return TechCategoryDTO.toTechCategoryDTO(techCategoryEntity);
-//    }
-
-    // 프로젝트 / 스터디 여부 수정
+    /* 프로젝트, 스터디 여부 수정 */
     @Transactional
     public ProjectStudyCategoryDTO updateProjectStudy(ProjectDTO projectDTO,
                                                       ProjectStudyCategoryLinkDTO projectStudyCategoryLinkDTO) {
@@ -338,18 +278,8 @@ public class ProjectService {
         return ProjectStudyCategoryDTO.toProjectStudyCategoryDTO(projectStudyCategoryEntity);
     }
 
-    // 프로젝트 / 스터디 랜덤 추출 3개
-    @Transactional
-    public List<ProjectDTO> findRandomProjects() {
-        List<ProjectEntity> projectEntityList = projectRepository.findRandomProjects();
-        List<ProjectDTO> projectDTOList = new ArrayList<>();
-        for (ProjectEntity projectEntity : projectEntityList) {
-            projectDTOList.add(ProjectDTO.toProjectDTO(projectEntity));
-        }
-        return projectDTOList;
-    }
 
-    // 메인 페이지 (프로젝트 스터디 조회) - 나중에 수정 !!!!
+   /* 메인 페이지 (프로젝트 스터디 조회수 순으로 조회) - 나중에 수정할 것 !!!!*/
     @Transactional
     public List<ProjectDTO> findAllInMainPage() {
         List<ProjectEntity> projectEntityList = projectRepository.findAllByOrderByReadCountDesc();
@@ -360,7 +290,7 @@ public class ProjectService {
         return projectDTOList;
     }
 
-    // 활동 내역
+    /* 사용자의 프로젝트, 스터디 찾기 메뉴 활동 내역 조회 */
     @Transactional
     public List<ProjectArticleDTO> findArticleList(Long userId) {
         List<Object[]> projectArticles = projectRepository.getProjectArticles(userId);
@@ -373,7 +303,7 @@ public class ProjectService {
             java.sql.Timestamp timestamp = (java.sql.Timestamp) article[3];
             LocalDateTime regDate = timestamp.toLocalDateTime();
 
-            // 게시물 내용일 경우
+            /* 게시물 내용일 경우 */
             if (title != null) {
                 projectArticleDTO.setProjectId(id);
                 projectArticleDTO.setTitle(title);
@@ -407,7 +337,7 @@ public class ProjectService {
     }
 
 
-    // 게시물 스크랩
+    /* 게시물 스크랩 처리 */
     public void clip(ProjectClipDTO projectClipDTO) {
         Optional<ProjectEntity> optionalProjectEntity = projectRepository.findById(projectClipDTO.getProjectId());
         if (optionalProjectEntity.isPresent()) {
@@ -425,14 +355,14 @@ public class ProjectService {
     }
 
 
-    // 게시물 스크랩 여부 확인
+    /* 게시물 스크랩 여부 확인 */
     public int checkClipYn(ProjectClipDTO projectClipDTO) {
         ProjectEntity projectEntity = projectRepository.findById(projectClipDTO.getProjectId()).get();
         UserEntity userEntity = userRepository.findById(projectClipDTO.getUserId()).get();
         return projectClipRepository.countByProjectEntityAndUserEntity(projectEntity, userEntity);
     }
 
-    // 스크랩 목록
+    /* 게시물 스크랩 목록 */
     @Transactional
     public List<ProjectClipDTO> getClipList(Long id) {
         UserEntity userEntity = userRepository.findById(id).get();
@@ -445,21 +375,19 @@ public class ProjectService {
         return projectClipList;
     }
 
-    // 스크랩 수
+   /* 게시물 당 스크랩 수 조회 */
     public int clipCount(Long id) {
         ProjectEntity projectEntity = projectRepository.findById(id).get();
         return projectClipRepository.countByProjectEntity(projectEntity);
     }
 
     @Transactional
-    // Top Writers
+    /* Top Writers 조회 */
     public List<TopWritersDTO> getTopWriters() {
         List<Object[]> topWriters = projectRepository.getTopWriters();
         List<TopWritersDTO> topWritersDTOList = new ArrayList<>();
         for (Object[] writer : topWriters) {
             TopWritersDTO topWritersDTO = new TopWritersDTO();
-//            BigDecimal userIdBigDecimal = (BigDecimal) writer[0];
-//            Long userId = (userIdBigDecimal != null) ? userIdBigDecimal.longValue() : null;
 
             Long userId = (Long) writer[0];
             int totalCount = Integer.parseInt(String.valueOf(writer[1]));
@@ -479,7 +407,7 @@ public class ProjectService {
         return topWritersDTOList;
     }
 
-    // 프로젝트 , 스터디 카테고리 여부 조회 - 목록 페이지
+    /* 프로젝트 , 스터디 카테고리 여부 조회 - 목록 페이지 */
     @Transactional
     public List<ProjectDTO> findProjectStudyInListPage(Long id) {
         ProjectStudyCategoryEntity projectStudyCategoryEntity = projectStudyCategoryRepository.findById(id).get();

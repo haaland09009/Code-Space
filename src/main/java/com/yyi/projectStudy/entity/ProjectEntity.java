@@ -78,8 +78,8 @@ public class ProjectEntity extends BaseEntity {
         projectEntity.setId(projectDTO.getId());
         projectEntity.setTitle(projectDTO.getTitle());
         projectEntity.setContent(projectDTO.getContent());
-        projectEntity.setHeadCount(projectDTO.getHeadCount()); //
-        projectEntity.setStartDate(projectDTO.getStartDate()); //
+        projectEntity.setHeadCount(projectDTO.getHeadCount());
+        projectEntity.setStartDate(projectDTO.getStartDate());
         projectEntity.setStatus("모집중");
         projectEntity.setReadCount(0);
 

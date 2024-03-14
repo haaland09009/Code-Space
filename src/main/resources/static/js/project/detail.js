@@ -131,19 +131,15 @@ const alertLikeCheckModal = () => {
                  output += '<div class="col text-end">';
 
                  output += '<span>';
-                 output += '<img src="/img/like.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" ' +
-                      'onclick="isYourCommentForLike(' + comments[i].id + ')" ' +
-                      'id="cmtLike_' + comments[i].id + '">';
+                 output += '<img src="/img/like.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForLike(' + comments[i].id + ')">';
 
-                 output += '<span class="me-1">' + comments[i].likeCount + '</span>';
+                 output += '<span class="me-1" id="cmtLike_' + comments[i].id + '">' + comments[i].likeCount + '</span>';
                  output += '</span>';
 
 
                  output += '<span class="ms-2">';
-                 output += '<img src="/img/dislike.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" ' +
-                      'onclick="isYourCommentForDisLike(' + comments[i].id + ')" ' +
-                      'id="cmtDisLike_' + comments[i].id + '">';
-                 output += '<span class="me-1">' + comments[i].disLikeCount + '</span>';
+                 output += '<img src="/img/dislike.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForDisLike(' + comments[i].id + ')" >';
+                 output += '<span class="me-1" id="cmtDisLike_' + comments[i].id + '">' + comments[i].disLikeCount + '</span>';
                  output += '</span>';
 
                  if (sessionId == comments[i].userId) {
@@ -170,7 +166,7 @@ const alertLikeCheckModal = () => {
                  output += '</div>';
                  output += '</div>';
                  output += '<div class="row mt-3">';
-                 output += '<div class="col ms-1 boardContent">' + comments[i].content + '</div>';
+                 output += '<div class="col ms-1 boardContent fs-5">' + comments[i].content + '</div>';
                  output += '</div>';
 
                  <!-- 답글 작성 -->

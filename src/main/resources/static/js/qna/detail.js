@@ -66,9 +66,18 @@
             output += '<div class="row mt-4 mb-5">';
             output += '<div class="col ms-3 border border-1">';
 
+            if (bestReplyPkList.includes(replies[i].id)) {
+                output += '<div class="row mt-4 ms-3">';
+                output += '<div class="col">';
+                output += '<i class="bi bi-trophy-fill color-yellow">' + '</i>';
+                output += '<span class="ms-2 fw-semibold">' + "인기 답변" + '</span>';
+                output += '</div>';
+                output += '</div>';
+            }
+
             output += '<div class="row mt-4 ms-1">';
 
-            output += '<div class="col-1 mt-2">';
+            output += '<div class="col-1 mt-2 user-info-image" onclick="clickUserInfoModal('+ replies[i].userId  +')">';
             if (replies[i].fileAttached == 0) {
                 output += '<img class="rounded-circle" style="width: 65px; height: 65px;" src="/img/user.jpg">';
             } else if (replies[i].fileAttached == 1) {
@@ -78,10 +87,10 @@
 
             output += '<div class="col ps-1">';
             output += '<div class="row">';
-            output += '<div class="col fw-semibold fs-22">' + replies[i].writer + '</div>';
+            output += '<div class="col fw-semibold fs-22 user-info-actButton" onclick="clickUserInfoModal('+ replies[i].userId  +')">' + replies[i].writer + '</div>';
             output += '</div>';
             output += '<div class="row">';
-            output += '<div class="col text-secondary fs-18">' + replies[i].jobName + '</div>';
+            output += '<div class="col text-secondary fs-18 user-info-actButton" onclick="clickUserInfoModal('+ replies[i].userId  +')">' + replies[i].jobName + '</div>';
             output += '</div>';
 
             output += '<div class="row">';
@@ -168,7 +177,7 @@
                 output += '<div class="row mt-4 border-top">';
                 output += '<div class="col ms-5">';
                 output += '<div class="row mt-3">';
-                output += '<div class="col-1">';
+                output += '<div class="col-1 user-info-image" onclick="clickUserInfoModal('+ replies[i].commentList[c].userId  +')">';
                 if (replies[i].commentList[c].fileAttached == 0) {
                     output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 55px; height: 55px; position: relative; top: 2px;">';
                 } else {
@@ -179,11 +188,11 @@
                 output += '</div>';
                 output += '<div class="col px-0">';
                 output += '<div class="row">';
-                output += '<div class="col fw-semibold">' + replies[i].commentList[c].writer + '</div>';
+                output += '<div class="col fw-semibold user-info-actButton" onclick="clickUserInfoModal('+ replies[i].commentList[c].userId  +')">' + replies[i].commentList[c].writer + '</div>';
                 output += '</div>';
                 output += '<div class="row">';
                 output += '<div class="col text-secondary fs-16">';
-                output += '<span>' + replies[i].commentList[c].jobName + '</span>';
+                output += '<span class="user-info-actButton" onclick="clickUserInfoModal('+ replies[i].commentList[c].userId  +')">' + replies[i].commentList[c].jobName + '</span>';
                 output += '<span class="ms-1">' + "·" + '</span>';
                 output += '<span class="date-element ms-1">' +  formatDateTime(replies[i].commentList[c].regDate) + '</span>';
                 output += '</div>';
@@ -678,7 +687,7 @@
             output += '<div class="row mt-4 border-top">';
             output += '<div class="col ms-5">';
             output += '<div class="row mt-3">';
-            output += '<div class="col-1">';
+            output += '<div class="col-1  user-info-image" onclick="clickUserInfoModal('+ comments[i].userId  +')">';
             if (comments[i].fileAttached == 0) {
                 output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 55px; height: 55px; position: relative; top: 2px;">';
             } else {
@@ -688,11 +697,11 @@
             output += '</div>';
             output += '<div class="col px-0">';
             output += '<div class="row">';
-            output += '<div class="col fw-semibold">' + comments[i].writer + '</div>';
+            output += '<div class="col fw-semibold user-info-actButton" onclick="clickUserInfoModal('+ comments[i].userId  +')">' + comments[i].writer + '</div>';
             output += '</div>';
             output += '<div class="row">';
             output += '<div class="col text-secondary fs-16">';
-            output += '<span>' + comments[i].jobName + '</span>';
+            output += '<span class="user-info-actButton" onclick="clickUserInfoModal('+ comments[i].userId  +')">' + comments[i].jobName + '</span>';
             output += '<span class="ms-1">' + "·" + '</span>';
             output += '<span class="date-element ms-1">' +  formatDateTime(comments[i].regDate) + '</span>';
             output += '</div>';
@@ -845,10 +854,86 @@
          });
     }
 
+
+   /* 채팅하기 모달 */
+    const sendMessageModal = () => {
+        const sendMessageModal = bootstrap.Modal.getOrCreateInstance("#sendMessageModal");
+        sendMessageModal.show();
+    }
+
+
+    /* 메시지 전송 */
+    const sendMessage = () => {
+
+        if (sessionId == 0) {
+            location.href = "/user/loginPage";
+            return;
+        }
+        const content = document.querySelector("#messageContent");
+        const alertBox = document.querySelector("#alertMessageBox");
+
+        content.addEventListener("input", () => {
+            if (content.value.trim() !== "") {
+                alertBox.style.display = "none"; // 내용이 입력되면 alertBox를 숨깁니다.
+            }
+        });
+
+        if (content.value.trim() == "") {
+            alertBox.style.display = "block";
+            content.focus();
+            return;
+        }
+
+        $.ajax({
+           type: "post",
+           url: "/chat/save",
+           data: {
+               "content" : content.value,
+               "receiverId" : selectedUserInfoId
+           },
+            success: function(res) {
+                if (res == "ok") {
+                    // 성공시
+
+                     content.value = "";
+
+                    const sendSuccessModal = bootstrap.Modal.getOrCreateInstance("#sendSuccessModal");
+                    sendSuccessModal.show();
+
+                     setTimeout(function() {
+                        sendSuccessModal.hide();
+                    }, 2000);
+               } else {
+                  // 코드 추가
+                   return;
+               }
+           },
+           error: function(err) {
+               console.log("실패");
+           }
+       });
+    }
+
+        // 메시지 모달 창을 닫을 때 이벤트 처리
+        const sendMessageModal1 = bootstrap.Modal.getOrCreateInstance("#sendMessageModal");
+        sendMessageModal1.hide(); // 모달을 닫기 전에 값 초기화
+        sendMessageModal1._element.addEventListener("hidden.bs.modal", function () {
+            resetModalInputs(); // 모달이 숨겨진 후에 초기화 함수 호출
+        });
+
+        const resetModalInputs = () => {
+            const alertBox = document.querySelector("#alertMessageBox");
+            const content = document.querySelector("#messageContent");
+            alertBox.style.display = "none";
+            content.value = "";
+        }
+
+
+
 window.addEventListener("DOMContentLoaded", function(){
 
     if (sessionId != 0) {
          checkQnaLikeForColor(boardId);
      }
-
+    console.log()
 });

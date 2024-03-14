@@ -227,6 +227,9 @@ public class QnaController {
             qnaDTO.setHashTag(qnaTagsDTO.getTag());
         }
 
+       /* 베스트 답변 pk 리스트 조회 */
+        List<Long> bestReplyPkList = qnaReplyService.getBestReplyList();
+        model.addAttribute("bestReplyPkList", bestReplyPkList);
 
         return "qna/detail";
     }

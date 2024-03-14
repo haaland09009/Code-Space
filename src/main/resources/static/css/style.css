@@ -128,6 +128,10 @@ body {
     font-size: 22px;
 }
 
+.color-yellow {
+    color: #eab308;
+}
+
 p {
     font-size: 24px;
 }
@@ -241,4 +245,13 @@ textarea {
     color: white;
     font-weight: bold;
     pointer-events: none;
+}
+
+
+.user-info-image {
+    cursor: pointer;
+}
+
+.user-info-actButton {
+     cursor: pointer;
 }

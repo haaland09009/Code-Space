@@ -108,4 +108,9 @@ public class QnaReplyService {
         }
     }
 
+    /* 베스트 답변 pk 조회 */
+    public List<Long> getBestReplyList() {
+        return qnaReplyRepository.bestReplyPkList();
+    }
+
 }
