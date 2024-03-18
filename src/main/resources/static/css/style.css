@@ -247,6 +247,13 @@ textarea {
     pointer-events: none;
 }
 
+.unRecruitButton {
+    background-color: #dcdcdc;
+    color: white;
+    font-weight: bold;
+    pointer-events: none;
+}
+
 
 .user-info-image {
     cursor: pointer;

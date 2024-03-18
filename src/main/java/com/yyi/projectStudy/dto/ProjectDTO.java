@@ -38,6 +38,22 @@ public class ProjectDTO {
 
     private Long remainingDays;
 
+    public ProjectDTO(ProjectEntity projectEntity) {
+        this.id = projectEntity.getId();
+        this.title = projectEntity.getTitle();
+        this.content = projectEntity.getContent();
+        this.readCount = projectEntity.getReadCount();
+        this.headCount = projectEntity.getHeadCount();
+        this.regDate = projectEntity.getRegDate();
+        this.startDate = projectEntity.getStartDate();
+        this.status = projectEntity.getStatus();
+
+        this.writer = projectEntity.getUserEntity().getNickname();
+        this.fileAttached = projectEntity.getUserEntity().getFileAttached();
+        if (projectEntity.getUserEntity().getFileAttached() == 1) {
+            this.storedFileName = projectEntity.getUserEntity().getUserImageFileEntityList().get(0).getStoredFileName();
+        }
+    }
 
     public static ProjectDTO toProjectDTO(ProjectEntity projectEntity) {
         ProjectDTO projectDTO = new ProjectDTO();

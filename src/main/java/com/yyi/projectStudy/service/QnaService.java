@@ -282,7 +282,6 @@ public class QnaService {
             qnaBestDTO.setRegDate(qnaEntity.getRegDate());
 
 
-
 //            // 싫어요 수
 //            int disLikeCount = qnaDisLikeRepository.countByQnaEntity(qnaEntity);
             qnaBestDTOList.add(qnaBestDTO);
@@ -339,7 +338,7 @@ public class QnaService {
             java.sql.Timestamp timestamp = (java.sql.Timestamp) article[4];
             LocalDateTime regDate = timestamp.toLocalDateTime();
             String content = (String) article[5];
-            System.out.println("qnaId : " + qnaId  + ", replyId : " + replyId + ", commentId : " + commentId);
+            System.out.println("qnaId : " + qnaId + ", replyId : " + replyId + ", commentId : " + commentId);
             if (qnaId != null) {
                 qnaArticleDTO.setQnaId(qnaId);
                 qnaArticleDTO.setTitle(title);
@@ -402,7 +401,6 @@ public class QnaService {
     }
 
 
-
     // 게시물 스크랩 여부 확인
     public int checkClipYn(QnaClipDTO qnaClipDTO) {
         QnaEntity qnaEntity = qnaRepository.findById(qnaClipDTO.getQnaId()).get();
@@ -437,7 +435,6 @@ public class QnaService {
     }
 
 
-
     // 해시 태그 조회
     @Transactional
     public QnaTagsDTO findHashTag(Long id) {
@@ -450,10 +447,41 @@ public class QnaService {
         }
     }
 
-//    // 해시태그 수정
-//    @Transactional
-//    public void updateHashTag(QnaDTO dto, String tag) {
-//        Long qnaId = dto.getId();
-//        qnaTagsRepository.updateTags(qnaId, tag);
-//    }
+
+    /* 답변 순으로 정렬 */
+    @Transactional
+    public List<QnaDTO> getQnaDTOListByReplySort(Long topicId) {
+        List<Long> qnaIdList;
+        if (topicId != null) {
+            qnaIdList = qnaRepository.getQnaListSortByReplyAscAndTopic(topicId);
+        } else {
+            qnaIdList = qnaRepository.getQnaListSortByReplyAsc();
+        }
+        List<QnaDTO> qnaDTOList = new ArrayList<>();
+        for (Long qnaId : qnaIdList) {
+            QnaEntity qnaEntity = qnaRepository.findById(qnaId).get();
+            qnaDTOList.add(QnaDTO.toQnaDTO(qnaEntity));
+        }
+        return qnaDTOList;
+    }
+
+   /* 답변이 없는 게시물 */
+    @Transactional
+    public List<QnaDTO> getNoRelyQnaList() {
+        List<QnaDTO> qnaDTOList = new ArrayList<>();
+        List<Long> qnaIdList = qnaRepository.getNoReplyQnaList();
+        if (qnaIdList != null) {
+            for (Long qnaId : qnaIdList) {
+                Optional<QnaEntity> optionalQnaEntity = qnaRepository.findById(qnaId);
+                if (optionalQnaEntity.isPresent()) {
+                    qnaDTOList.add(QnaDTO.toQnaDTO(optionalQnaEntity.get()));
+                }
+            }
+        } else {
+            return null;
+        }
+        return qnaDTOList;
+    }
+
+
 }

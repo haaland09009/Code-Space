@@ -19,7 +19,8 @@ public interface ProjectStudyCategoryLinkRepository extends JpaRepository<Projec
     @Query("UPDATE ProjectStudyCategoryLinkEntity p SET p.projectStudyCategoryEntity.id = :projectStudyId WHERE p.projectEntity.id = :projectId")
     void updateProjectStudy(@Param("projectStudyId") Long projectStudyId, @Param("projectId") Long projectId);
 
-    /* 프로젝트, 스터디 여부 확인 2 */
-    List<ProjectStudyCategoryLinkEntity> findByProjectStudyCategoryEntityOrderByIdDesc(ProjectStudyCategoryEntity projectStudyCategoryEntity);
+
+
+
 
 }

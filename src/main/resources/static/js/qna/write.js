@@ -3,7 +3,7 @@
     var input = document.querySelector('input[name="tags"]');
     var whitelist = ["백엔드","프론트엔드","안드로이드","Java", "JavaScript",
                  "Spring", "Spring Boot", "React","Vue", "C", "C++", "Python", "NodeJs",
-                  "Swift", "Kotlin", "Flutter", "TypeScript", "자바","스프링", "HTML","CSS","AWS","딥러닝","AI"];
+                  "Swift", "Kotlin", "Flutter", "TypeScript", "자바","스프링", "HTML","CSS","AWS","딥러닝","AI","블로그","노션"];
     var tagify = new Tagify(input, {
         whitelist: whitelist,
         maxTags: 5,

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>main</title>
+    <title>CodeSpace | 개발자들의 공간</title>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
@@ -65,29 +65,33 @@
                                                 <span th:if="${tech.name == 'Spring Boot'}" class="text-success">•</span>
                                                 <span th:if="${tech.name == 'C'}" style="color: #007aff;">•</span>
                                                 <span th:if="${tech.name == 'Python'}" class="text-primary">•</span>
-                                                <span th:if="${tech.name == 'React'}" style="color: #84ffff;">•</span>
+                                                <span th:if="${tech.name == 'React'}" style="color: #14D3FF;">•</span>
                                                 <span th:if="${tech.name == 'Vue'}" style="color: #4caf50;">•</span>
                                                 <span th:if="${tech.name == 'NodeJS'}" style="color: #9c27b0;">•</span>
                                                 <span th:if="${tech.name == 'Swift'}" style="color: #b71c1c;">•</span>
                                                 <span th:if="${tech.name == 'Kotlin'}" style="color: #712cf9;">•</span>
-                                                <span th:if="${tech.name == 'Git'}">•</span>
-                                                <span th:if="${tech.name == 'AWS'}">•</span>
+                                                <span th:if="${tech.name == 'Git'}" style="color: #FF9100">•</span>
+                                                <span th:if="${tech.name == 'AWS'}" style="color: #FF9100">•</span>
                                                 <span th:if="${tech.name == 'Flutter'}">•</span>
                                                 <span th:if="${tech.name == 'Docker'}">•</span>
                                                 <span th:if="${tech.name == 'JavaScript'}" style="color: #712cf9;">•</span>
                                                 <span th:if="${tech.name == 'TypeScript'}" class="text-primary">•</span>
                                                 <span th:if="${tech.name == 'Django'}">•</span>
                                                 <span th:if="${tech.name == 'PHP'}" class="text-secondary">•</span>
-                                                <span th:if="${tech.name == 'SQL'}" style="color: #ff6f0f">•</span>
+                                                <span th:if="${tech.name == 'MySQL'}" style="color: #ff6f0f">•</span>
                                                 <span class="ms-1" th:text="${tech.name}"></span>
                                             </button>
                                         </div>
                                     </div>
                                     <div class="row mt-3">
                                         <div class="col-auto">
-                                            <button class="btn recruitButton rounded-4 fs-5 btn-sm"
+                                            <button class="btn recruitButton rounded-4 fs-5 btn-sm mt-1"
                                                     th:if="${project.status == '모집중'}">
                                                 모집중
+                                            </button>
+                                            <button class="btn unRecruitButton rounded-4 btn-sm fs-5 btn-sm mt-1"
+                                                    th:if="${project.status == '모집완료'}">
+                                                모집완료
                                             </button>
                                         </div>
                                         <div class="col ps-0 fs-3 fw-semibold" th:text="${project.title}">

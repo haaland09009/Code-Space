@@ -1,9 +1,13 @@
 package com.yyi.projectStudy.service;
 
+import com.yyi.projectStudy.ProjectStatus;
 import com.yyi.projectStudy.dto.*;
 import com.yyi.projectStudy.entity.*;
 import com.yyi.projectStudy.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +35,8 @@ public class ProjectService {
     private final ProjectPeriodCategoryLinkRepository projectPeriodCategoryLinkRepository;
     private final ProjectStudyCategoryLinkRepository projectStudyCategoryLinkRepository;
     private final ProjectTechCategoryLinkRepository projectTechCategoryLinkRepository;
+
+    private static final int PAGE_LIMIT = 6; // 한 페이지에 존재하는 게시글 수
 
 
     /* 진행기간 카테고리 조회 */
@@ -126,14 +132,43 @@ public class ProjectService {
 
     /* 게시글 목록 조회  */
     @Transactional
-    public List<ProjectDTO> findAll() {
-        List<ProjectEntity> projectEntityList = projectRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+    public Page<ProjectDTO> findAll(String status, Pageable pageable) {
+        Page<ProjectEntity> projectList;
+
+        int page = pageable.getPageNumber() - 1;
+        if (status != null) {
+            if (status.equals("unrecruited")) {
+                projectList = projectRepository.findByStatusOrderByIdDesc("모집중", PageRequest.of(page, PAGE_LIMIT));
+            } else {
+                projectList = projectRepository.findByStatusOrderByIdDesc("모집완료", PageRequest.of(page, PAGE_LIMIT));
+            }
+        } else {
+            projectList = projectRepository.findAll(PageRequest.of(page, PAGE_LIMIT, Sort.by(Sort.Direction.DESC, "id")));
+        }
+        Page<ProjectDTO> projectDTOS = projectList.map(
+                project -> new ProjectDTO(project));
+
+        return projectDTOS;
+    }
+
+/*    @Transactional
+    public List<ProjectDTO> findAll(String status) {
+        List<ProjectEntity> projectEntityList;
+        if (status != null) {
+            if (status.equals("unrecruited")) {
+                projectEntityList = projectRepository.findByStatusOrderByIdDesc("모집중");
+            } else {
+                projectEntityList = projectRepository.findByStatusOrderByIdDesc("모집완료");
+            }
+        } else {
+            projectEntityList = projectRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        }
         List<ProjectDTO> projectDTOList = new ArrayList<>();
         for (ProjectEntity projectEntity : projectEntityList) {
             projectDTOList.add(ProjectDTO.toProjectDTO(projectEntity));
         }
         return projectDTOList;
-    }
+    }*/
 
     /* 게시글 상세 보기 */
     @Transactional
@@ -408,22 +443,142 @@ public class ProjectService {
     }
 
     /* 프로젝트 , 스터디 카테고리 여부 조회 - 목록 페이지 */
-    @Transactional
-    public List<ProjectDTO> findProjectStudyInListPage(Long id) {
-        ProjectStudyCategoryEntity projectStudyCategoryEntity = projectStudyCategoryRepository.findById(id).get();
-        List<ProjectStudyCategoryLinkEntity> projectStudyCategoryLinkEntityList =
-        projectStudyCategoryLinkRepository.findByProjectStudyCategoryEntityOrderByIdDesc(projectStudyCategoryEntity);
+    @Transactional(readOnly = true)
+    public Page<ProjectDTO> findProjectStudyInListPage(Long id, String status, Pageable pageable) {
+        Page<ProjectEntity> projectEntityList;
 
-        List<ProjectDTO> projectDTOList = new ArrayList<>();
-        for (ProjectStudyCategoryLinkEntity projectStudyCategoryLinkEntity : projectStudyCategoryLinkEntityList) {
-            Long projectId = projectStudyCategoryLinkEntity.getProjectEntity().getId();
-
-            Optional<ProjectEntity> optionalProjectEntity = projectRepository.findById(projectId);
-            if (optionalProjectEntity.isPresent()) {
-                projectDTOList.add(ProjectDTO.toProjectDTO(optionalProjectEntity.get()));
+        if (status != null) {
+            if (status.equals("unrecruited")) {
+                projectEntityList = projectRepository.getProjectListByCategoryAndStatus(id, "모집중",
+                        PageRequest.of(pageable.getPageNumber() - 1, PAGE_LIMIT));
+            } else {
+                projectEntityList = projectRepository.getProjectListByCategoryAndStatus(id, "모집완료",
+                        PageRequest.of(pageable.getPageNumber() - 1, PAGE_LIMIT));
             }
+        } else {
+            projectEntityList = projectRepository.getProjectListByCategory(id, PageRequest.of(pageable.getPageNumber() - 1, PAGE_LIMIT));
+        }
+
+
+
+        Page<ProjectDTO> projectDTOS = projectEntityList.map(
+                project -> new ProjectDTO(project));
+
+
+        return projectDTOS;
+    }
+  /*  @Transactional(readOnly = true)
+    public List<ProjectDTO> findProjectStudyInListPage(Long id, String status) {
+        List<ProjectEntity> projectEntityList;
+        if (status != null) {
+            if ("unrecruited".equals(status)) {
+                projectEntityList = projectRepository.getProjectListByCategoryAndStatus(id, "모집중");
+            } else {
+                projectEntityList = projectRepository.getProjectListByCategoryAndStatus(id, "모집완료");
+            }
+        } else {
+            projectEntityList = projectRepository.getProjectListByCategory(id);
+        }
+        List<ProjectDTO> projectDTOList = new ArrayList<>();
+        for (ProjectEntity projectEntity : projectEntityList) {
+            projectDTOList.add(ProjectDTO.toProjectDTO(projectEntity));
         }
         return projectDTOList;
+    }*/
+
+   /* 댓글 많은 순 조회 (전체보기) */
+    @Transactional(readOnly = true)
+    public Page<ProjectDTO> getProjectListOrderByComment(String status, Pageable pageable) {
+         Page<ProjectEntity> projectEntityList;
+         if (status != null) {
+             if (status.equals("unrecruited")) {
+                 projectEntityList = projectRepository.getProjectListOrderByCommentAndStatus("모집중", PageRequest.of(pageable.getPageNumber()-1, PAGE_LIMIT));
+             } else {
+                 projectEntityList = projectRepository.getProjectListOrderByCommentAndStatus("모집완료", PageRequest.of(pageable.getPageNumber()-1, PAGE_LIMIT));
+             }
+         } else {
+             projectEntityList = projectRepository.getProjectListOrderByComment(PageRequest.of(pageable.getPageNumber()-1, PAGE_LIMIT));
+         }
+
+        Page<ProjectDTO> projectDTOS = projectEntityList.map(projectEntity -> new ProjectDTO(projectEntity));
+
+        return projectDTOS;
     }
+
+    /* 댓글 많은 순 조회 (카테고리 포함) */
+    @Transactional
+    public Page<ProjectDTO> getProjectListOrderByCommentAndCategory(Long projectStudyId, String status, Pageable pageable) {
+        Page<ProjectEntity> projectEntityList;
+        if (status != null) {
+            if (status.equals("unrecruited")) {
+                projectEntityList = projectRepository.getProjectListOrderByCommentAndCategoryAndStatus(projectStudyId,"모집중", PageRequest.of(pageable.getPageNumber()-1, PAGE_LIMIT));
+            } else {
+                projectEntityList = projectRepository.getProjectListOrderByCommentAndCategoryAndStatus(projectStudyId,"모집완료", PageRequest.of(pageable.getPageNumber()-1, PAGE_LIMIT));
+            }
+        } else {
+            projectEntityList = projectRepository.getProjectListOrderByCommentAndCategory(projectStudyId, PageRequest.of(pageable.getPageNumber()-1, PAGE_LIMIT));
+        }
+        Page<ProjectDTO> projectDTOS = projectEntityList.map(projectEntity -> new ProjectDTO(projectEntity));
+        return projectDTOS;
+    }
+
+   /* 스크랩 많은 순 조회 (전체 보기) */
+    @Transactional
+    public Page<ProjectDTO> getProjectListOrderByClip(String status, Pageable pageable) {
+        Page<ProjectEntity> projectEntityList;
+        if (status != null) {
+            if (status.equals("unrecruited")) {
+                projectEntityList = projectRepository.getProjectListOrderByClipAndStatus("모집중", PageRequest.of(pageable.getPageNumber()-1, PAGE_LIMIT));
+            } else {
+                projectEntityList = projectRepository.getProjectListOrderByClipAndStatus("모집완료", PageRequest.of(pageable.getPageNumber()-1, PAGE_LIMIT));
+            }
+        } else {
+            projectEntityList = projectRepository.getProjectListOrderByClip(PageRequest.of(pageable.getPageNumber()-1, PAGE_LIMIT));
+        }
+
+        Page<ProjectDTO> projectDTOS = projectEntityList.map(projectEntity -> new ProjectDTO(projectEntity));
+        return projectDTOS;
+    }
+
+   /* 스크랩 많은 순 조회 (카테고리 포함) */
+    @Transactional
+   public Page<ProjectDTO> getProjectListOrderByClipAndCategory(Long projectStudyId, String status, Pageable pageable) {
+        Page<ProjectEntity> projectEntityList;
+        if (status != null) {
+            if (status.equals("unrecruited")) {
+                projectEntityList = projectRepository.getProjectListOrderByClipAndCategoryAndStatus(projectStudyId, "모집중",
+                        PageRequest.of(pageable.getPageNumber()-1, PAGE_LIMIT));
+            } else {
+                projectEntityList = projectRepository.getProjectListOrderByClipAndCategoryAndStatus(projectStudyId, "모집완료",
+                        PageRequest.of(pageable.getPageNumber()-1, PAGE_LIMIT));
+            }
+       } else {
+            projectEntityList = projectRepository.getProjectListOrderByClipAndCategory(projectStudyId, PageRequest.of(pageable.getPageNumber()-1, PAGE_LIMIT));
+        }
+
+        Page<ProjectDTO> projectDTOS = projectEntityList.map(projectEntity -> new ProjectDTO(projectEntity));
+       return projectDTOS;
+   }
+
+/*    @Transactional
+    public List<ProjectDTO> getProjectListOrderByClipAndCategory(Long projectStudyId, String status) {
+        List<Long> projectIdList;
+        if (status != null) {
+            if (status.equals("unrecruited")) {
+                projectIdList = projectRepository.getProjectListOrderByClipAndCategoryAndStatus(projectStudyId, "모집중");
+            } else {
+                projectIdList = projectRepository.getProjectListOrderByClipAndCategoryAndStatus(projectStudyId, "모집완료");
+            }
+        } else {
+            projectIdList = projectRepository.getProjectListOrderByClipAndCategory(projectStudyId);
+        }
+
+        List<ProjectDTO> projectDTOList = new ArrayList<>();
+        for (Long projectId : projectIdList) {
+            ProjectEntity projectEntity = projectRepository.findById(projectId).get();
+            projectDTOList.add(ProjectDTO.toProjectDTO(projectEntity));
+        }
+        return projectDTOList;
+    }*/
 
 }
