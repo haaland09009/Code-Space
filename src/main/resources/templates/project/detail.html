@@ -14,6 +14,8 @@
             border-right: 2px solid #ddd; /* 원하는 경계선 스타일 및 색상으로 조절 가능 */
             padding-right: 15px; /* 옵션: 오른쪽 여백 추가 */
         }
+
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 <body>
@@ -149,13 +151,13 @@
                                                     </i>
                                                     <ul class="dropdown-menu" aria-labelledby="dropButton">
                                                         <li>
-                                                            <a class="dropdown-item" th:href="@{|/project/update/${project.id}|}">
+                                                            <a class="dropdown-item fs-5" th:href="@{|/project/update/${project.id}|}">
                                                                 <i class="bi bi-pencil-square"></i>
                                                                 <span class="ms-1"> 수정하기 </span>
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item" onclick="deleteBoardReq()">
+                                                            <a class="dropdown-item fs-5" onclick="deleteBoardReq()">
                                                                 <i class="bi bi-trash3"></i>
                                                                 <span class="ms-1"> 삭제하기 </span>
                                                             </a>
@@ -167,7 +169,7 @@
                                                     <div class="row">
                                                         <div class="col pe-0">
                                                             <button class="btn btn-sm btn-outline-dark px-3 fs-18"
-                                                                    onclick="sendMessageModal()" th:if="${session.userDTO != null}">
+                                                                    onclick="sendMessageToWriterModal()" th:if="${session.userDTO != null}">
                                                                 <i class="bi bi-chat-dots"></i>
                                                                 <span class="ms-1">채팅하기</span>
                                                             </button>
@@ -413,13 +415,44 @@
                                                     <div class="col">
 
                                                         <div class="row">
-                                                            <div class="col-2">
+                                                            <div class="col-2 user-info-image" th:id="'commentUserImage_' + ${comment.id}"
+                                                                 th:onclick="clickUserInfoModal([[${comment.userId}]])">
                                                                 <img class="rounded-circle ms-2" style="width: 55px; height:55px;"
                                                                      src="/img/user.jpg" th:if="${comment.fileAttached == 0}">
                                                                 <img class="rounded-circle ms-2" style="width: 55px; height:55px;"
                                                                      th:src="@{|/upload/${comment.storedFileName}|}" th:if="${comment.fileAttached == 1}">
                                                             </div>
-                                                            <div class="col">
+
+                                                            <div class="col" th:id="'commentUpdateForm_' + ${comment.id}" style="display: none;"
+                                                            th:if="${session.userDTO != null && session.userDTO.id == comment.userId}">
+                                                                <div class="row">
+                                                                    <div class="col me-3">
+                                                                   <textarea name="" th:id="'commentUpdateContent_' + ${comment.id}" cols="10" rows="3"
+                                                                             class="form-control fs-5"  style="resize:none;"
+                                                                             placeholder="댓글을 작성하여 프로젝트와 스터디에 참여해보세요 !"
+                                                                             onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row mt-1 noContentAlert" style="display: none;">
+                                                                    <div class="col text-danger">
+                                                                        <i class="bi bi-exclamation-circle"></i>
+                                                                        <span class="ms-1">
+                                                                            내용을 최소 1자 이상 입력해주세요.
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row mt-3">
+                                                                    <div class="col text-end me-3">
+                                                                        <button class="btn btn-outline-dark fs-18" th:onclick="toggleUpdateCommentPage([[${comment.id}]])">취소</button>
+                                                                        <button class="btn mainButton ms-1 fs-18" th:onclick="updateComment([[${comment.id}]])">댓글 쓰기</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="col" th:id="'commentUserInfo_' + ${comment.id}">
                                                                 <div class="row">
                                                                     <div class="col px-0 fw-semibold fs-5" th:text="${comment.writer}">
 
@@ -433,11 +466,12 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+
+
                                                         </div>
 
                                                     </div>
-                                                    <div class="col text-end me-1">
-
+                                                    <div class="col text-end me-1" th:id="'commentUserLikeInfo_' + ${comment.id}">
                                                         <span>
                                                             <img src="/img/like.png" style="width: 30px; height: 30px; cursor: pointer;"
                                                             th:onclick="isYourCommentForLike([[${comment.id}]])">
@@ -456,13 +490,13 @@
                                                             </i>
                                                             <ul class="dropdown-menu" aria-labelledby="dropButtonComment">
                                                                 <li>
-                                                                    <a class="dropdown-item" href="#">
+                                                                    <a class="dropdown-item fs-5" th:onclick="toggleUpdateCommentPage([[${comment.id}]])">
                                                                         <i class="bi bi-pencil-square"></i>
                                                                         <span class="ms-1"> 수정하기 </span>
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a class="dropdown-item" th:onclick="deleteCommentPage([[${comment.id}]])">
+                                                                    <a class="dropdown-item fs-5" th:onclick="deleteCommentPage([[${comment.id}]])">
                                                                         <i class="bi bi-trash3"></i>
                                                                         <span class="ms-1"> 삭제하기 </span>
                                                                     </a>
@@ -475,52 +509,14 @@
                                                 <!-- 댓글 작성 정보 -->
 
                                                 <!-- 댓글 내용 정보 -->
-                                                <div class="row mt-3">
-                                                    <div class="col ms-1 boardContent fs-5" th:text="${comment.content}">
+                                                <div class="row mt-3" th:id="'commentContent_' + ${comment.id}">
+                                                    <div class="col ms-2 boardContent fs-5" th:text="${comment.content}">
                                                     </div>
                                                 </div>
                                                 <!-- 댓글 내용 정보 -->
 
-<!--                                                <div class="row mt-3" style="cursor: pointer;">-->
-<!--                                                    <div class="col commentFont ms-1 mb-1 text-secondary"-->
-<!--                                                         th:onclick="toggleReplyInputBox([[${comment.id}]])"-->
-<!--                                                         th:id="'toggleReplyButton_' + ${comment.id}">-->
-<!--                                                        댓글 작성-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
 
 
-                                                <!-- 댓글 -->
-                                                <!-- 답글 입력 폼 -->
-<!--                                                <div class="row" th:id="'toggleReplyInputBox_' + ${comment.id}" style="display: none;">-->
-<!--                                                    <div class="col">-->
-<!--                                                        <div class="row mt-3">-->
-<!--                                                            <div class="col-1 ms-1">-->
-<!--                                                                <img class="rounded-circle" style="width: 40px; height: 40px;"-->
-<!--                                                                     src="/img/user2.jpg" th:if="${session.userDTO == null}">-->
-<!--                                                                <img class="rounded-circle" style="width: 40px; height: 40px;"-->
-<!--                                                                     src="/img/user2.jpg" th:if="${session.userDTO != null && session.userDTO.fileAttached == 0}">-->
-<!--                                                                <img class="rounded-circle" style="width: 40px; height: 40px;"-->
-<!--                                                                     th:src="@{|/upload/${session.userDTO.storedFileName}|}" th:if="${session.userDTO != null && session.userDTO.fileAttached == 1}">-->
-<!--                                                            </div>-->
-
-<!--                                                            <div class="col">-->
-<!--                                                            <textarea name="" th:id="'replyContent_' + ${comment.id}" cols="10" rows="4"-->
-<!--                                                                  class="form-control" ></textarea>-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
-
-<!--                                                        <div class="row mt-3">-->
-<!--                                                            <div class="col text-end">-->
-<!--                                                                <button class="btn btn-primary px-3" th:onclick="replyReq([[${comment.id}]])"-->
-<!--                                                                        th:if="${session.userDTO != null}">댓글 쓰기</button>-->
-<!--                                                                <button class="btn btn-primary px-3 disabled"-->
-<!--                                                                        th:if="${session.userDTO == null}">댓글 쓰기</button>-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
-<!--                                                        <div class="row mt-2 mb-3"></div>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
                                                 <!-- 답글 입력 폼 -->
                                                 <div class="row mt-2 mb-2"></div>
                                                 <div class="border-bottom mt-1 mb-3"></div>
@@ -669,7 +665,7 @@
 
 
 <!-- 메시지 전송 모달 -->
-<div class="modal" id="sendMessageModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal" id="sendMessageToWriterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-light">
@@ -720,13 +716,13 @@
                                 <textarea  rows="10" class="form-control"
                                 style="resize: none; font-size: 18px"
                                 placeholder="프로젝트 / 스터디에 대해 문의하거나, 팀원으로 지원해보세요."
-                               id="messageContent" name="content"></textarea>
+                               id="messageToWriterContent" name="content"></textarea>
 
 
                             </div>
                         </div>
 
-                        <div class="row mt-2" style="display: none;" id="alertMessageBox">
+                        <div class="row mt-2" style="display: none;" id="alertMessageToWriterBox">
                             <div class="col text-danger">
                                 메시지 내용을 입력해주세요.
                             </div>
@@ -735,7 +731,7 @@
                         <div class="row mt-4">
                             <div class="col d-grid">
                                 <button class="mainButton btn p-2 fs-4"
-                                        onclick="sendMessage()">보내기</button>
+                                        onclick="sendMessageToWriter()">보내기</button>
                             </div>
                         </div>
 
@@ -783,6 +779,125 @@
 </div>
 <!-- 메시지 전송 성공 alert -->
 
+<!-- 회원 정보 모달 -->
+<div class="modal" id="userInfoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <div class="row">
+                    <div class="col ms-2 fw-semibold fs-5">
+                        사용자 정보
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body mb-3">
+
+                <div class="mt-3 mb-3"></div>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col-10">
+
+                        <div class="row">
+                            <div class="col-2">
+                                <img class="rounded-circle mt-2" style="width: 70px; height: 70px;"
+                                     id="userModalImg">
+                            </div>
+                            <div class="col ms-4">
+                                <div class="row mt-1">
+                                    <div class="col fw-semibold fs-5" id="userModalNickname">
+
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col text-secondary fs-18" id="userModalJob">
+
+                                    </div>
+                                </div>
+                                <div class="row mt-2 user-info-space">
+                                    <div class="col">
+                                        <span class="fs-18 user-info-actButton">
+                                            <i class="bi bi-person-plus fs-5"></i>
+                                            <span class="ms-1">친구 추가</span>
+                                        </span>
+                                        <span class="ms-4 fs-18 user-info-actButton"
+                                              onclick="sendMessageModal()">
+                                            <i class="bi bi-chat-dots"></i>
+                                            <span class="ms-1">메시지 보내기</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- 회원 정보 모달 -->
+
+<!-- 메시지 전송 모달 -->
+<div class="modal" id="sendMessageModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <div class="row">
+                    <div class="col ms-2 fw-semibold fs-5">
+                        메시지 전송
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body mb-3">
+
+                <div class="mt-3 mb-3"></div>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col-10">
+
+                        <div class="row mt-4">
+                            <div class="col">
+                             <textarea  rows="10" class="form-control"
+                                        style="resize: none; font-size: 18px"
+                                        placeholder=""
+                                        id="messageContent" name="content"></textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="row mt-2" style="display: none;" id="alertMessageBox">
+                            <div class="col text-danger">
+                                메시지 내용을 입력해주세요.
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col d-grid">
+                                <button class="mainButton btn p-2 fs-4"
+                                        onclick="sendMessage()">보내기</button>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="col"></div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<!-- 메시지 전송 모달 -->
+
+
+
 <script th:inline="javascript">
 
     /*<![CDATA[*/
@@ -807,6 +922,10 @@
 
     /*<![CDATA[*/
         let projectUserId = [[${project.userId}]];
+    /*]]>*/
+
+    /*<![CDATA[*/
+        let selectedUserInfoId = null;
     /*]]>*/
 
 </script>

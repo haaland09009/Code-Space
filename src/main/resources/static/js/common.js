@@ -172,6 +172,9 @@
      const userModalImg = document.querySelector("#userModalImg");
      const userModalNickname = document.querySelector("#userModalNickname");
      const userModalJob = document.querySelector("#userModalJob");
+
+     const userInfoSpace = document.querySelector(".user-info-space");
+
      $.ajax({
        url: "/user/getUserInfo/" + id,
        success: function(res) {
@@ -182,6 +185,13 @@
           }
           userModalNickname.innerText = res.nickname;
           userModalJob.innerText = res.jobName;
+
+          if (sessionId == res.id) {
+            userInfoSpace.style.display = "none";
+          } else {
+            userInfoSpace.style.display = "block";
+          }
+
          /* 모달 열기 */
           userInfoModal();
        }, error: function(err) {

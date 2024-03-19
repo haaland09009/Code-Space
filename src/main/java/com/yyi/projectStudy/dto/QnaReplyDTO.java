@@ -18,6 +18,8 @@ public class QnaReplyDTO {
     private Long userId;
     private String content;
     private LocalDateTime regDate;
+    /* 수정 여부 */
+    private LocalDateTime updDate;
 
     private String writer;
     private String jobName;
@@ -30,6 +32,7 @@ public class QnaReplyDTO {
     // user에 따라 달라짐.
     private int isLike;
 
+
     public static QnaReplyDTO toQnaReplyDTO(QnaReplyEntity qnaReplyEntity) {
         QnaReplyDTO qnaReplyDTO = new QnaReplyDTO();
         qnaReplyDTO.setId(qnaReplyEntity.getId());
@@ -37,6 +40,7 @@ public class QnaReplyDTO {
         qnaReplyDTO.setUserId(qnaReplyEntity.getUserEntity().getId());
         qnaReplyDTO.setContent(qnaReplyEntity.getContent());
         qnaReplyDTO.setRegDate(qnaReplyEntity.getRegDate());
+        qnaReplyDTO.setUpdDate(qnaReplyEntity.getUpdDate());
 
         qnaReplyDTO.setWriter(qnaReplyEntity.getUserEntity().getNickname());
         qnaReplyDTO.setFileAttached(qnaReplyEntity.getUserEntity().getFileAttached());
@@ -45,4 +49,6 @@ public class QnaReplyDTO {
         }
         return qnaReplyDTO;
     }
+
+
 }

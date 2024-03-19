@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -113,4 +114,26 @@ public class QnaReplyService {
         return qnaReplyRepository.bestReplyPkList();
     }
 
+   /* 답변 수정하기 */
+    @Transactional
+    public QnaReplyDTO updateReply(QnaReplyDTO qnaReplyDTO) {
+        QnaReplyEntity qnaReplyEntity = qnaReplyRepository.findById(qnaReplyDTO.getId()).get();
+        Optional<QnaEntity> optionalQnaEntity =
+                qnaRepository.findById(qnaReplyEntity.getQnaEntity().getId());
+        if (optionalQnaEntity.isPresent()) {
+            /* 답변 수정 시 게시글이 존재한다면 */
+
+            /* 답변 수정 처리 */
+            qnaReplyDTO.setUpdDate(LocalDateTime.now());
+            qnaReplyRepository.updateReply(qnaReplyDTO.getContent(), qnaReplyDTO.getId());
+
+            /* 수정된 답변 반환 */
+            QnaReplyEntity updatedQnaReplyEntity = qnaReplyRepository.findById(qnaReplyDTO.getId()).get();
+            return QnaReplyDTO.toQnaReplyDTO(updatedQnaReplyEntity);
+
+        } else {
+            /* 답변 수정 시 게시글이 삭제가 되었거나 존재하지 않다면 */
+            return null;
+        }
+    }
 }

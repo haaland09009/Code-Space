@@ -3,6 +3,7 @@ package com.yyi.projectStudy.service;
 import com.yyi.projectStudy.dto.ProCmtDisLikeDTO;
 import com.yyi.projectStudy.dto.ProCmtLikeDTO;
 import com.yyi.projectStudy.dto.ProjectCommentDTO;
+import com.yyi.projectStudy.dto.ProjectDTO;
 import com.yyi.projectStudy.entity.*;
 import com.yyi.projectStudy.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -142,6 +143,12 @@ public class ProjectCommentService {
         ProjectCommentEntity projectCommentEntity = projectCommentRepository.findById(projectCommentDTO.getId()).get();
         UserEntity userEntity = userRepository.findById(projectCommentDTO.getUserId()).get();
         return proCmtLikeRepository.countByProjectCommentEntityAndUserEntity(projectCommentEntity, userEntity);
+    }
+
+   /* 댓글 수정하기 */
+    @Transactional
+    public void update(ProjectCommentDTO projectCommentDTO) {
+        projectCommentRepository.updateComment(projectCommentDTO.getContent(), projectCommentDTO.getId());
     }
 }
 

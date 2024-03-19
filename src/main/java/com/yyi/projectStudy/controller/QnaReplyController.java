@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -165,6 +166,17 @@ public class QnaReplyController {
             return false;
         }
 
+    }
+
+    /* 답변 수정하기 */
+    @PostMapping("/update")
+    public @ResponseBody String updateReply(@ModelAttribute QnaReplyDTO qnaReplyDTO) {
+        QnaReplyDTO updatedReplyDTO = qnaReplyService.updateReply(qnaReplyDTO);
+        if (updatedReplyDTO == null) {
+            return "no";
+        } else {
+            return "ok";
+        }
     }
 
 

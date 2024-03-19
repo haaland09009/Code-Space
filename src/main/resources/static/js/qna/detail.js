@@ -96,6 +96,9 @@
             output += '<div class="row">';
             output += '<div class="col text-secondary fs-18">';
             output += '<span class="date-element">' + formatDateTime(replies[i].regDate) + '</span>';
+            if (replies[i].updDate != null) {
+                output += '<span class="ms-2 text-primary fw-medium">' + "수정됨" + "</span>";
+            }
             output += '</div>';
             output += '</div>';
             output += '</div>';
@@ -105,13 +108,13 @@
                 output += '<i class="bi bi-three-dots-vertical" style="height: 10px" id="dropReplyButton" data-bs-toggle="dropdown" aria-expanded="false">' + '</i>';
                 output += '<ul class="dropdown-menu" aria-labelledby="dropReplyButton">';
                 output += '<li>';
-                output += '<a class="dropdown-item">';
+                output += '<a class="dropdown-item fs-18" onclick="toggleUpdateReplyPage('+ replies[i].id +')">';
                 output += '<i class="bi bi-pencil-square">' + '</i>';
                 output += '<span class="ms-2">' + "수정하기" + '</span>';
                 output += '</a>';
                 output += '</li>';
                 output += '<li>';
-                output += '<a class="dropdown-item"  onclick="deleteReplyPage(' + replies[i].id + ')">';
+                output += '<a class="dropdown-item fs-18"  onclick="deleteReplyPage(' + replies[i].id + ')">';
                 output += '<i class="bi bi-trash3">' + '</i>';
                 output += '<span class="ms-2">' + "삭제하기" + '</span>';
                 output += '</a>';
@@ -120,10 +123,32 @@
                 output += '</div>';
             }
             output += '</div>';
-
             output += '<div class="row mt-4 ms-2">';
-            output += '<div class="col-11 boardContent pe-0">' + replies[i].content +  '</div>';
+            output += '<div class="col-11 boardContent pe-0" id="replyContentBox_' + replies[i].id  + '">' + replies[i].content +  '</div>';
+          /*  output += '</div>';*/
+
+            if (sessionId != 0 && sessionId == replies[i].userId) {
+                output += '<div class="col me-4" id="replyUpdateBox_' + replies[i].id + '" style="display: none">';
+                output += '<div class="row">';
+                output += '<div class="col">';
+                output += '<textarea name="" cols="10" rows="10" class="form-control fs-5" onkeydown="resize(this)" onkeyup="resize(this)" style="resize:none;" id="replyUpdateContent_' + replies[i].id + '">' + replies[i].content + '</textarea>';
+                output += '</div>';
+                output += '</div>';
+                output += '<div class="row mt-2">';
+                output += '<div class="col text-danger noContentAlert" style="display: none;">';
+                output += '<i class="bi bi-exclamation-circle">' + '</i>';
+                output += '<span class="ms-2">' + "내용을 최소 1자 이상 입력해주세요." + '</span>';
+                output += '</div>';
+                output += '<div class="col mt-1 text-end">';
+                output += '<button class="btn btn-outline-dark fs-18" onclick="toggleUpdateReplyPage('+ replies[i].id +')">' + "취소" + '</button>';
+                output += '<button class="ms-2 btn mainButton fs-18" onclick="updateReply('+ replies[i].id +')">' + "답변 등록하기" + '</button>';
+                output += '</div>';
+                output += '</div>';
+                output += '</div>';
+            }
+
             output += '</div>';
+
 
             output += '<div class="row mt-4 ms-2 text-secondary fw-semibold">';
             output += '<div class="col fs-18">';
@@ -205,13 +230,13 @@
                     output += '<i class="bi bi-three-dots-vertical" style="height: 10px" id="dropCommentButton" data-bs-toggle="dropdown" aria-expanded="false">' + '</i>';
                     output += '<ul class="dropdown-menu" aria-labelledby="dropCommentButton">';
                     output += '<li>';
-                    output += '<a class="dropdown-item">';
+                    output += '<a class="dropdown-item fs-18" onclick="toggleUpdateCommentPage(' + replies[i].commentList[c].id + ')">';
                     output += '<i class="bi bi-pencil-square">' + '</i>';
                     output += '<span class="ms-2">' +  "수정하기" + '</span>';
                     output += '</a>';
                     output += '</li>';
                     output += '<li>';
-                    output += '<a class="dropdown-item" onclick="deleteCommentPage(' + replies[i].commentList[c].id + ')">';
+                    output += '<a class="dropdown-item fs-18" onclick="deleteCommentPage(' + replies[i].commentList[c].id + ')">';
                     output += '<i class="bi bi-trash3">' + '</i>';
                     output += '<span class="ms-2">' +  "삭제하기" + '</span>';
                     output += '</a>';
@@ -928,7 +953,62 @@
             content.value = "";
         }
 
+    /* 답변 수정 폼 열기 */
+    const toggleUpdateReplyPage = (id) => {
+        const replyUpdateBox = document.querySelector("#replyUpdateBox_" + id);
+        const replyContentBox = document.querySelector("#replyContentBox_" + id);
 
+        if (replyUpdateBox.style.display == "none") {
+            replyContentBox.style.display = "none";
+            replyUpdateBox.style.display = "block";
+        } else if (replyUpdateBox.style.display == "block") {
+            replyUpdateBox.style.display = "none";
+            replyContentBox.style.display = "block";
+        }
+    }
+
+   /* 답변 수정 */
+   const updateReply = (id) => {
+      const replyUpdateContent = document.querySelector("#replyUpdateContent_" + id);
+      const noContentAlert = document.querySelector(".noContentAlert");
+
+      if (sessionId == 0) {
+            location.href = "/user/loginPage";
+            return;
+      }
+
+      replyUpdateContent.addEventListener("input", () => {
+         if (replyUpdateContent.value.trim() !== "") {
+             noContentAlert.style.display = "none"; // 내용이 입력되면 alertBox를 숨깁니다.
+         }
+        });
+
+      if (replyUpdateContent.value.trim() == "") {
+            noContentAlert.style.display = "block";
+            replyUpdateContent.value = "";
+            replyUpdateContent.focus();
+            return;
+      }
+     $.ajax({
+          type: "post",
+          url: "/qnaReply/update",
+          data: {
+              "id" : id,
+              "content" : replyUpdateContent.value
+          },
+          success: function(res) {
+               if (res == "ok") {
+                /* 답변 목록 다시 조회 */
+                loadReplies(boardId);
+              } else {
+                alert("게시글이 존재하지 않습니다.");
+                location.href = "/qna";
+              }
+          }, error: function(err) {
+              return;
+          }
+       });
+   }
 
 window.addEventListener("DOMContentLoaded", function(){
 

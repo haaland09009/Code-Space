@@ -105,7 +105,7 @@ const alertLikeCheckModal = () => {
                  output += '<div class="row">';
                  output += '<div class="col">';
                  output += '<div class="row">';
-                 output += '<div class="col-2">';
+                 output += '<div class="col-2 user-info-image" id="commentUserImage_' + comments[i].id + '" onclick="clickUserInfoModal(' + comments[i].userId + ')">';
 
                  if (comments[i].fileAttached == 0) {
                      output += '<img class="rounded-circle ms-2" style="width: 55px; height: 55px;" src="/img/user.jpg">';
@@ -114,7 +114,34 @@ const alertLikeCheckModal = () => {
                  }
 
                  output += '</div>';
-                 output += '<div class="col">';
+
+                 if (sessionId != 0 && sessionId == comments[i].userId) {
+                    output += '<div class="col" id="commentUpdateForm_' + comments[i].id + '" style="display: none;">';
+                    output += '<div class="row">';
+                    output += '<div class="col me-3">';
+                    output += '<textarea name="" id="commentUpdateContent_' + comments[i].id + '" cols="10" rows="3" class="form-control fs-5"  style="resize:none;" placeholder="댓글을 작성하여 프로젝트와 스터디에 참여해보세요 !" onkeydown="resize(this)" onkeyup="resize(this)">';
+                    output += '</textarea>';
+                    output += '</div>';
+                    output += '</div>';
+
+                    output += '<div class="row mt-1 noContentAlert" style="display: none;">';
+                    output += '<div class="col text-danger">';
+                    output += '<i class="bi bi-exclamation-circle">' + '</i>';
+                    output += '<span class="ms-2">' + "내용을 최소 1자 이상 입력해주세요." + '</span>';
+                    output += '</div>';
+                    output += '</div>';
+
+
+                    output += '<div class="row mt-3">';
+                    output += '<div class="col text-end me-3">';
+                    output += '<button class="btn btn-outline-dark fs-18" onclick="toggleUpdateCommentPage(' + comments[i].id + ')">' + "취소" + '</button>';
+                    output += '<button class="btn mainButton ms-1 fs-18" onclick="updateComment(' + comments[i].id + ')">' + "댓글 쓰기" + '</button>';
+                    output += '</div>';
+                    output += '</div>';
+                    output += '</div>';
+                 }
+
+                 output += '<div class="col" id="commentUserInfo_' + comments[i].id + '">';
                  output += '<div class="row">';
                  output += '<div class="col fw-semibold px-0 fs-5">' + comments[i].writer + '</div>';
                  output += '</div>';
@@ -128,7 +155,7 @@ const alertLikeCheckModal = () => {
                  output += '</div>';
                  output += '</div>';
                  output += '</div>';
-                 output += '<div class="col text-end">';
+                 output += '<div class="col text-end" id="commentUserLikeInfo_' + comments[i].id + '">';
 
                  output += '<span>';
                  output += '<img src="/img/like.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForLike(' + comments[i].id + ')">';
@@ -147,13 +174,13 @@ const alertLikeCheckModal = () => {
                  output += '<i class="bi bi-three-dots-vertical" style="height: 10px" id="dropButtonComment" data-bs-toggle="dropdown" aria-expanded="false"></i>';
                  output += '<ul class="dropdown-menu" aria-labelledby="dropButtonComment">';
                  output += '<li>';
-                 output += '<a class="dropdown-item" href="#">';
+                 output += '<a class="dropdown-item fs-5" onclick="toggleUpdateCommentPage(' + comments[i].id + ')">';
                  output += '<i class="bi bi-pencil-square"></i>';
                  output += '<span class="ms-2">' + "수정하기" + '</span>';
                  output += '</a>';
                  output += '</li>';
                  output += '<li>';
-                 output += '<a class="dropdown-item" onclick="deleteCommentPage(' + comments[i].id + ')">';
+                 output += '<a class="dropdown-item fs-5" onclick="deleteCommentPage(' + comments[i].id + ')">';
                  output += '<i class="bi bi-trash3"></i>';
                  output += '<span class="ms-2">' +  "삭제하기" + '</span>';
 
@@ -165,8 +192,8 @@ const alertLikeCheckModal = () => {
 
                  output += '</div>';
                  output += '</div>';
-                 output += '<div class="row mt-3">';
-                 output += '<div class="col ms-1 boardContent fs-5">' + comments[i].content + '</div>';
+                 output += '<div class="row mt-3" id="commentContent_' + comments[i].id + '">';
+                 output += '<div class="col ms-2 boardContent fs-5">' + comments[i].content + '</div>';
                  output += '</div>';
 
                  <!-- 답글 작성 -->
@@ -404,22 +431,36 @@ const alertLikeCheckModal = () => {
 
 
     // 채팅하기 모달
-    const sendMessageModal = () => {
-        const sendMessageModal = bootstrap.Modal.getOrCreateInstance("#sendMessageModal");
-	    sendMessageModal.show();
+    const sendMessageToWriterModal = () => {
+        const sendMessageToWriterModal = bootstrap.Modal.getOrCreateInstance("#sendMessageToWriterModal");
+	    sendMessageToWriterModal.show();
+    }
+
+    // 메시지 모달 창을 닫을 때 이벤트 처리
+    const sendMessageModalToWriter = bootstrap.Modal.getOrCreateInstance("#sendMessageToWriterModal");
+    sendMessageModalToWriter.hide(); // 모달을 닫기 전에 값 초기화
+    sendMessageModalToWriter._element.addEventListener("hidden.bs.modal", function () {
+        resetModalWriterInputs(); // 모달이 숨겨진 후에 초기화 함수 호출
+    });
+
+    const resetModalWriterInputs = () => {
+        const alertBox = document.querySelector("#alertMessageToWriterBox");
+        const content = document.querySelector("#messageToWriterContent");
+        alertBox.style.display = "none";
+        content.value = "";
     }
 
 
 
     // 메시지 전송
-    const sendMessage = () => {
+    const sendMessageToWriter = () => {
 
         if (sessionId == 0) {
             location.href = "/user/loginPage";
             return;
         }
-        const content = document.querySelector("#messageContent");
-        const alertBox = document.querySelector("#alertMessageBox");
+        const content = document.querySelector("#messageToWriterContent");
+        const alertBox = document.querySelector("#alertMessageToWriterBox");
 
         content.addEventListener("input", () => {
             if (content.value.trim() !== "") {
@@ -464,6 +505,66 @@ const alertLikeCheckModal = () => {
        });
     }
 
+
+  /* 채팅하기 모달 */
+    const sendMessageModal = () => {
+        const sendMessageModal = bootstrap.Modal.getOrCreateInstance("#sendMessageModal");
+        sendMessageModal.show();
+    }
+
+
+    /* 메시지 전송 */
+    const sendMessage = () => {
+
+        if (sessionId == 0) {
+            location.href = "/user/loginPage";
+            return;
+        }
+        const content = document.querySelector("#messageContent");
+        const alertBox = document.querySelector("#alertMessageBox");
+
+        content.addEventListener("input", () => {
+            if (content.value.trim() !== "") {
+                alertBox.style.display = "none"; // 내용이 입력되면 alertBox를 숨깁니다.
+            }
+        });
+
+        if (content.value.trim() == "") {
+            alertBox.style.display = "block";
+            content.focus();
+            return;
+        }
+
+        $.ajax({
+           type: "post",
+           url: "/chat/save",
+           data: {
+               "content" : content.value,
+               "receiverId" : selectedUserInfoId
+           },
+            success: function(res) {
+                if (res == "ok") {
+                    // 성공시
+
+                     content.value = "";
+
+                    const sendSuccessModal = bootstrap.Modal.getOrCreateInstance("#sendSuccessModal");
+                    sendSuccessModal.show();
+
+                     setTimeout(function() {
+                        sendSuccessModal.hide();
+                    }, 2000);
+               } else {
+                  // 코드 추가
+                   return;
+               }
+           },
+           error: function(err) {
+               console.log("실패");
+           }
+       });
+    }
+
     // 메시지 모달 창을 닫을 때 이벤트 처리
     const sendMessageModal1 = bootstrap.Modal.getOrCreateInstance("#sendMessageModal");
     sendMessageModal1.hide(); // 모달을 닫기 전에 값 초기화
@@ -477,7 +578,6 @@ const alertLikeCheckModal = () => {
         alertBox.style.display = "none";
         content.value = "";
     }
-
 
     // 게시물 스크랩 여부 확인
     const checkProjectClip = (id) => {
@@ -527,3 +627,69 @@ const alertLikeCheckModal = () => {
              }
          });
     }
+
+    /* 댓글 수정 모달 열기 */
+    const toggleUpdateCommentPage = (id) => {
+        const commentUserImage = document.querySelector("#commentUserImage_" + id);
+        const commentUserInfo = document.querySelector("#commentUserInfo_" + id);
+        const commentUserLikeInfo = document.querySelector("#commentUserLikeInfo_" + id);
+        const commentContent = document.querySelector("#commentContent_" + id);
+
+        const commentUpdateForm = document.querySelector("#commentUpdateForm_" + id);
+
+        if (commentUpdateForm.style.display == 'none') {
+            commentUserImage.classList.remove("col-2");
+            commentUserImage.classList.add("col-1");
+
+            commentUserInfo.style.display = "none";
+            commentUserLikeInfo.style.display = "none";
+            commentContent.style.display = "none";
+            commentUpdateForm.style.display = "block";
+        } else {
+            commentUserImage.classList.remove("col-1");
+            commentUserImage.classList.add("col-2");
+
+            commentUserInfo.style.display = "block";
+            commentUserLikeInfo.style.display = "block";
+            commentContent.style.display = "block";
+            commentUpdateForm.style.display = "none";
+        }
+    }
+
+   /* 댓글 수정하기 */
+   const updateComment = (id) => {
+       const commentUpdateContent = document.querySelector("#commentUpdateContent_" + id);
+       const noContentAlert = document.querySelector(".noContentAlert");
+
+       if (sessionId == 0) {
+            location.href = "/user/loginPage";
+            return;
+       }
+
+       commentUpdateContent.addEventListener("input", () => {
+           if (commentUpdateContent.value.trim() !== "") {
+               noContentAlert.style.display = "none"; // 내용이 입력되면 alertBox를 숨깁니다.
+           }
+       });
+
+       if (commentUpdateContent.value.trim() == "") {
+            noContentAlert.style.display = "block";
+            commentUpdateContent.value = "";
+            commentUpdateContent.focus();
+            return;
+       }
+       $.ajax({
+            type: "post",
+            url: "/projectComment/update",
+            data: {
+                "id" : id,
+                "content" : commentUpdateContent.value
+            },
+            success: function(res) {
+                /* 댓글 목록 다시 조회 */
+                loadComments(projectPk);
+            }, error: function(err) {
+                return;
+            }
+         });
+   }

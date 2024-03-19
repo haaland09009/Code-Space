@@ -5,6 +5,7 @@ import com.yyi.projectStudy.entity.ProjectEntity;
 import com.yyi.projectStudy.entity.QnaEntity;
 import com.yyi.projectStudy.entity.QnaReplyEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -69,4 +70,8 @@ public interface QnaReplyRepository extends JpaRepository<QnaReplyEntity, Long> 
             "      WHERE rank = 1", nativeQuery = true)
     List<Long> bestReplyPkList();
 
+    /* 답변 수정하기 */
+    @Modifying
+    @Query(value = "update QnaReplyEntity set content = :content, updDate = sysdate where id = :id")
+    void updateReply(String content, Long id);
 }

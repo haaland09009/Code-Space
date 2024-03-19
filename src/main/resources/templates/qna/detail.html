@@ -93,14 +93,14 @@
                             </i>
                             <ul class="dropdown-menu" aria-labelledby="dropButton">
                                 <li>
-                                    <a class="dropdown-item" th:href="@{|/qna/update/${qna.id}|}">
+                                    <a class="dropdown-item fs-18" th:href="@{|/qna/update/${qna.id}|}">
                                         <i class="bi bi-pencil-square"></i>
                                         <span class="ms-1"> 수정하기 </span>
                                     </a>
                                 </li>
 
                                 <li>
-                                    <a class="dropdown-item" onclick="deleteQnaReq()">
+                                    <a class="dropdown-item fs-18" onclick="deleteQnaReq()">
                                         <i class="bi bi-trash3"></i>
                                         <span class="ms-1"> 삭제하기 </span>
                                     </a>
@@ -277,6 +277,7 @@
                                     <div class="row">
                                         <div class="col text-secondary fs-18">
                                             <span class="date-element" th:text="${reply.regDate}"></span>
+                                            <span class="ms-1 text-primary fw-medium" th:if="${reply.updDate != null}">수정됨</span>
                                         </div>
                                     </div>
                                 </div>
@@ -287,13 +288,13 @@
                                     </i>
                                     <ul class="dropdown-menu" aria-labelledby="dropReplyButton">
                                         <li>
-                                            <a class="dropdown-item">
+                                            <a class="dropdown-item fs-18" th:onclick="toggleUpdateReplyPage([[${reply.id}]])">
                                                 <i class="bi bi-pencil-square"></i>
                                                 <span class="ms-1"> 수정하기 </span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" th:onclick="deleteReplyPage([[${reply.id}]])">
+                                            <a class="dropdown-item fs-18" th:onclick="deleteReplyPage([[${reply.id}]])">
                                                 <i class="bi bi-trash3"></i>
                                                 <span class="ms-1"> 삭제하기 </span>
                                             </a>
@@ -303,8 +304,33 @@
                             </div>
 
                             <div class="row mt-4 ms-2">
-                                <div class="col-11 boardContent pe-0" th:utext="${reply.content}">
+                                <div class="col-11 boardContent pe-0" th:utext="${reply.content}"
+                                     th:id="'replyContentBox_' + ${reply.id}">
 
+                                </div>
+                                <div class="col me-4" th:id="'replyUpdateBox_' + ${reply.id}"
+                                     th:if="${session.userDTO != null && session.userDTO.id == reply.userId}"
+                                     style="display: none;">
+                                    <div class="row">
+                                        <div class="col">
+                                            <textarea name="" id="" cols="10" rows="10" class="form-control fs-5"
+                                                      onkeydown="resize(this)" onkeyup="resize(this)" style="resize:none;"
+                                                      th:utext="${reply.content}"
+                                                      th:id="'replyUpdateContent_' + ${reply.id}"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col text-danger noContentAlert" style="display: none;">
+                                            <i class="bi bi-exclamation-circle"></i>
+                                            <span class="ms-1">
+                                                    내용을 최소 1자 이상 입력해주세요.
+                                                </span>
+                                        </div>
+                                        <div class="col mt-1 text-end">
+                                            <button class="btn btn-outline-dark fs-18" th:onclick="toggleUpdateReplyPage([[${reply.id}]])">취소</button>
+                                            <button class="ms-1 btn mainButton fs-18" th:onclick="updateReply([[${reply.id}]])">답변 등록하기</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -397,13 +423,13 @@
                                             </i>
                                             <ul class="dropdown-menu" aria-labelledby="dropCommentButton">
                                                 <li>
-                                                    <a class="dropdown-item">
-                                                        <i class="bi bi-pencil-square"></i>
+                                                    <a class="dropdown-item fs-18">
+                                                        <i class="bi bi-pencil-square" th:onclick="toggleUpdateCommentPage([[${comment.id}]])"></i>
                                                         <span class="ms-1"> 수정하기 </span>
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" th:onclick="deleteCommentPage([[${comment.id}]])">
+                                                    <a class="dropdown-item fs-18" th:onclick="deleteCommentPage([[${comment.id}]])">
                                                         <i class="bi bi-trash3"></i>
                                                         <span class="ms-1"> 삭제하기 </span>
                                                     </a>
@@ -541,8 +567,8 @@
             </div>
 
             <div class="modal-footer">
-                <input type="button" class="btn btn-outline-dark fw-semibold" value="확인" onclick="deleteQna()">
-                <button type="button" class="btn mainButton" data-bs-dismiss="modal">취소</button>
+                <input type="button" class="btn mainButton" value="확인" onclick="deleteQna()">
+                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
             </div>
 
         </div>
@@ -570,8 +596,8 @@
             </div>
 
             <div class="modal-footer">
-                <input type="button" class="btn btn-outline-dark fw-semibold" value="확인" onclick="deleteReply()">
-                <button type="button" class="btn mainButton" data-bs-dismiss="modal">취소</button>
+                <input type="button" class="btn mainButton" value="확인" onclick="deleteReply()">
+                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
             </div>
 
         </div>
@@ -725,7 +751,7 @@
 
                                     </div>
                                 </div>
-                                <div class="row mt-2">
+                                <div class="row mt-2 user-info-space">
                                     <div class="col">
                                         <span class="fs-18 user-info-actButton">
                                             <i class="bi bi-person-plus fs-5"></i>
@@ -811,7 +837,7 @@
         </div>
     </div>
 </div>
-<!-- 회원 정보 모달 -->
+<!-- 메시지 전송 모달 -->
 
 <!-- 메시지 전송 성공 alert -->
 <div class="modal" id="sendSuccessModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

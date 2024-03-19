@@ -213,6 +213,7 @@ public class QnaController {
             JobDTO replyJob = userService.findJob(dto.getUserId());
             dto.setJobName(replyJob.getName());
 
+
             // 답변에 달린 댓글 가져오기
             List<QnaReplyCommentDTO> qnaReplyCommentDTOList = qnaReplyCommentService.findAll(dto.getId());
             List<QnaReplyCommentDTO> commentList = new ArrayList<>();
