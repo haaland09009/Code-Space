@@ -119,23 +119,18 @@ const alertLikeCheckModal = () => {
                     output += '<div class="col" id="commentUpdateForm_' + comments[i].id + '" style="display: none;">';
                     output += '<div class="row">';
                     output += '<div class="col me-3">';
-                    output += '<textarea name="" id="commentUpdateContent_' + comments[i].id + '" cols="10" rows="3" class="form-control fs-5"  style="resize:none;" placeholder="댓글을 작성하여 프로젝트와 스터디에 참여해보세요 !" onkeydown="resize(this)" onkeyup="resize(this)">';
-                    output += '</textarea>';
+                    output += '<textarea name="" id="commentUpdateContent_' + comments[i].id + '" cols="10" rows="3" class="form-control fs-5"  style="resize:none;" placeholder="댓글을 작성하여 프로젝트와 스터디에 참여해보세요 !" onkeydown="resize(this)" onkeyup="resize(this)">' + comments[i].content +  '</textarea>';
                     output += '</div>';
                     output += '</div>';
 
-                    output += '<div class="row mt-1 noContentAlert" style="display: none;">';
-                    output += '<div class="col text-danger">';
+                    output += '<div class="row mt-2">';
+                    output += '<div class="col text-danger" style="display: none;" id="noContentAlert_' + comments[i].id + '">';
                     output += '<i class="bi bi-exclamation-circle">' + '</i>';
                     output += '<span class="ms-2">' + "내용을 최소 1자 이상 입력해주세요." + '</span>';
                     output += '</div>';
-                    output += '</div>';
-
-
-                    output += '<div class="row mt-3">';
                     output += '<div class="col text-end me-3">';
                     output += '<button class="btn btn-outline-dark fs-18" onclick="toggleUpdateCommentPage(' + comments[i].id + ')">' + "취소" + '</button>';
-                    output += '<button class="btn mainButton ms-1 fs-18" onclick="updateComment(' + comments[i].id + ')">' + "댓글 쓰기" + '</button>';
+                    output += '<button class="btn mainButton ms-2 fs-18" onclick="updateComment(' + comments[i].id + ')">' + "댓글 쓰기" + '</button>';
                     output += '</div>';
                     output += '</div>';
                     output += '</div>';
@@ -150,6 +145,14 @@ const alertLikeCheckModal = () => {
                  output += '<span>'  + comments[i].jobName + '</span>';
                  output += '<span class="ms-1">' + "·" + '</span>';
                  output += '<span class="date-element ms-1">' +  formatDateTime(comments[i].regDate) + '</span>';
+                 if (comments[i].updDate != null) {
+                    output += '<span style="position: relative; white-space: nowrap;">';
+                    output += '<span class="ms-2 updatedFont updated-project">' + "수정됨" + '</span>';
+                    output += '<span class="updated-text" style="position: absolute; left: 12px">' + "수정일시 : ";
+                    output += '<span>' + formatDate(comments[i].updDate) + '</span>'
+                    output += '</span>';
+                    output += '</span>';
+                 }
                  output += '</div>';
                  output += '</div>';
                  output += '</div>';
@@ -432,6 +435,10 @@ const alertLikeCheckModal = () => {
 
     // 채팅하기 모달
     const sendMessageToWriterModal = () => {
+       if (sessionId == 0) {
+            location.href = "/user/loginPage";
+            return;
+        }
         const sendMessageToWriterModal = bootstrap.Modal.getOrCreateInstance("#sendMessageToWriterModal");
 	    sendMessageToWriterModal.show();
     }
@@ -508,6 +515,10 @@ const alertLikeCheckModal = () => {
 
   /* 채팅하기 모달 */
     const sendMessageModal = () => {
+         if (sessionId == 0) {
+            location.href = "/user/loginPage";
+            return;
+        }
         const sendMessageModal = bootstrap.Modal.getOrCreateInstance("#sendMessageModal");
         sendMessageModal.show();
     }
@@ -636,6 +647,11 @@ const alertLikeCheckModal = () => {
         const commentContent = document.querySelector("#commentContent_" + id);
 
         const commentUpdateForm = document.querySelector("#commentUpdateForm_" + id);
+        const commentUpdateContent = document.querySelector("#commentUpdateContent_" + id);
+
+       /* 모달 열고 닫을때마다 경고창 초기화 */
+        const noContentAlert = document.querySelector("#noContentAlert_" + id);
+        noContentAlert.style.display = "none";
 
         if (commentUpdateForm.style.display == 'none') {
             commentUserImage.classList.remove("col-2");
@@ -645,6 +661,11 @@ const alertLikeCheckModal = () => {
             commentUserLikeInfo.style.display = "none";
             commentContent.style.display = "none";
             commentUpdateForm.style.display = "block";
+
+             // 내용의 끝에 커서 설정
+            commentUpdateContent.selectionStart = commentUpdateContent.value.length;
+            commentUpdateContent.selectionEnd = commentUpdateContent.value.length;
+            commentUpdateContent.focus();
         } else {
             commentUserImage.classList.remove("col-1");
             commentUserImage.classList.add("col-2");
@@ -659,7 +680,7 @@ const alertLikeCheckModal = () => {
    /* 댓글 수정하기 */
    const updateComment = (id) => {
        const commentUpdateContent = document.querySelector("#commentUpdateContent_" + id);
-       const noContentAlert = document.querySelector(".noContentAlert");
+       const noContentAlert = document.querySelector("#noContentAlert_" + id);
 
        if (sessionId == 0) {
             location.href = "/user/loginPage";

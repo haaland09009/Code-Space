@@ -96,4 +96,15 @@ public class QnaReplyCommentController {
         return qnaReplyCommentService.commentCount(id);
     }
 
+    /* 댓글 수정하기 */
+    @PostMapping("update")
+    public @ResponseBody String updateComment(@ModelAttribute QnaReplyCommentDTO qnaReplyCommentDTO) {
+        QnaReplyCommentDTO updatedCommentDTO = qnaReplyCommentService.updateComment(qnaReplyCommentDTO);
+        if (updatedCommentDTO == null) {
+            return "no";
+        } else {
+            return "ok";
+        }
+    }
+
 }

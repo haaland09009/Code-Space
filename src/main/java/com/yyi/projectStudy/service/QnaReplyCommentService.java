@@ -2,11 +2,13 @@ package com.yyi.projectStudy.service;
 
 import com.yyi.projectStudy.dto.QnaReplyCommentDTO;
 import com.yyi.projectStudy.dto.QnaReplyDTO;
+import com.yyi.projectStudy.entity.QnaEntity;
 import com.yyi.projectStudy.entity.QnaReplyCommentEntity;
 import com.yyi.projectStudy.entity.QnaReplyEntity;
 import com.yyi.projectStudy.entity.UserEntity;
 import com.yyi.projectStudy.repository.QnaReplyCommentRepository;
 import com.yyi.projectStudy.repository.QnaReplyRepository;
+import com.yyi.projectStudy.repository.QnaRepository;
 import com.yyi.projectStudy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class QnaReplyCommentService {
     private final QnaReplyCommentRepository qnaReplyCommentRepository;
+    private final QnaRepository qnaRepository;
     private final QnaReplyRepository qnaReplyRepository;
     private final UserRepository userRepository;
 
@@ -70,6 +73,30 @@ public class QnaReplyCommentService {
     public int commentCount(Long id) {
         QnaReplyEntity qnaReplyEntity = qnaReplyRepository.findById(id).get();
         return qnaReplyCommentRepository.countByQnaReplyEntity(qnaReplyEntity);
+    }
+
+
+   /* 댓글 수정하기 */
+    @Transactional
+    public QnaReplyCommentDTO updateComment(QnaReplyCommentDTO qnaReplyCommentDTO) {
+        /* 댓글에 달린 답변 조회 */
+        Optional<QnaReplyEntity> optionalQnaReplyEntity = qnaReplyRepository.findById(qnaReplyCommentDTO.getReplyId());
+        if (optionalQnaReplyEntity.isPresent()) {
+            QnaReplyEntity qnaReplyEntity = optionalQnaReplyEntity.get();
+            /* 답변에 달린 게시글 조회 */
+            Optional<QnaEntity> optionalQnaEntity = qnaRepository.findById(qnaReplyEntity.getQnaEntity().getId());
+            if (optionalQnaEntity.isPresent()) {
+                /* 댓글 수정처리 */
+                qnaReplyCommentRepository.updateComment(qnaReplyCommentDTO.getContent(), qnaReplyCommentDTO.getId());
+               /* 수정된 댓글 조회 */
+               QnaReplyCommentEntity qnaReplyCommentEntity = qnaReplyCommentRepository.findById(qnaReplyCommentDTO.getId()).get();
+               return QnaReplyCommentDTO.toQnaReplyCommentDTO(qnaReplyCommentEntity);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
 

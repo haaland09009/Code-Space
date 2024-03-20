@@ -4,7 +4,9 @@ import com.yyi.projectStudy.entity.QnaEntity;
 import com.yyi.projectStudy.entity.QnaReplyCommentEntity;
 import com.yyi.projectStudy.entity.QnaReplyEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -16,13 +18,11 @@ public interface QnaReplyCommentRepository extends JpaRepository<QnaReplyComment
     // select count(*) from qna_reply_comment_table where reply_id = ?
     int countByQnaReplyEntity(QnaReplyEntity qnaReplyEntity);
 
-//     SELECT qt.id, COUNT(*)
-//          FROM
-//          qna_table qt JOIN qna_reply_table qr
-//          ON qt.id = qr.qna_id
-//          JOIN qna_reply_comment_table qc
-//          ON qr.id = qc.reply_id
-//          GROUP BY qt.id
-//          ORDER BY qt.id DESC
+    /* 댓글 수정 처리 */
+    @Modifying
+    @Query(value = "update QnaReplyCommentEntity set content = :content, updDate = sysdate where id = :id")
+    void updateComment(@Param("content") String content, @Param("id") Long id);
+
+
 
 }

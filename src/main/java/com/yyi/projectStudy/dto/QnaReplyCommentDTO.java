@@ -16,6 +16,8 @@ public class QnaReplyCommentDTO {
     private Long userId;
     private String content;
     private LocalDateTime regDate;
+    /* 수정 여부 */
+    private LocalDateTime updDate;
 
     private String writer;
     private int fileAttached;
@@ -28,6 +30,7 @@ public class QnaReplyCommentDTO {
         qnaReplyCommentDTO.setUserId(qnaReplyCommentEntity.getUserEntity().getId());
         qnaReplyCommentDTO.setContent(qnaReplyCommentEntity.getContent());
         qnaReplyCommentDTO.setRegDate(qnaReplyCommentEntity.getRegDate());
+        qnaReplyCommentDTO.setUpdDate(qnaReplyCommentEntity.getUpdDate());
 
         qnaReplyCommentDTO.setWriter(qnaReplyCommentEntity.getUserEntity().getNickname());
         qnaReplyCommentDTO.setFileAttached(qnaReplyCommentEntity.getUserEntity().getFileAttached());

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class QnaReplyCommentEntity extends BaseEntity {
 
     @Column(nullable = false, length = 4000)
     private String content;
+
+    @Column
+    private LocalDateTime updDate;
 
     @OneToMany(mappedBy = "qnaReplyCommentEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
     private List<NotificationEntity> notificationEntityList = new ArrayList<>();

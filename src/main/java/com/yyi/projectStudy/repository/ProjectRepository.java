@@ -22,7 +22,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
 
     /* 게시글 수정 */
     @Modifying
-    @Query(value = "update ProjectEntity p set p.title = :title, p.content = :content, p.startDate = :startDate, p.headCount = :headCount where p.id = :id")
+    @Query(value = "update ProjectEntity p set p.title = :title, p.content = :content, p.startDate = :startDate, p.headCount = :headCount, p.updDate = sysdate where p.id = :id")
     void updateProject(@Param("title") String title, @Param("content") String content,
                        @Param("startDate") Date startDate, @Param("headCount") int headCount, @Param("id") Long id);
 

@@ -16,6 +16,7 @@ public class ProjectCommentDTO {
     private Long userId;
     private String content;
     private LocalDateTime regDate;
+    private LocalDateTime updDate;
 
     private String writer;
     private String jobName;
@@ -32,6 +33,7 @@ public class ProjectCommentDTO {
         projectCommentDTO.setUserId(projectCommentEntity.getUserEntity().getId());
         projectCommentDTO.setContent(projectCommentEntity.getContent());
         projectCommentDTO.setRegDate(projectCommentEntity.getRegDate());
+        projectCommentDTO.setUpdDate(projectCommentEntity.getUpdDate());
 
         projectCommentDTO.setWriter(projectCommentEntity.getUserEntity().getNickname());
         projectCommentDTO.setFileAttached(projectCommentEntity.getUserEntity().getFileAttached());

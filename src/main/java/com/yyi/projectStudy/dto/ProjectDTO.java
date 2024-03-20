@@ -25,6 +25,7 @@ public class ProjectDTO {
     private Date startDate;
     private LocalDateTime regDate;
     private String status;
+    private LocalDateTime updDate;
 
     private String writer;
     private int fileAttached;
@@ -61,10 +62,11 @@ public class ProjectDTO {
         projectDTO.setTitle(projectEntity.getTitle());
         projectDTO.setContent(projectEntity.getContent());
         projectDTO.setReadCount(projectEntity.getReadCount());
-        projectDTO.setHeadCount(projectEntity.getHeadCount()); //
+        projectDTO.setHeadCount(projectEntity.getHeadCount());
         projectDTO.setRegDate(projectEntity.getRegDate());
-        projectDTO.setStartDate(projectEntity.getStartDate()); //
+        projectDTO.setStartDate(projectEntity.getStartDate());
         projectDTO.setStatus(projectEntity.getStatus());
+        projectDTO.setUpdDate(projectEntity.getUpdDate());
 
         projectDTO.setUserId(projectEntity.getUserEntity().getId());
         projectDTO.setWriter(projectEntity.getUserEntity().getNickname());

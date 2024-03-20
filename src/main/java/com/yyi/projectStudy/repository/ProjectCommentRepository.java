@@ -20,8 +20,8 @@ public interface ProjectCommentRepository extends JpaRepository<ProjectCommentEn
     Long countByProjectEntity(ProjectEntity projectEntity);
 
     /* 댓글 수정하기 */
-   /* update project_comment_table set content = ? where id = ?*/
+    /* update project_comment_table set content = ?, updDate = sysdate where id = ?*/
     @Modifying
-    @Query(value = "update ProjectCommentEntity p set p.content = :content, p.regDate = sysdate where p.id = :id")
+    @Query(value = "update ProjectCommentEntity p set p.content = :content, p.updDate = sysdate where p.id = :id")
     void updateComment(@Param("content") String content, @Param("id") Long id);
 }

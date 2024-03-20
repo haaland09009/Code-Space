@@ -46,6 +46,9 @@ public class ProjectEntity extends BaseEntity {
     @Column
     private String status;
 
+    @Column
+    private LocalDateTime updDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;

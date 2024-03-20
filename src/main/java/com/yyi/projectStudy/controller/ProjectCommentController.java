@@ -136,7 +136,7 @@ public class ProjectCommentController {
         return projectCommentService.checkCommentLike(projectCommentDTO);
     }
 
-    /* 댓글 수정하기 */
+    /* 댓글 수정하기 -- 추후에 수정해야함 !*/
     @PostMapping("update")
     public @ResponseBody void update(@ModelAttribute ProjectCommentDTO projectCommentDTO) {
         projectCommentService.update(projectCommentDTO);

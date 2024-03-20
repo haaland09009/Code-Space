@@ -1,10 +1,9 @@
 package com.yyi.projectStudy.controller;
 
 import com.yyi.projectStudy.dto.*;
-import com.yyi.projectStudy.service.ChatService;
-import com.yyi.projectStudy.service.ProjectCommentService;
-import com.yyi.projectStudy.service.ProjectService;
-import com.yyi.projectStudy.service.UserService;
+import com.yyi.projectStudy.service.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
@@ -28,6 +27,7 @@ public class ProjectController {
     private final ProjectService projectService;
     private final ProjectCommentService projectCommentService;
     private final UserService userService;
+    private final CookieService cookieService;
 
 
    /* 게시글 작성 페이지 이동 */
@@ -88,105 +88,6 @@ public class ProjectController {
 
         return "redirect:/project/" + savedId;
     }
-
-
-    /* 게시글 목록 조회 */
-//    @GetMapping(value = {"", "/category/{category}"})
-//    public String boardList(Model model,
-//                            @PathVariable(name = "category", required = false) String category,
-//                            @RequestParam(name = "order", required = false) String order,
-//                            @RequestParam(name = "status", required = false) String status) {
-//
-//        /* 게시글 목록 불러오기 */
-//        List<ProjectDTO> projectDTOList;
-//        /* 프로젝트 메뉴를 클릭할 경우 */
-//        if (category != null && category.equals("pro")) {
-//            model.addAttribute("category", "pro");
-//            projectDTOList = projectService.findProjectStudyInListPage(1L, status);
-//            if ("clip".equals(order)) {
-//                projectDTOList = projectService.getProjectListOrderByClipAndCategory(1L, status);
-//            } else if ("comment".equals(order)) {
-//                projectDTOList = projectService.getProjectListOrderByCommentAndCategory(1L, status);
-//            }
-//        }
-//        /* 스터디 메뉴를 선택할 경우 */
-//        else if (category != null && category.equals("study")) {
-//            model.addAttribute("category", "study");
-//            projectDTOList = projectService.findProjectStudyInListPage(2L, status);
-//            if ("clip".equals(order)) {
-//                projectDTOList = projectService.getProjectListOrderByClipAndCategory(2L, status);
-//            } else if ("comment".equals(order)) {
-//                projectDTOList = projectService.getProjectListOrderByCommentAndCategory(2L, status);
-//            }
-//        } else {
-//            projectDTOList = projectService.findAll(status);
-//            if ("clip".equals(order)) {
-//                projectDTOList = projectService.getProjectListOrderByClip(status);
-//            } else if ("comment".equals(order)) {
-//                projectDTOList = projectService.getProjectListOrderByComment(status);
-//            } else {
-//                projectDTOList = projectService.findAll(status);
-//            }
-//        }
-//
-//        if (status != null) {
-//            model.addAttribute("status", status);
-//        }
-//
-//        /* 게시글 목록 반복문 */
-//        for (ProjectDTO projectDTO : projectDTOList) {
-//            String content = projectDTO.getContent().replace("<br>", "\n");
-//
-//            /* 목록 조회 화면에 html 태그 제거 */
-//            content = content.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "");
-//            content = content.replaceAll("<[^>]*>", " ");
-//            projectDTO.setContent(content);
-//
-//            /* 게시글 당 댓글 수 조회 */
-//            projectDTO.setCommentCount(projectCommentService.count(projectDTO.getId()));
-//
-//            /* 게시글 당 프로젝트, 스터디 여부 조회 */
-//            ProjectStudyCategoryDTO projectStudyCategoryDTO = projectService.findProjectStudyCategory(projectDTO.getId());
-//            projectDTO.setProjectStudy(projectStudyCategoryDTO.getName());
-//
-//            /* 게시글 당 스크랩 수 조회 */
-//            int clipCount = projectService.clipCount(projectDTO.getId());
-//            projectDTO.setClipCount(clipCount);
-//
-//
-//            //////////////////////////////////////////
-//            /* !!! 추후에 진행상태 저장하는 코드 추가할 것 !!*/
-//
-//
-//            /* 게시글 당 사용 언어 목록 조회 */
-//            List<TechCategoryDTO> techCategoryDTOList = projectService.findTechCategory(projectDTO.getId());
-//            List<String> techList = new ArrayList<>();
-//            for (TechCategoryDTO techCategoryDTO : techCategoryDTOList) {
-//                techList.add(techCategoryDTO.getName());
-//            }
-//            projectDTO.setTechList(techList);
-//        }
-//        model.addAttribute("projectList", projectDTOList);
-//
-//
-//        /* Top writer s*/
-//        List<TopWritersDTO> topWritersDTOList = projectService.getTopWriters();
-//        model.addAttribute("topWriters", topWritersDTOList);
-//
-//        /* 인기글 */
-//        List<ProjectDTO> topProjectDTOList = projectService.findAllInMainPage();
-//        for (ProjectDTO projectDTO : topProjectDTOList) {
-//            UserDTO userDTO = userService.findById(projectDTO.getUserId());
-//            projectDTO.setFileAttached(userDTO.getFileAttached());
-//            if (userDTO.getFileAttached() == 1) {
-//                projectDTO.setStoredFileName(userDTO.getStoredFileName());
-//            }
-//        }
-//        model.addAttribute("topProjectList", topProjectDTOList);
-//        return "project/list";
-//    }
-
-
 
     @GetMapping(value = {"", "/category/{category}"})
     public String boardList(Model model,
@@ -303,7 +204,8 @@ public class ProjectController {
     /* 게시글 상세보기 */
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Long id, Model model,
-                           HttpSession session) {
+                           HttpSession session,
+                           HttpServletRequest request, HttpServletResponse response) {
 
        /* 게시글 pk로 해당 게시글 작성자 정보 조회 */
         Long userId = projectService.findById(id).getUserId();
@@ -315,7 +217,7 @@ public class ProjectController {
         model.addAttribute("job", job);
 
         /* 클릭 시 조회수 증가 */
-        projectService.updateReadCount(id);
+        cookieService.checkCookieForReadCount(request, response, "project", id);
 
         /* enter 처리 */
         ProjectDTO projectDTO = projectService.findById(id);

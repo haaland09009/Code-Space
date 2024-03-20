@@ -97,7 +97,11 @@
             output += '<div class="col text-secondary fs-18">';
             output += '<span class="date-element">' + formatDateTime(replies[i].regDate) + '</span>';
             if (replies[i].updDate != null) {
-                output += '<span class="ms-2 text-primary fw-medium">' + "수정됨" + "</span>";
+                output += '<span style="position: relative; white-space: nowrap;">';
+                output += '<span class="ms-2 updatedFont updated-qna">' + "수정됨" + '</span>';
+                output += '<span class="updated-text" style="position: absolute; left: 12px">' + "수정일시: ";
+                output +=  '<span>' + formatDate(replies[i].updDate) + '</span>';
+                output += '</span>';
             }
             output += '</div>';
             output += '</div>';
@@ -125,7 +129,7 @@
             output += '</div>';
             output += '<div class="row mt-4 ms-2">';
             output += '<div class="col-11 boardContent pe-0" id="replyContentBox_' + replies[i].id  + '">' + replies[i].content +  '</div>';
-          /*  output += '</div>';*/
+
 
             if (sessionId != 0 && sessionId == replies[i].userId) {
                 output += '<div class="col me-4" id="replyUpdateBox_' + replies[i].id + '" style="display: none">';
@@ -135,7 +139,7 @@
                 output += '</div>';
                 output += '</div>';
                 output += '<div class="row mt-2">';
-                output += '<div class="col text-danger noContentAlert" style="display: none;">';
+                output += '<div class="col text-danger" style="display: none;" id="noContentAlert_' + replies[i].id + '">';
                 output += '<i class="bi bi-exclamation-circle">' + '</i>';
                 output += '<span class="ms-2">' + "내용을 최소 1자 이상 입력해주세요." + '</span>';
                 output += '</div>';
@@ -211,7 +215,7 @@
 
 
                 output += '</div>';
-                output += '<div class="col px-0">';
+                output += '<div class="col px-0" id="commentUserInfo_' + replies[i].commentList[c].id + '">';
                 output += '<div class="row">';
                 output += '<div class="col fw-semibold user-info-actButton" onclick="clickUserInfoModal('+ replies[i].commentList[c].userId  +')">' + replies[i].commentList[c].writer + '</div>';
                 output += '</div>';
@@ -220,13 +224,34 @@
                 output += '<span class="user-info-actButton" onclick="clickUserInfoModal('+ replies[i].commentList[c].userId  +')">' + replies[i].commentList[c].jobName + '</span>';
                 output += '<span class="ms-1">' + "·" + '</span>';
                 output += '<span class="date-element ms-1">' +  formatDateTime(replies[i].commentList[c].regDate) + '</span>';
+                if (replies[i].commentList[c].updDate != null) {
+                    output += '<span class="ms-2 updatedFont fw-medium">' + "수정됨" + '</span>';
+                }
                 output += '</div>';
                 output += '</div>';
                 output += '</div>';
-
 
                 if (sessionId == replies[i].commentList[c].userId) {
-                    output += '<div class="col-2 text-end dropdown" style="cursor: pointer;">';
+                    output += '<div class="col px-0" id="commentUpdateForm_' + replies[i].commentList[c].id + '" style="display: none;">';
+                    output += '<div class="row">';
+                    output += '<div class="col me-3">';
+                    output += '<textarea id="commentUpdateContent_' + replies[i].commentList[c].id + '" cols="10" rows="3"  class="form-control fs-18"  style="resize:none;" placeholder="여러분의 소중한 댓글을 남겨주세요" onkeydown="resize(this)" onkeyup="resize(this)">' + replies[i].commentList[c].content + '</textarea>';
+                    output += '</div>';
+                    output += '</div>';
+
+                    output += '<div class="row mt-2">';
+                    output += '<div class="col text-danger" id="noCommentContentAlert_' + replies[i].commentList[c].id + '"  style="display: none;">';
+                    output += '<i class="bi bi-exclamation-circle">' + '</i>';
+                    output += '<span class="ms-2">' + "내용을 최소 1자 이상 입력해주세요." + '</span>';
+                    output += '</div>';
+                    output += '<div class="col text-end me-3">';
+                    output += '<button class="btn btn-outline-dark fs-18" onclick="toggleUpdateCommentPage(' + replies[i].commentList[c].id + ')">' + "취소" + '</button>'
+                    output += '<button class="btn mainButton ms-2 fs-18" onclick="updateComment(' + replies[i].commentList[c].id + ')">' + "댓글 쓰기" + '</button>';
+                    output += '</div>';
+                    output += '</div>';
+                    output += '</div>';
+
+                    output += '<div class="col-2 text-end dropdown" style="cursor: pointer;" id="commentUserToggleInfo_' + replies[i].commentList[c].id + '">';
                     output += '<i class="bi bi-three-dots-vertical" style="height: 10px" id="dropCommentButton" data-bs-toggle="dropdown" aria-expanded="false">' + '</i>';
                     output += '<ul class="dropdown-menu" aria-labelledby="dropCommentButton">';
                     output += '<li>';
@@ -246,7 +271,7 @@
                 }
                 output += '</div>';
                 output += '<div class="row mt-3">';
-                output += '<div class="col-11 ms-1 boardContent">' + replies[i].commentList[c].content + '</div>';
+                output += '<div class="col-11 ms-1 boardContent" id="commentOriginalContent_' + replies[i].commentList[c].id + '">' + replies[i].commentList[c].content + '</div>';
                 output += '</div>';
                 output += '</div>';
                 output += '</div>';
@@ -667,7 +692,7 @@
  }
 
 
-    // 댓글 작성
+    /* 댓글 작성 */
     const writeComment = (id) => {
         const content = document.querySelector("#commentContent_" + id);
 
@@ -692,14 +717,63 @@
              success: function(res) {
                 // 댓글 load 함수
                 loadComments(id);
+
                 // 댓글 수 업데이트 함수
                 updateCommentCount(id);
-                 content.value = "";
+                content.value = "";
              }, error: function(err) {
                  return;
              }
           });
     }
+
+
+   /* 댓글 수정하기 */
+   const updateComment = (id) => {
+      const commentUpdateContent = document.querySelector("#commentUpdateContent_" + id);
+      const noCommentContentAlert = document.querySelector("#noCommentContentAlert_" + id);
+
+      if (sessionId == 0) {
+           location.href = "/user/loginPage";
+           return;
+      }
+
+      commentUpdateContent.addEventListener("input", () => {
+          if (commentUpdateContent.value.trim() !== "") {
+              noCommentContentAlert.style.display = "none"; // 내용이 입력되면 alertBox를 숨깁니다.
+          }
+      });
+
+      if (commentUpdateContent.value.trim() == "") {
+           noCommentContentAlert.style.display = "block";
+           commentUpdateContent.value = "";
+           commentUpdateContent.focus();
+           return;
+      }
+      $.ajax({
+           type: "post",
+           url: "/qnaReplyComment/update",
+           data: {
+               "id" : id,
+               "content" : commentUpdateContent.value,
+               "replyId": selectedReplyIdForComment
+           },
+           success: function(res) {
+                if (res == "ok") {
+                   /* 댓글 목록 다시 조회 */
+                   loadComments(selectedReplyIdForComment);
+
+                   selectedReplyIdForComment = null;
+               } else {
+                   alert("해당 문서가 존재하지 않습니다.");
+                   location.href = "/qna";
+               }
+           }, error: function(err) {
+               return;
+           }
+        });
+      }
+
 
     // 답변의 댓글 load
     const loadComments = (id) => {
@@ -720,7 +794,7 @@
             }
 
             output += '</div>';
-            output += '<div class="col px-0">';
+            output += '<div class="col px-0" id="commentUserInfo_' +  comments[i].id + '">';
             output += '<div class="row">';
             output += '<div class="col fw-semibold user-info-actButton" onclick="clickUserInfoModal('+ comments[i].userId  +')">' + comments[i].writer + '</div>';
             output += '</div>';
@@ -729,21 +803,43 @@
             output += '<span class="user-info-actButton" onclick="clickUserInfoModal('+ comments[i].userId  +')">' + comments[i].jobName + '</span>';
             output += '<span class="ms-1">' + "·" + '</span>';
             output += '<span class="date-element ms-1">' +  formatDateTime(comments[i].regDate) + '</span>';
+            if (comments[i].updDate != null) {
+                output += '<span class="ms-2 updatedFont fw-medium">' + "수정됨" + '</span>';
+            }
             output += '</div>';
             output += '</div>';
             output += '</div>';
             if (sessionId == comments[i].userId) {
-                output += '<div class="col-2 text-end dropdown" style="cursor: pointer;">';
+                output += '<div class="col px-0" id="commentUpdateForm_' + comments[i].id + '" style="display: none;">';
+                output += '<div class="row">';
+                output += '<div class="col me-3">';
+                output += '<textarea id="commentUpdateContent_' +comments[i].id + '" cols="10" rows="3"  class="form-control fs-18"  style="resize:none;" placeholder="여러분의 소중한 댓글을 남겨주세요" onkeydown="resize(this)" onkeyup="resize(this)">' + comments[i].content + '</textarea>';
+                output += '</div>';
+                output += '</div>';
+
+                output += '<div class="row mt-2">';
+                output += '<div class="col text-danger" id="noCommentContentAlert_' + comments[i].id + '"  style="display: none;">';
+                output += '<i class="bi bi-exclamation-circle">' + '</i>';
+                output += '<span class="ms-2">' + "내용을 최소 1자 이상 입력해주세요." + '</span>';
+                output += '</div>';
+                output += '<div class="col text-end me-3">';
+                output += '<button class="btn btn-outline-dark fs-18" onclick="toggleUpdateCommentPage(' + comments[i].id + ')">' + "취소" + '</button>'
+                output += '<button class="btn mainButton ms-2 fs-18" onclick="updateComment(' + comments[i].id + ')">' + "댓글 쓰기" + '</button>';
+                output += '</div>';
+                output += '</div>';
+                output += '</div>';
+
+                output += '<div class="col-2 text-end dropdown" style="cursor: pointer;" id="commentUserToggleInfo_' +  comments[i].id + '">';
                 output += '<i class="bi bi-three-dots-vertical" style="height: 10px" id="dropCommentButton" data-bs-toggle="dropdown" aria-expanded="false">' + '</i>';
                 output += '<ul class="dropdown-menu" aria-labelledby="dropCommentButton">';
                 output += '<li>';
-                output += '<a class="dropdown-item">';
+                output += '<a class="dropdown-item fs-18" onclick="toggleUpdateCommentPage(' + comments[i].id + ')">';
                 output += '<i class="bi bi-pencil-square">' + '</i>';
                 output += '<span class="ms-2">' +  "수정하기" + '</span>';
                 output += '</a>';
                 output += '</li>';
                 output += '<li>';
-                output += '<a class="dropdown-item" onclick="deleteCommentPage(' + comments[i].id + ')">';
+                output += '<a class="dropdown-item fs-18" onclick="deleteCommentPage(' + comments[i].id + ')">';
                 output += '<i class="bi bi-trash3">' + '</i>';
                 output += '<span class="ms-2">' +  "삭제하기" + '</span>';
                 output += '</a>';
@@ -753,7 +849,7 @@
             }
             output += '</div>';
             output += '<div class="row mt-3">';
-            output += '<div class="col-11 ms-1 boardContent">' + comments[i].content + '</div>';
+            output += '<div class="col-11 ms-1 boardContent" id="commentOriginalContent_' +  comments[i].id + '">' + comments[i].content + '</div>';
             output += '</div>';
             output += '</div>';
             output += '</div>';
@@ -766,6 +862,40 @@
       });
     }
 
+   /* 댓글 수정 폼 열고 닫기 */
+    const toggleUpdateCommentPage = (id) => {
+         /* 댓글이 작성된 답변 pk 얻기 */
+         getReplyPk(id);
+
+         const commentUserInfo = document.querySelector("#commentUserInfo_" + id);
+         const commentUpdateForm = document.querySelector("#commentUpdateForm_" + id);
+         const commentUserToggleInfo = document.querySelector("#commentUserToggleInfo_" + id);
+         const commentOriginalContent = document.querySelector("#commentOriginalContent_" + id);
+
+         const commentUpdateContent = document.querySelector("#commentUpdateContent_" + id);
+
+         /* 모달 열고 닫을때마다 경고창 초기화 */
+         const noCommentContentAlert = document.querySelector("#noCommentContentAlert_" + id);
+         noCommentContentAlert.style.display = "none";
+
+
+         if (commentUpdateForm.style.display == 'none') {
+            commentUserInfo.style.display = "none";
+            commentUserToggleInfo.style.display = "none";
+            commentOriginalContent.style.display = "none";
+            commentUpdateForm.style.display = "block";
+
+             // 내용의 끝에 커서 설정
+            commentUpdateContent.selectionStart = commentUpdateContent.value.length;
+            commentUpdateContent.selectionEnd = commentUpdateContent.value.length;
+            commentUpdateContent.focus();
+        } else {
+           commentUpdateForm.style.display = "none";
+           commentUserInfo.style.display = "block";
+           commentUserToggleInfo.style.display = "block";
+           commentOriginalContent.style.display = "block";
+        }
+    }
 
 
 
@@ -882,6 +1012,10 @@
 
    /* 채팅하기 모달 */
     const sendMessageModal = () => {
+        if (sessionId == 0) {
+            location.href = "/user/loginPage";
+            return;
+        }
         const sendMessageModal = bootstrap.Modal.getOrCreateInstance("#sendMessageModal");
         sendMessageModal.show();
     }
@@ -958,6 +1092,9 @@
         const replyUpdateBox = document.querySelector("#replyUpdateBox_" + id);
         const replyContentBox = document.querySelector("#replyContentBox_" + id);
 
+        const noContentAlert = document.querySelector("#noContentAlert_" + id);
+        noContentAlert.style.display = "none";
+
         if (replyUpdateBox.style.display == "none") {
             replyContentBox.style.display = "none";
             replyUpdateBox.style.display = "block";
@@ -970,7 +1107,7 @@
    /* 답변 수정 */
    const updateReply = (id) => {
       const replyUpdateContent = document.querySelector("#replyUpdateContent_" + id);
-      const noContentAlert = document.querySelector(".noContentAlert");
+      const noContentAlert = document.querySelector("#noContentAlert_" + id);
 
       if (sessionId == 0) {
             location.href = "/user/loginPage";
@@ -1015,5 +1152,5 @@ window.addEventListener("DOMContentLoaded", function(){
     if (sessionId != 0) {
          checkQnaLikeForColor(boardId);
      }
-    console.log()
+
 });

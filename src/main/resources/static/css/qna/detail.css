@@ -1,0 +1,11 @@
+  .updated-text {
+     padding: 15px 20px;
+     background-color: #444444;
+     border-radius: 5px;
+     color: #ffffff;
+     display: none;
+     font-size: 18px;
+  }
+.updated-qna:hover + .updated-text {
+   display: block;
+}

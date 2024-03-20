@@ -17,6 +17,7 @@ public class QnaDTO {
     private String content;
     private int readCount;
     private LocalDateTime regDate;
+    private LocalDateTime updDate;
 
     private String writer;
     private String categoryName;
@@ -39,6 +40,7 @@ public class QnaDTO {
         qnaDTO.setContent(qnaEntity.getContent());
         qnaDTO.setReadCount(qnaEntity.getReadCount());
         qnaDTO.setRegDate(qnaEntity.getRegDate());
+        qnaDTO.setUpdDate(qnaEntity.getUpdDate());
 
         // 게시글 작성자 정보
         qnaDTO.setWriter(qnaEntity.getUserEntity().getNickname());

@@ -2,6 +2,8 @@ package com.yyi.projectStudy.controller;
 
 import com.yyi.projectStudy.dto.*;
 import com.yyi.projectStudy.service.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,7 @@ public class QnaController {
     private final QnaReplyCommentService qnaReplyCommentService;
     private final UserService userService;
     private final utils utils;
+    private final CookieService cookieService;
 
     // 메인 페이지 - 기술, 커리어, 기타 모두 조회
     @GetMapping(value = {"", "/topic/{category}"})
@@ -178,7 +181,8 @@ public class QnaController {
 
     // 게시글 상세보기
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Long id, Model model, HttpSession session) {
+    public String findById(@PathVariable("id") Long id, Model model, HttpSession session,
+                           HttpServletRequest request, HttpServletResponse response) {
         // 토픽 카테고리
         TopicDTO topicDTO = qnaService.findTopic(id);
         model.addAttribute("topic", topicDTO);
@@ -191,8 +195,9 @@ public class QnaController {
         qnaDTO.setContent(content);
         model.addAttribute("qna", qnaDTO);
 
-        // 조회수 증가
-        qnaService.updateReadCount(id);
+        /* 클릭 시 조회수 증가 */
+        cookieService.checkCookieForReadCount(request, response, "qna", id);
+
 
         // 회원 직업
         JobDTO jobDTO = userService.findJob(qnaDTO.getUserId());

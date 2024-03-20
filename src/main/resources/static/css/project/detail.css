@@ -1,0 +1,10 @@
+  .updated-text {
+     padding: 15px 20px;
+     background-color: #444444;
+     border-radius: 5px;
+     color: #ffffff;
+     display: none;
+  }
+.updated-project:hover + .updated-text {
+   display: block;
+}

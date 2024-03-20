@@ -18,9 +18,9 @@ public interface QnaRepository extends JpaRepository<QnaEntity, Long> {
     void updateReadCount(@Param("id") Long id);
 
    /* 게시글 수정
-    update qna_table set title = :title, content = :content where id = ?*/
+    update qna_table set title = :title, content = :content, updDate = :sysdate where id = ?*/
     @Modifying
-    @Query(value = "update QnaEntity q set q.title = :title, q.content = :content where q.id = :id")
+    @Query(value = "update QnaEntity q set q.title = :title, q.content = :content, q.updDate = sysdate where q.id = :id")
     void updateQna(@Param("title") String title, @Param("content") String content, @Param("id") Long id);
 
 
