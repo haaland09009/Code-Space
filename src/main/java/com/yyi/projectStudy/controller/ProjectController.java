@@ -2,22 +2,19 @@ package com.yyi.projectStudy.controller;
 
 import com.yyi.projectStudy.dto.*;
 import com.yyi.projectStudy.service.*;
+import com.yyi.projectStudy.time.StringToDate;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.unbescape.html.HtmlEscape;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -140,6 +137,11 @@ public class ProjectController {
 
         /* 게시글 목록 반복문 */
         for (ProjectDTO projectDTO : projectDTOList) {
+
+            /* 날짜 변환 */
+            String formatDateTime = StringToDate.formatDateTime(String.valueOf(projectDTO.getRegDate()));
+            projectDTO.setFormattedDate(formatDateTime);
+
             String content = projectDTO.getContent().replace("<br>", "\n");
 
             /* 목록 조회 화면에 html 태그 제거 */
@@ -244,6 +246,11 @@ public class ProjectController {
         /* 게시글에 작성된 댓글 목록 조회 */
         List<ProjectCommentDTO> projectCommentDTOList = projectCommentService.findAll(id);
         for (ProjectCommentDTO projectCommentDTO : projectCommentDTOList) {
+
+            /* 날짜 변환하기 */
+            String formatDateTime = StringToDate.formatDateTime(String.valueOf(projectCommentDTO.getRegDate()));
+            projectCommentDTO.setFormattedDate(formatDateTime);
+
             /* 댓글 당 좋아요 수 조회 */
             int commentLikeCount = projectCommentService.commentLikeCount(projectCommentDTO.getId());
             projectCommentDTO.setLikeCount(commentLikeCount);
@@ -366,6 +373,7 @@ public class ProjectController {
         String content = projectDTO.getContent().replaceAll("\n", "<br>");
         projectDTO.setContent(content);
 
+
         /* 수정된 카테고리 코두 조회 */
         List<PositionCategoryDTO> positionCategoryDTOList = projectService.updatePosition(projectDTO, positionIdList);
         model.addAttribute("positionCategoryList", positionCategoryDTOList);
@@ -393,6 +401,10 @@ public class ProjectController {
             /* 댓글 작성자의 직군 조회  */
             JobDTO userJob = userService.findJob(projectCommentDTO.getUserId());
             projectCommentDTO.setJobName(userJob.getName());
+
+            /* 날짜 변환하기 */
+            String formatDateTime = StringToDate.formatDateTime(String.valueOf(projectCommentDTO.getRegDate()));
+            projectCommentDTO.setFormattedDate(formatDateTime);
         }
         /* 게시글에 작성된 총 댓글 수 조회  */
         Long commentCount = projectCommentService.count(project.getId());

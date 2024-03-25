@@ -34,8 +34,6 @@ public class ChatRoomEntity extends BaseEntity {
     @JoinColumn(name = "sender_id")
     private UserEntity sender;
 
-    @Column
-    private LocalDateTime endDate;
 
     @OneToMany(mappedBy = "chatRoomEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ChatEntity> chatEntityList

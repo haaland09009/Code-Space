@@ -39,7 +39,15 @@
                             채팅
                         </div>
                         <div class="col me-1 text-end">
-                            <button class="btn btn-outline-dark btn-sm rounded rounded-4 fs-16">
+                            <button class="btn btn-outline-dark btn-sm rounded rounded-4 fs-16 unreadChatButton"
+                            th:onclick="toggleUnreadChatList([[${session.userDTO.id}]])"
+                            th:if="${session.userDTO != null}">
+                                <i class="bi bi-chat-quote"></i>
+                                <span class="ms-1">안 읽은 메시지</span>
+                            </button>
+                            <button class="btn btn-outline-dark btn-sm rounded rounded-4 fs-16 unreadChatButton"
+                                    th:if="${session.userDTO == null}"
+                            onclick="location.href='/user/loginPage'">
                                 <i class="bi bi-chat-quote"></i>
                                 <span class="ms-1">안 읽은 메시지</span>
                             </button>
@@ -71,7 +79,7 @@
                                     <div class="row">
                                         <div class="col">
                                             <span class=fw-semibold th:text="${room.nickname}"></span>
-                                            <span class="ms-2 text-secondary date-element fs-18" th:text="${room.regDate}"></span>
+                                            <span class="ms-2 text-secondary fs-18" th:text="${room.formattedDate}"></span>
                                         </div>
                                         <div class="col-1 me-3 text-end" th:if="${room.isNotReadCount != 0}">
                                                 <div class="redCircle">
@@ -218,8 +226,8 @@
             </div>
 
             <div class="modal-footer">
-                <input type="button" class="btn btn-outline-dark fw-semibold" value="확인" onclick="deleteChat()">
-                <button type="button" class="btn mainButton" data-bs-dismiss="modal">취소</button>
+                <input type="button" class="btn mainButton fw-semibold" value="확인" onclick="deleteChat()">
+                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
             </div>
 
         </div>

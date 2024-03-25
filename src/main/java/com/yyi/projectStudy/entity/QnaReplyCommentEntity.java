@@ -41,9 +41,6 @@ public class QnaReplyCommentEntity extends BaseEntity {
     @Column
     private LocalDateTime updDate;
 
-    @OneToMany(mappedBy = "qnaReplyCommentEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
-    private List<NotificationEntity> notificationEntityList = new ArrayList<>();
-
     public static QnaReplyCommentEntity toQnaReplyCommentEntity(QnaReplyCommentDTO qnaReplyCommentDTO, QnaReplyEntity qnaReplyEntity, UserEntity userEntity) {
         QnaReplyCommentEntity qnaReplyCommentEntity = new QnaReplyCommentEntity();
         qnaReplyCommentEntity.setQnaReplyEntity(qnaReplyEntity);

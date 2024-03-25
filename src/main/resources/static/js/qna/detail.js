@@ -85,9 +85,9 @@
             }
             output += '</div>';
 
-            output += '<div class="col ps-1">';
+            output += '<div class="col ps-2">';
             output += '<div class="row">';
-            output += '<div class="col fw-semibold fs-22 user-info-actButton" onclick="clickUserInfoModal('+ replies[i].userId  +')">' + replies[i].writer + '</div>';
+            output += '<div class="col fw-semibold fs-5 user-info-actButton" onclick="clickUserInfoModal('+ replies[i].userId  +')">' + replies[i].writer + '</div>';
             output += '</div>';
             output += '<div class="row">';
             output += '<div class="col text-secondary fs-18 user-info-actButton" onclick="clickUserInfoModal('+ replies[i].userId  +')">' + replies[i].jobName + '</div>';
@@ -225,7 +225,12 @@
                 output += '<span class="ms-1">' + "·" + '</span>';
                 output += '<span class="date-element ms-1">' +  formatDateTime(replies[i].commentList[c].regDate) + '</span>';
                 if (replies[i].commentList[c].updDate != null) {
-                    output += '<span class="ms-2 updatedFont fw-medium">' + "수정됨" + '</span>';
+                    output += '<span style="position: relative; white-space: nowrap;">';
+                    output += '<span class="ms-2 updatedFont updated-qna">' + "수정됨" + '</span>';
+                    output += '<span class="updated-text" style="position: absolute; left: 12px">' + "수정일시: "
+                    output += '<span>' + formatDate(replies[i].commentList[c].updDate) + '</span>';
+                    output += '</span>';
+                    output += '</span>';
                 }
                 output += '</div>';
                 output += '</div>';
@@ -804,7 +809,12 @@
             output += '<span class="ms-1">' + "·" + '</span>';
             output += '<span class="date-element ms-1">' +  formatDateTime(comments[i].regDate) + '</span>';
             if (comments[i].updDate != null) {
-                output += '<span class="ms-2 updatedFont fw-medium">' + "수정됨" + '</span>';
+               output += '<span style="position: relative; white-space: nowrap;">';
+               output += '<span class="ms-2 updatedFont updated-qna">' + "수정됨" + '</span>';
+               output += '<span class="updated-text" style="position: absolute; left: 12px">' + "수정일시: "
+               output += '<span>' + formatDate(comments[i].updDate) + '</span>';
+               output += '</span>';
+               output += '</span>';
             }
             output += '</div>';
             output += '</div>';

@@ -24,6 +24,7 @@ public class QnaDTO {
     private int fileAttached;
     private String storedFileName;
     private int replyCount;
+    private String formattedDate;
 
     private int likeCount;
     private int dislikeCount;

@@ -19,11 +19,11 @@
     const urlParams = new URLSearchParams(window.location.search);
     const sortKey = urlParams.get('sortKey');
 
-    if (sortKey == 'reply') {
+    if (sortKey == 'reply' && searchWord == null) {
         document.querySelector(".sortPoint1").classList.add("text-success");
         document.querySelector(".sortName1").classList.add("text-black");
         document.querySelector(".sortName1").classList.add("fw-semibold");
-    } else if (sortKey == null) {
+    } else if (sortKey == null && searchWord == null) {
         if (pathname != '/qna/no-questions') {
             document.querySelector(".sortPoint").classList.add("text-success");
             document.querySelector(".sortName").classList.add("text-black");
@@ -72,4 +72,11 @@
         }
     });
 
+    /* 검색 */
+    document.querySelector("#searchInput").addEventListener("keypress", function(event) {
+      if (event.keyCode === 13) {
+          event.preventDefault(); // 기본 제출 방지
+          document.querySelector("#searchForm").submit(); // 폼 제출
+      }
+  });
 

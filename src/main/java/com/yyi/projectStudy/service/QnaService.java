@@ -68,10 +68,17 @@ public class QnaService {
         qnaTopicRepository.save(qnaTopicEntity);
     }
 
-    // 기술, 커리어, 기타 모두 조회
+    /* 기술, 커리어, 기타 모두 조회 */
     @Transactional
-    public List<QnaDTO> findAll() {
-        List<QnaEntity> qnaEntityList = qnaRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+    public List<QnaDTO> findAll(String searchWord) {
+        List<QnaEntity> qnaEntityList;
+        if (searchWord != null) {
+            searchWord = searchWord.toLowerCase();
+            System.out.println("검색 단어 : " + searchWord);
+            qnaEntityList = qnaRepository.findByTitleOrContent(searchWord);
+        } else {
+            qnaEntityList = qnaRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        }
         List<QnaDTO> qnaDTOList = new ArrayList<>();
         for (QnaEntity qnaEntity : qnaEntityList) {
             qnaDTOList.add(QnaDTO.toQnaDTO(qnaEntity));

@@ -41,6 +41,19 @@ public class UserController {
         return "user/joinPage";
     }
 
+    /* 이메일 중복 체크 */
+    @GetMapping("/existsUserId")
+    public @ResponseBody boolean existsUserId(String email) {
+        return userService.existsUserId(email);
+    }
+
+    /* 닉네임 중복 체크 */
+    @GetMapping("/existsNickname")
+    public @ResponseBody boolean existsNickname(String nickname) {
+        return userService.existsNickname(nickname);
+    }
+
+
     /* 회원가입 프로세스 */
     @PostMapping("/joinProcess")
     public String joinProcess(@ModelAttribute UserDTO userDTO,
@@ -105,7 +118,7 @@ public class UserController {
             return "redirect:/user/loginPage";
         } else {
             Long userId = sessionUser.getId();
-            List<ChatDTO> chatDTOList = chatService.findRecentChats(userId);
+            List<ChatDTO> chatDTOList = chatService.findRecentChats(userId, null);
             model.addAttribute("chatRoomList", chatDTOList);
             return "user/message";
         }
@@ -168,6 +181,9 @@ public class UserController {
         userDTO.setJobName(jobDTO.getName());
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
+
+
+
 
 
 }

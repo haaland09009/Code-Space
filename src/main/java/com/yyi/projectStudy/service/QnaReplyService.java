@@ -3,10 +3,7 @@ package com.yyi.projectStudy.service;
 import com.yyi.projectStudy.dto.QnaReplyDTO;
 import com.yyi.projectStudy.dto.QnaReplyLikeDTO;
 import com.yyi.projectStudy.entity.*;
-import com.yyi.projectStudy.repository.QnaReplyLikeRepository;
-import com.yyi.projectStudy.repository.QnaReplyRepository;
-import com.yyi.projectStudy.repository.QnaRepository;
-import com.yyi.projectStudy.repository.UserRepository;
+import com.yyi.projectStudy.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +20,8 @@ public class QnaReplyService {
     private final QnaRepository qnaRepository;
     private final UserRepository userRepository;
     private final QnaReplyLikeRepository qnaReplyLikeRepository;
+    private final NotTypeRepository notTypeRepository;
+    private final NotificationRepository notificationRepository;
 
     // 답변 작성
     public Long save(QnaReplyDTO qnaReplyDTO) {
@@ -51,8 +50,14 @@ public class QnaReplyService {
         return qnaReplyDTOList;
     }
 
-    // 답변 삭제
+    /* 답변 삭제 */
+    @Transactional
     public void deleteById(Long id) {
+        /* 알림 삭제 */
+        NotTypeEntity notTypeEntity = notTypeRepository.findByName("qna_reply").get();
+        Long notId = notTypeEntity.getId();
+        notificationRepository.deleteNotification(notId, id);
+
         qnaReplyRepository.deleteById(id);
     }
 

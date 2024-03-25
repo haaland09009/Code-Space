@@ -19,6 +19,7 @@ public class QnaReplyCommentDTO {
     /* 수정 여부 */
     private LocalDateTime updDate;
 
+    private String formattedDate;
     private String writer;
     private int fileAttached;
     private String storedFileName;

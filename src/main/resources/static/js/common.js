@@ -89,22 +89,22 @@
      return formattedDateTime;
    }
 
-
+    /* 알림 조회 */
     const getNotificationList = () => {
             $.ajax({
              type: "get",
              url: "/notification/findAll/" + sessionId,
              success: function(res) {
                 let output = "";
-                 if (res == null) {
-                    output += '<div class="text-center mt-3">알림이 존재하지 않습니다.</div>';
+                 if (res.length == 0) {
+                    output += '<div class="text-center mt-3 mb-3 fs-5">읽지 않은 알림이 존재하지 않습니다.</div>';
                 } else {
                   for (let i in res) {
                     output += '<a href="' + res[i].notUrl + '">';
-                    output += '<div class="row mt-2">';
-                    output += '<div class="col ms-3">';
+                    output += '<div class="row contentDiv">';
+                    output += '<div class="col ms-3 border-bottom">';
 
-                    output += '<div class="row">';
+                    output += '<div class="row mt-3">';
                     output += '<div class="col-1">';
                     if (res[i].fileAttached == 0) {
                         output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 30px; height: 30px; position: relative; top: 4px">';
@@ -112,19 +112,19 @@
                         output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 30px; height: 30px; position: relative; top: 4px">';
                     }
                     output += '</div>';
-                    output += '<div class="col ms-2 fw-semibold">' + res[i].sender + '</div>';
-                    output += '<div class="col text-end text-secondary me-1">' + formatDateTime(res[i].occurDate) + '</div>';
+                    output += '<div class="col ms-1 fw-semibold">' + res[i].nickname + '</div>';
+                    output += '<div class="col text-end text-secondary me-1">' + res[i].formattedDate + '</div>';
                     output += '</div>';
 
-                    output += '<div class="row">';
+                    output += '<div class="row mb-3">';
                     output += '<div class="col-1">';
                     output += '</div>';
-                    output += '<div class="col ms-2">' + res[i].sentence + '</div>';
+                    output += '<div class="col ms-1">' + res[i].content + '</div>';
                     output += '</div>';
 
-                    output += '<div class="border-bottom mt-2">' + '</div>';
 
                     output += '</div>';
+
                     output += '</div>';
                     output += '</a>';
                     }
@@ -135,6 +135,26 @@
                  return;
              }
          });
+      }
+
+       /*  안 읽은 알림 개수  */
+      const notReadNoticeCount = (id) => {
+         const notReadNoticeBox = document.querySelector("#notReadNoticeBox");
+         const notReadNoticeCount = document.querySelector("#notReadNoticeCount");
+         $.ajax({
+           url: "/notification/notReadCount/" + id,
+           success: function(res) {
+              if (res > 0) {
+                 notReadNoticeBox.style.display = "block";
+                 notReadNoticeCount.innerText = res;
+               } else {
+                 notReadNoticeBox.style.display = "none";
+               }
+
+           }, error: function(err) {
+               return;
+           }
+        });
       }
 
 
@@ -151,7 +171,9 @@
          document.querySelector('#qnaLink').classList.add('text-black');
      } else if (path.startsWith('/project')) {
          document.querySelector('#projectLink').classList.add('text-black');
-     }
+     } else if (path.startsWith('/notice')) {
+        document.querySelector('#noticeLink').classList.add('text-black');
+    }
 
 
     /*  안 읽은 채팅 개수  */
@@ -226,6 +248,7 @@
 window.addEventListener("DOMContentLoaded", function(){
     if (sessionId != 0) {
         notReadChatCount(sessionId);
+        notReadNoticeCount(sessionId);
         getNotificationList();
     }
     const dateElements = document.querySelectorAll('.date-element');

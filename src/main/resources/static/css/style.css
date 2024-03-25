@@ -269,3 +269,7 @@ textarea {
 .updatedFont {
     color: #0090f9;
 }
+
+mark {
+    padding: 0;
+}

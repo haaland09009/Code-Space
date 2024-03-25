@@ -467,7 +467,7 @@
                                                                     <div class="col px-0 text-secondary fs-18">
                                                                         <span th:text="${comment.jobName}"></span>
                                                                         <span>·</span>
-                                                                        <span class="date-element" th:text="${comment.regDate}"></span>
+                                                                        <span th:text="${comment.formattedDate}"></span>
                                                                         <span style="position: relative; white-space: nowrap;" th:if="${comment.updDate != null}">
                                                                             <span class="ms-2 updatedFont updated-project">수정됨</span>
                                                                             <span class="updated-text" style="position: absolute; left: 12px">
@@ -488,7 +488,7 @@
                                                             th:onclick="isYourCommentForLike([[${comment.id}]])">
                                                             <span th:id="'cmtLike_' + ${comment.id}" th:text="${comment.likeCount}"></span>
                                                         </span>
-                                                        <span class="ms-2">
+                                                        <span class="ms-1">
                                                              <img src="/img/dislike.png" style="width: 30px; height: 30px; cursor: pointer;"
                                                                   th:onclick="isYourCommentForDisLike([[${comment.id}]])">
                                                             <span th:id="'cmtDisLike_' + ${comment.id}" th:text="${comment.disLikeCount}"></span>

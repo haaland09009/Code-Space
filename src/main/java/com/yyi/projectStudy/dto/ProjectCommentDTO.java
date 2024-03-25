@@ -24,6 +24,7 @@ public class ProjectCommentDTO {
     private String storedFileName;
     private int likeCount;
     private int disLikeCount;
+    private String formattedDate;
 
     // Entity -> DTO
     public static ProjectCommentDTO toProjectCommentDTO(ProjectCommentEntity projectCommentEntity) {

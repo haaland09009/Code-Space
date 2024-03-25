@@ -20,9 +20,10 @@ import java.util.List;
 public class ProjectCommentController {
     private final ProjectService projectService;
     private final ProjectCommentService projectCommentService;
-    private final NotificationService notificationService;
     private final UserService userService;
-    // 댓글 작성
+    private final NotificationService notificationService;
+
+    /* 댓글 작성하기 */
     @PostMapping("/save")
     public ResponseEntity save(@ModelAttribute ProjectCommentDTO projectCommentDTO,
                                HttpSession session) {
@@ -34,17 +35,16 @@ public class ProjectCommentController {
             List<ProjectCommentDTO> projectCommentDTOList =
                     projectCommentService.findAll(projectCommentDTO.getProjectId());
 
-            // 댓글 알림 넣기
+            /* 알림 넣기 */
             ProjectDTO projectDTO = projectService.findById(projectCommentDTO.getProjectId());
             NotificationDTO notificationDTO = new NotificationDTO();
-            if (!projectDTO.getUserId().equals(projectCommentDTO.getUserId())) {
-                notificationDTO.setUserId(projectDTO.getUserId()); // 수신자 id
-                notificationDTO.setSenderId(projectCommentDTO.getUserId()); // 발신자 id
-                notificationDTO.setNotType("projectComment"); // 종류
-                notificationDTO.setNotContentId(commentId); // 종류 pk
-                notificationDTO.setNotUrl("/project/" + projectDTO.getId());
-                notificationService.saveComment(notificationDTO, commentId);
-            }
+            notificationDTO.setReceiver(projectDTO.getUserId()); // 수신자 pk
+            notificationDTO.setSender(projectCommentDTO.getUserId()); // 발신자 pk
+            notificationDTO.setEntityId(commentId); // 댓글 pk
+            notificationDTO.setNotUrl("/project/" + projectDTO.getId());
+            notificationService.saveProjectComment(notificationDTO, projectDTO);
+
+
             return new ResponseEntity<>(projectCommentDTOList, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("해당 게시글이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
@@ -80,7 +80,7 @@ public class ProjectCommentController {
         }
     }
 
-    // 댓글 삭제
+    /* 댓글 삭제 */
     @PostMapping("/delete/{id}")
     public @ResponseBody void delete(@PathVariable("id") Long id) {
         projectCommentService.deleteById(id);

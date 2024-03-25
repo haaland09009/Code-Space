@@ -78,7 +78,7 @@
 
                             <div class="row">
                                 <div class="col fs-16 text-secondary">
-                                    <span class="date-element" th:text="${qna.regDate}"></span>
+                                    <span th:text="${qna.formattedDate}"></span>
 
                                     <span class="ms-1">
                                         <i class="bi bi-eye"></i>
@@ -270,7 +270,7 @@
                                 </div>
                                 <div class="col ps-2">
                                     <div class="row">
-                                        <div class="col fw-semibold fs-22 user-info-actButton" th:text="${reply.writer}"
+                                        <div class="col fw-semibold fs-5 user-info-actButton" th:text="${reply.writer}"
                                              th:onclick="clickUserInfoModal([[${reply.userId}]])">
 
                                         </div>
@@ -283,8 +283,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col text-secondary fs-18">
-                                            <span class="date-element" th:text="${reply.regDate}"></span>
-                                           <!-- <span class="ms-1 updatedFont fw-medium" th:if="${reply.updDate != null}">수정됨</span>-->
+                                            <span th:text="${reply.formattedDate}"></span>
                                             <span style="position: relative; white-space: nowrap;" th:if="${reply.updDate != null}">
                                                 <span class="ms-1 updatedFont updated-qna">수정됨</span>
                                                 <span class="updated-text" style="position: absolute; left: 12px">
@@ -425,8 +424,14 @@
                                                     <span th:text="${comment.jobName}" th:onclick="clickUserInfoModal([[${comment.userId}]])"
                                                     class="user-info-actButton"></span>
                                                     <span>·</span>
-                                                    <span class="date-element"  th:text="${comment.regDate}"></span>
-                                                    <span class="ms-1 updatedFont fw-medium" th:if="${comment.updDate != null}">수정됨</span>
+                                                    <span th:text="${comment.formattedDate}"></span>
+                                                    <span style="position: relative; white-space: nowrap;" th:if="${comment.updDate != null}">
+                                                        <span class="ms-1 updatedFont updated-qna">수정됨</span>
+                                                        <span class="updated-text" style="position: absolute; left: 12px">
+                                                            수정일시: <span th:text="*{#temporals.format(comment.updDate, 'yyyy-MM-dd a hh:mm')}"></span>
+                                                        </span>
+                                                    </span>
+
                                                 </div>
                                             </div>
                                         </div>

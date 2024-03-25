@@ -47,8 +47,6 @@ public class ProjectCommentEntity extends BaseEntity {
     @OneToMany(mappedBy = "projectCommentEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProCmtDisLikeEntity> proCmtDisLikeEntityList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "projectCommentEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<NotificationEntity> notificationEntityList = new ArrayList<>();
 
     // DTO -> Entity
     public static ProjectCommentEntity toProjectCommentEntity(ProjectCommentDTO projectCommentDTO,

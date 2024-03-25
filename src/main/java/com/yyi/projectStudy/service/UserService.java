@@ -132,4 +132,27 @@ public class UserService {
         userRepository.updateUser(userDTO.getNickname(), userDTO.getEmail(), userDTO.getId());
         userJobRepository.updateUserJob(userJobDTO.getJobId(), userDTO.getId());
     }
+
+    /* 이메일 중복 체크 */
+    public boolean existsUserId(String email) {
+        int count = userRepository.countByEmail(email);
+        if (count > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /* 닉네임 중복 체크 */
+    public boolean existsNickname(String nickname) {
+        int count = userRepository.countByNickname(nickname);
+        if (count > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
 }

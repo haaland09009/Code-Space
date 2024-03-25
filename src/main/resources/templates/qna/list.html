@@ -27,7 +27,7 @@
                 <!---------------->
                 <div class="col">
                     <!---------------->
-                    <div class="row" th:if="${category == null}">
+                    <div class="row" th:if="${category == null && searchWord == null}">
                         <!---------------->
                         <div class="col">
                             <div class="row">
@@ -124,10 +124,10 @@
                         <!---------------->
                     </div>
                     <!---------------->
-                    <div class="mt-5" th:if="${category == null}">
+                    <div class="mt-5" th:if="${category == null && searchWord == null}">
                     </div>
 
-                    <div class="row mt-1" th:if="${category == null or (category != null && category != 'no-Reply')}">
+                    <div class="row mt-1" th:if="${(category == null or (category != null && category != 'no-Reply')) && searchWord == null}">
                         <div class="col-auto sort-item ps-0">
                             <a href="/qna" th:if="${category == null}">
                                 <span class="sortPoint text-secondary">•</span>
@@ -172,8 +172,8 @@
 
                                             <span class="ms-2 fw-semibold" th:text="${qna.writer}"></span>
                                             <span class="ms-1">·</span>
-                                            <!--                                                    <span class="ms-1 text-secondary" th:text="*{#temporals.format(project.regDate, 'yyyy-MM-dd HH:mm:ss')}"></span>-->
-                                            <span class="ms-1 text-secondary date-element" th:text="${qna.regDate}"></span>
+
+                                            <span class="ms-1 text-secondary" th:text="${qna.formattedDate}"></span>
                                             <span class="ms-1">·</span>
                                             <span class="ms-1 text-secondary">조회</span>
                                             <span class="text-secondary" th:text="${qna.readCount}"></span>
@@ -186,7 +186,11 @@
 
                                     <div class="row mt-2">
                                         <a th:href="@{|/qna/${qna.id}|}">
-                                            <div class="col fw-semibold fs-4" th:text="${qna.title}">
+                                            <div class="col fw-semibold fs-4" th:text="${qna.title}" th:if="${searchWord == null}">
+
+                                            </div>
+                                            <div class="col fw-semibold fs-4"
+                                            th:utext="${#strings.replace(qna.title, searchWord, '<mark>' + searchWord + '</mark>')}"th:if="${searchWord != null}">
 
                                             </div>
                                         </a>
@@ -195,7 +199,11 @@
                                     <div class="row mt-2">
                                         <a th:href="@{|/qna/${qna.id}|}">
                                             <div class="col overflow-list fs-18" th:utext="${qna.content}"
-                                            style="">
+                                            th:if="${searchWord == null}">
+
+                                            </div>
+                                            <div class="col overflow-list fs-18"
+                                                 th:utext="${#strings.replace(qna.content, searchWord, '<mark>' + searchWord + '</mark>')}"th:if="${searchWord != null}">
 
                                             </div>
                                         </a>
@@ -259,6 +267,10 @@
 
     /*<![CDATA[*/
       let sessionId = [[${session.userDTO != null ? session.userDTO.id : 0}]];
+  /*]]>*/
+
+  /*<![CDATA[*/
+      let searchWord = [[${searchWord}]];
   /*]]>*/
 
 </script>

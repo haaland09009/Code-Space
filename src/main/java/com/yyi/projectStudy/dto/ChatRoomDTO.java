@@ -16,7 +16,6 @@ public class ChatRoomDTO {
     private Long senderId;
     private Long receiverId;
     private LocalDateTime regDate;
-    private LocalDateTime endDate;
 
     private List<ChatDTO> chatList;
 
@@ -31,7 +30,6 @@ public class ChatRoomDTO {
         chatRoomDTO.setSenderId(chatRoomEntity.getSender().getId());
         chatRoomDTO.setReceiverId(chatRoomEntity.getReceiver().getId());
         chatRoomDTO.setRegDate(chatRoomEntity.getRegDate());
-        chatRoomDTO.setEndDate(chatRoomEntity.getEndDate());
         return chatRoomDTO;
     }
 }

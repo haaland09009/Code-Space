@@ -18,6 +18,7 @@ public class ChatDTO {
     private LocalDateTime regDate;
     private LocalDateTime readDate;
 
+    private String formattedDate;
     private int fileAttached;
     private String storedFileName;
     private String nickname;

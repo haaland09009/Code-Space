@@ -2,6 +2,7 @@ package com.yyi.projectStudy.controller;
 
 import com.yyi.projectStudy.dto.*;
 import com.yyi.projectStudy.service.*;
+import com.yyi.projectStudy.time.StringToDate;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -24,13 +25,15 @@ public class QnaController {
     private final utils utils;
     private final CookieService cookieService;
 
-    // 메인 페이지 - 기술, 커리어, 기타 모두 조회
+    /* 메인 페이지 - 기술, 커리어, 기타 모두 조회 */
     @GetMapping(value = {"", "/topic/{category}"})
     public String mainPage(Model model,
                            @PathVariable(name = "category", required = false) String category,
-                           @RequestParam(name = "sortKey", required = false) String sortKey) {
+                           @RequestParam(name = "sortKey", required = false) String sortKey,
+                           String searchWord) {
 
         List<QnaDTO> qnaDTOList;
+
         if (category != null && category.equals("tech")) {
             if (sortKey != null) {
                 qnaDTOList = qnaService.getQnaDTOListByReplySort(1L);
@@ -45,18 +48,29 @@ public class QnaController {
                 qnaDTOList = qnaService.findAllByTopic(2L);
             }
             model.addAttribute("category", "career");
-        } else if (category == null)  {
+        } else if (category == null) {
             if (sortKey != null) {
                 qnaDTOList = qnaService.getQnaDTOListByReplySort(null);
             } else {
-                qnaDTOList = qnaService.findAll();
+                qnaDTOList = qnaService.findAll(searchWord);
             }
         } else {
-            qnaDTOList = qnaService.findAll();
+            qnaDTOList = qnaService.findAll(searchWord);
         }
 
-        // 기술, 커리어, 기타 카테고리 여부 dto에 저장
+        /* 검색 키워드가 존재할 경우 */
+        if (searchWord != null) {
+            model.addAttribute("searchWord", searchWord);
+        }
+
+
+        /* 기술, 커리어, 기타 카테고리 여부 dto에 저장 */
         for (QnaDTO qnaDTO : qnaDTOList) {
+
+            /* 날짜 변환하기 */
+            String formatDateTime = StringToDate.formatDateTime(String.valueOf(qnaDTO.getRegDate()));
+            qnaDTO.setFormattedDate(formatDateTime);
+
             String content = qnaDTO.getContent();
             content = content.replaceAll("<br>", "\r\n");
             qnaDTO.setContent(content);
@@ -67,17 +81,17 @@ public class QnaController {
             int replyCount = qnaReplyService.count(qnaDTO.getId());
             qnaDTO.setReplyCount(replyCount);
 
-            // 댓글 수
-            // 게시글 당 답변 모두 조회
+
+            /* 게시글 당 답변 모두 조회 */
             List<QnaReplyDTO> qnaReplyDTOList = qnaReplyService.findAll(qnaDTO.getId());
             int commentCount = 0;
-            // 답변에 달린 댓글 수 모두 조회
+            /* 답변에 달린 댓글 수 모두 조회 */
             for (QnaReplyDTO qnaReplyDTO : qnaReplyDTOList) {
                 commentCount += qnaReplyCommentService.commentCount(qnaReplyDTO.getId());
             }
             qnaDTO.setCommentCount(commentCount);
 
-            // 해시태그 조회
+            /* 해시태그 조회 */
             QnaTagsDTO qnaTagsDTO = qnaService.findHashTag(qnaDTO.getId());
             if (qnaTagsDTO != null) {
                 qnaDTO.setHashTag(qnaTagsDTO.getTag());
@@ -85,11 +99,11 @@ public class QnaController {
         }
         model.addAttribute("qnaList", qnaDTOList);
 
-        // 베스트 답변
+        /* 베스트 답변 */
         List<QnaBestReplyDTO> bestReplyList = qnaService.findBestReplyList();
         model.addAttribute("bestReplyList", bestReplyList);
 
-        // 베스트 질문
+        /* 베스트 질문 */
         List<QnaBestDTO> qnaBestDTOList = qnaService.findBestQnaList();
         model.addAttribute("bestQnaList", qnaBestDTOList);
 
@@ -105,6 +119,11 @@ public class QnaController {
 
         // 기술, 커리어, 기타 카테고리 여부 dto에 저장
         for (QnaDTO qnaDTO : qnaDTOList) {
+
+            /* 날짜 변환하기 */
+            String formatDateTime = StringToDate.formatDateTime(String.valueOf(qnaDTO.getRegDate()));
+            qnaDTO.setFormattedDate(formatDateTime);
+
             String content = qnaDTO.getContent();
             content = content.replaceAll("<br>", "\r\n");
             qnaDTO.setContent(content);
@@ -195,6 +214,10 @@ public class QnaController {
         qnaDTO.setContent(content);
         model.addAttribute("qna", qnaDTO);
 
+        /* 날짜 변환하기 */
+        String formatDateTime = StringToDate.formatDateTime(String.valueOf(qnaDTO.getRegDate()));
+        qnaDTO.setFormattedDate(formatDateTime);
+
         /* 클릭 시 조회수 증가 */
         cookieService.checkCookieForReadCount(request, response, "qna", id);
 
@@ -209,6 +232,10 @@ public class QnaController {
         List<QnaReplyDTO> qnaReplyDTOList = qnaReplyService.findAll(id);
         // enter 처리
         for (QnaReplyDTO dto : qnaReplyDTOList) {
+
+            /* 날짜 변환하기 */
+            dto.setFormattedDate(StringToDate.formatDateTime(String.valueOf(dto.getRegDate())));
+
             String replyContent = dto.getContent();
             replyContent = replyContent.replaceAll("<br>", "\n");
             dto.setContent(replyContent);
@@ -223,6 +250,9 @@ public class QnaController {
             List<QnaReplyCommentDTO> qnaReplyCommentDTOList = qnaReplyCommentService.findAll(dto.getId());
             List<QnaReplyCommentDTO> commentList = new ArrayList<>();
             for (QnaReplyCommentDTO qnaReplyCommentDTO : qnaReplyCommentDTOList) {
+                /* 날짜 변환하기 */
+                qnaReplyCommentDTO.setFormattedDate(StringToDate.formatDateTime(String.valueOf(qnaReplyCommentDTO.getRegDate())));
+
                 String commentContent = qnaReplyCommentDTO.getContent();
                 commentContent = commentContent.replaceAll("<br>", "\n");
                 qnaReplyCommentDTO.setContent(commentContent);
@@ -344,7 +374,7 @@ public class QnaController {
         }
     }
 
-    // 게시글 수정
+    /* 게시글 수정 */
     @PostMapping("/update")
     public String update(@ModelAttribute QnaDTO qnaDTO,
                          @ModelAttribute QnaTopicDTO qnaTopicDTO,
@@ -355,6 +385,7 @@ public class QnaController {
         String content = updateQnaDTO.getContent();
         content = content.replaceAll("<br>", "\r\n");
         updateQnaDTO.setContent(content);
+
 
         TopicDTO updateTopicDTO = qnaService.updateQnaTopic(qnaDTO.getId(), qnaTopicDTO);
 
@@ -380,6 +411,10 @@ public class QnaController {
             JobDTO replyJob = userService.findJob(dto.getUserId());
             dto.setJobName(replyJob.getName());
 
+            /* 날짜 변환하기 */
+            String formatDateTime = StringToDate.formatDateTime(String.valueOf(dto.getRegDate()));
+            dto.setFormattedDate(formatDateTime);
+
 
             // 답변에 달린 댓글 가져오기
             List<QnaReplyCommentDTO> qnaReplyCommentDTOList = qnaReplyCommentService.findAll(dto.getId());
@@ -392,6 +427,10 @@ public class QnaController {
 
                 JobDTO commentJob = userService.findJob(qnaReplyCommentDTO.getUserId());
                 qnaReplyCommentDTO.setJobName(commentJob.getName());
+
+                /* 날짜 변환하기 */
+                String formatDateTimeComment = StringToDate.formatDateTime(String.valueOf(qnaReplyCommentDTO.getRegDate()));
+                qnaReplyCommentDTO.setFormattedDate(formatDateTimeComment);
             }
             dto.setCommentList(commentList);
 
@@ -452,6 +491,10 @@ public class QnaController {
         if (qnaTagsDTO != null) {
             updateQnaDTO.setHashTag(qnaTagsDTO.getTag());
         }
+
+        /* 베스트 답변 pk 리스트 조회 */
+        List<Long> bestReplyPkList = qnaReplyService.getBestReplyList();
+        model.addAttribute("bestReplyPkList", bestReplyPkList);
 
 
         return "qna/detail";

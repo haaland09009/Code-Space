@@ -12,38 +12,40 @@ import java.time.LocalDateTime;
 @ToString
 public class NotificationDTO {
     private Long id;
-    private Long userId; // 수신자
-    private Long senderId; // 발신자
-    private String notType;
-    private Long notContentId;
-    private String notUrl; // url
-    private LocalDateTime readDate; // 읽은 날짜
+    private Long notId;
+    private Long receiver;
+    private Long sender;
+    private Long entityId;
+    private String notUrl;
+    private LocalDateTime readDate;
+    private String content;
+    private LocalDateTime regDate;
 
 
-    private String sender;
-    private String sentence;
-    private LocalDateTime occurDate;
-    // 발신자
     private int fileAttached;
     private String storedFileName;
+    private String nickname;
+
+    private String formattedDate;
+
 
     public static NotificationDTO toNotificationDTO(NotificationEntity notificationEntity) {
         NotificationDTO notificationDTO = new NotificationDTO();
         notificationDTO.setId(notificationEntity.getId());
-        notificationDTO.setUserId(notificationEntity.getUserEntity().getId());
-        notificationDTO.setSenderId(notificationEntity.getSenderId());
-        notificationDTO.setNotType(notificationEntity.getNotType());
-        if (notificationEntity.getNotType().equals("projectComment")) {
-            notificationDTO.setNotContentId(notificationEntity.getProjectCommentEntity().getId());
-        } else if (notificationEntity.getNotType().equals("qnaReply")) {
-            notificationDTO.setNotContentId(notificationEntity.getQnaReplyEntity().getId());
-        } else if (notificationEntity.getNotType().equals("qnaReplyComment")) {
-            notificationDTO.setNotContentId(notificationEntity.getQnaReplyCommentEntity().getId());
-        }
+        notificationDTO.setNotId(notificationEntity.getNotTypeEntity().getId());
+        notificationDTO.setReceiver(notificationEntity.getReceiver().getId());
+        notificationDTO.setSender(notificationEntity.getSender().getId());
+        notificationDTO.setEntityId(notificationEntity.getEntityId());
         notificationDTO.setNotUrl(notificationEntity.getNotUrl());
-        notificationDTO.setReadDate(notificationEntity.getReadDate());
+        notificationDTO.setContent(notificationEntity.getContent());
+        notificationDTO.setRegDate(notificationEntity.getRegDate());
 
-
+        /* 알림 발신 사용자 정보 */
+        notificationDTO.setFileAttached(notificationEntity.getSender().getFileAttached());
+        if (notificationEntity.getSender().getFileAttached() == 1) {
+            notificationDTO.setStoredFileName(notificationEntity.getSender().getUserImageFileEntityList().get(0).getStoredFileName());
+        }
+        notificationDTO.setNickname(notificationEntity.getSender().getNickname());
         return notificationDTO;
     }
 }

@@ -23,8 +23,10 @@ public class ProjectCommentService {
     private final UserRepository userRepository;
     private final ProCmtLikeRepository proCmtLikeRepository;
     private final ProCmtDisLikeRepository proCmtDisLikeRepository;
+    private final NotTypeRepository notTypeRepository;
+    private final NotificationRepository notificationRepository;
 
-    // 댓글 작성
+    /* 댓글 작성하기 */
     public Long save(ProjectCommentDTO projectCommentDTO) {
         Optional<ProjectEntity> optionalProjectEntity =
                 projectRepository.findById(projectCommentDTO.getProjectId());
@@ -58,8 +60,14 @@ public class ProjectCommentService {
         return projectCommentRepository.countByProjectEntity(projectEntity);
     }
 
-    // 댓글 삭제
+    /* 댓글 삭제 */
+    @Transactional
     public void deleteById(Long id) {
+        /* 알림 삭제 */
+        NotTypeEntity notTypeEntity = notTypeRepository.findByName("project_comment").get();
+        Long notId = notTypeEntity.getId();
+        notificationRepository.deleteNotification(notId, id);
+
         projectCommentRepository.deleteById(id);
     }
 

@@ -28,8 +28,8 @@
                     <div class="row mt-4 fw-semibold">
                         <div class="col fs-22">
                             <a href="/project" class="text-secondary tab-link" id="projectLink" >프로젝트 / 스터디 찾기</a>
-                            <a href="/qna" id="qnaLink" class="ms-4 text-secondary tab-link" >Q&A</a>
-                            <a class="ms-4 text-secondary tab-link" id="noticeLink" > 공지사항</a>
+                            <a href="/qna"  class="ms-4 text-secondary tab-link" id="qnaLink">Q&A</a>
+                            <a href="/notice" class="ms-4 text-secondary tab-link" id="noticeLink" > 공지사항</a>
                         </div>
 
                     </div>
@@ -63,20 +63,27 @@
                             <div style="position: relative;">
                                 <i class="bi bi-bell alarmBell fs-2 ms-1" style="cursor:pointer;"
                                 id="dropAlarmButton" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                                <div class="pinkCircle" style="display: none; position: absolute; left: 25px; top: -1px;" id="notReadNoticeBox">
+                                    <span class="fw-semibold mt-n1" id="notReadNoticeCount"></span>
+                                </div>
                                 <div class="dropdown-menu row bg-light Small shadow" aria-labelledby="dropAlarmButton" style="width: 520px">
                                     <div class="col">
 
                                         <div class="row">
-                                            <div class="col p-1 fw-semibold border-bottom border-1">
-                                                <span class="ms-3 fs-18" style="position: relative; bottom: 3px;"> 알림 </span>
+                                            <div class="col p-2 fw-medium border-bottom border-1">
+                                                <span class="ms-4 fs-5" style="position: relative; bottom: 3px;"> 읽지 않은 알림 </span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col fs-18 bg-white">
-                                                <div class="row mt-2 mb-2"></div>
-                                                <!---->
+
                                                 <div id="notification-list"></div>
 
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col text-center fs-18">
+                                                알림 모두 확인하기
                                             </div>
                                         </div>
                                     </div>
@@ -141,53 +148,6 @@
  /*]]>*/
 
 
-  const getNotificationList = () => {
-        $.ajax({
-         type: "get",
-         url: "/notification/findAll/" + sessionId,
-         success: function(res) {
-            let output = "";
-             if (res == null) {
-                output += '<div class="text-center mt-3">알림이 존재하지 않습니다.</div>';
-            } else {
-              for (let i in res) {
-                output += '<a href="' + res[i].notUrl + '">';
-                output += '<div class="row mt-2">';
-                output += '<div class="col ms-3">';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                if (res[i].fileAttached == 0) {
-                    output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 30px; height: 30px; position: relative; top: 4px">';
-                } else if (res[i].fileAttached == 1) {
-                    output += '<img class="rounded-circle" src="/upload/' + res[i].storedFileName + '" style="width: 30px; height: 30px; position: relative; top: 4px">';
-                }
-                output += '</div>';
-                output += '<div class="col ms-2 fw-semibold">' + res[i].sender + '</div>';
-                output += '<div class="col text-end text-secondary me-1">' + formatDateTime(res[i].occurDate) + '</div>';
-                output += '</div>';
-
-                output += '<div class="row">';
-                output += '<div class="col-1">';
-                output += '</div>';
-                output += '<div class="col ms-2">' + res[i].sentence + '</div>';
-                output += '</div>';
-
-                output += '<div class="border-bottom mt-2">' + '</div>';
-
-                output += '</div>';
-                output += '</div>';
-                output += '</a>';
-                }
-            }
-            document.getElementById('notification-list').innerHTML = output;
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
-
 
     const formatDateTime = (dateString) => {
 
@@ -246,9 +206,7 @@
 
 
 window.addEventListener("DOMContentLoaded", function(){
-    if (sessionId != 0) {
-        getNotificationList();
-    }
+
  });
 });
 

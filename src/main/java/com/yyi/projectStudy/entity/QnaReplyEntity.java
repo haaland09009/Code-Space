@@ -48,8 +48,6 @@ public class QnaReplyEntity extends BaseEntity {
     @OneToMany(mappedBy = "qnaReplyEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
     private List<QnaReplyCommentEntity> qnaReplyCommentEntityList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "qnaReplyEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
-    private List<NotificationEntity> notificationEntityList = new ArrayList<>();
 
     public static QnaReplyEntity toQnaReplyEntity(QnaReplyDTO qnaReplyDTO, QnaEntity qnaEntity,
                                                   UserEntity userEntity) {

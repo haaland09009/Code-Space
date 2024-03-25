@@ -459,22 +459,25 @@ const alertLikeCheckModal = () => {
 
 
 
-    // 메시지 전송
+    /* 게시글 작성자에게 메시지 전송하기 */
     const sendMessageToWriter = () => {
 
         if (sessionId == 0) {
             location.href = "/user/loginPage";
             return;
         }
+
         const content = document.querySelector("#messageToWriterContent");
         const alertBox = document.querySelector("#alertMessageToWriterBox");
 
+        /* 내용이 입력되면 경고창 숨기기 */
         content.addEventListener("input", () => {
             if (content.value.trim() !== "") {
-                alertBox.style.display = "none"; // 내용이 입력되면 alertBox를 숨깁니다.
+                alertBox.style.display = "none";
             }
         });
 
+        /* 내용을 입력하지 않으면 경고창 표시 */
         if (content.value.trim() == "") {
             alertBox.style.display = "block";
             content.focus();
@@ -490,19 +493,18 @@ const alertLikeCheckModal = () => {
            },
             success: function(res) {
                 if (res == "ok") {
-                    // 성공시
+                    /* 전송 성공 */
+                    content.value = "";
 
-                     content.value = "";
-
-                     const sendSuccessModal = bootstrap.Modal.getOrCreateInstance("#sendSuccessModal");
+                    const sendSuccessModal = bootstrap.Modal.getOrCreateInstance("#sendSuccessModal");
 	                sendSuccessModal.show();
-
 
                      setTimeout(function() {
                         sendSuccessModal.hide();
                     }, 2000);
+
                } else {
-                  // 코드 추가
+                  /* 만약 메시지를 보냈을 때 회원 탈퇴된 경우를 생각해야함 */
                    return;
                }
            },

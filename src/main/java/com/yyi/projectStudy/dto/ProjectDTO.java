@@ -33,11 +33,12 @@ public class ProjectDTO {
     private Long commentCount;
     private List<String> positionList = new ArrayList<>();
     private List<String> techList = new ArrayList<>();
-//    private String techList;
     private String projectStudy;
     private int clipCount;
+    private String formattedDate;
 
     private Long remainingDays;
+
 
     public ProjectDTO(ProjectEntity projectEntity) {
         this.id = projectEntity.getId();

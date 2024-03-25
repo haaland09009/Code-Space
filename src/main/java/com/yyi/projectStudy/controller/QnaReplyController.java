@@ -20,24 +20,25 @@ public class QnaReplyController {
     private final QnaReplyService qnaReplyService;
     private final QnaReplyCommentService qnaReplyCommentService;
     private final QnaService qnaService;
-    private final NotificationService notificationService;
     private final UserService userService;
+    private final NotificationService notificationService;
 
 
-    // 답변 작성
+    /* 답변 작성 */
     @PostMapping("/save")
     public ResponseEntity save(@ModelAttribute QnaReplyDTO qnaReplyDTO) {
-        // enter 처리
+        /* enter 처리 */
         String content = qnaReplyDTO.getContent();
         content = content.replaceAll("\r\n", "<br>");
         qnaReplyDTO.setContent(content);
-        //
+
 
         Long replyId = qnaReplyService.save(qnaReplyDTO);
         if (replyId != null) {
             List<QnaReplyDTO> qnaReplyDTOList = qnaReplyService.findAll(qnaReplyDTO.getQnaId());
-            // enter 처리
+
             for (QnaReplyDTO dto : qnaReplyDTOList) {
+                /* enter 처리 */
                 String replyContent = dto.getContent();
                 replyContent = replyContent.replaceAll("<br>", "\n");
                 dto.setContent(replyContent);
@@ -46,18 +47,14 @@ public class QnaReplyController {
                 dto.setJobName(replyJob.getName());
             }
 
-            // 답변 작성 - 알림 넣기
+            /* 알림 넣기 */
             QnaDTO qnaDTO = qnaService.findById(qnaReplyDTO.getQnaId());
             NotificationDTO notificationDTO = new NotificationDTO();
-            if (!qnaReplyDTO.getUserId().equals(qnaDTO.getUserId())) {
-                notificationDTO.setUserId(qnaDTO.getUserId()); // 수신자 id
-                notificationDTO.setSenderId(qnaReplyDTO.getUserId()); // 발신자 id
-                notificationDTO.setNotType("qnaReply"); // 알림 종류
-                notificationDTO.setNotContentId(replyId);
-                notificationDTO.setNotUrl("/qna/" + qnaDTO.getId());
-                notificationService.saveQnaReply(notificationDTO, replyId);
-            }
-
+            notificationDTO.setReceiver(qnaDTO.getUserId()); // 수신자 pk
+            notificationDTO.setSender(qnaReplyDTO.getUserId()); // 발신자 pk
+            notificationDTO.setEntityId(replyId); // 답변 pk
+            notificationDTO.setNotUrl("/qna/" + qnaDTO.getId());
+            notificationService.saveQnaReply(notificationDTO);
 
             return new ResponseEntity<>(qnaReplyDTOList, HttpStatus.OK);
         } else {
@@ -66,7 +63,7 @@ public class QnaReplyController {
     }
 
 
-    // 답글 조회
+    /* 답변 목록 조회 */
     @GetMapping("/getReplyList/{qnaId}")
     public ResponseEntity getReplyList(@PathVariable("qnaId") Long qnaId, HttpSession session) {
         UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
@@ -117,7 +114,7 @@ public class QnaReplyController {
         }
     }
 
-    // 답변 삭제
+    /* 답변 삭제 */
     @PostMapping("/delete/{id}")
     public @ResponseBody void delete(@PathVariable("id") Long id) {
         qnaReplyService.deleteById(id);

@@ -129,5 +129,17 @@ public interface QnaRepository extends JpaRepository<QnaEntity, Long> {
             "   having count(qr.qna_id) = 0)", nativeQuery = true)
     List<Long> getNoReplyQnaList();
 
+/*    select * from qna_table
+    where lower(title) like '%'|| '합격' ||'%'
+    or lower(content) like '%'|| '합격' ||'%'
+    order by id desc*/
+    /* 검색을 통한 조회 */
+    @Query(value = "select * from qna_table\n" +
+            "where lower(title) like '%'|| :searchWord ||'%'\n" +
+            "or lower(content) like '%'|| :searchWord ||'%'\n" +
+            "order by id desc", nativeQuery = true)
+    List<QnaEntity> findByTitleOrContent(@Param("searchWord") String keyword);
+
+
 
 }
