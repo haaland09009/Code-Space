@@ -100,7 +100,7 @@ const alertLikeCheckModal = () => {
          success: function(comments) {
              let output = "";
              for (let i in comments) {
-                 output += '<div class="row mb-2">';
+                 output += '<div class="row mb-2" id="comment_' + comments[i].id + '">';
                  output += '<div class="col ms-1">';
                  output += '<div class="row">';
                  output += '<div class="col">';
@@ -196,7 +196,9 @@ const alertLikeCheckModal = () => {
                  output += '</div>';
                  output += '</div>';
                  output += '<div class="row mt-3" id="commentContent_' + comments[i].id + '">';
-                 output += '<div class="col ms-2 boardContent fs-5">' + comments[i].content + '</div>';
+                 output += '<div class="col ms-2">';
+                 output += '<span class="boardContent" id="commentSpan_' + comments[i].id + '">' + comments[i].content + '</span>';
+                 output += '</div>';
                  output += '</div>';
 
                  <!-- 답글 작성 -->
@@ -716,3 +718,32 @@ const alertLikeCheckModal = () => {
             }
          });
    }
+
+
+   /* 댓글 위치 스크롤 이동 */
+   window.onload = function() {
+       /* URL에서 댓글 위치를 가져온다. (예: http://localhost:8081/project/149#comment_342) */
+       const url = window.location.href;
+       const commentIndex = url.indexOf("#");
+       if (commentIndex != -1) { // URL에 #이 포함되어 있는 경우
+          const location = url.substring(commentIndex + 1); // # 이후의 문자열을 가져온다.
+
+          /* 댓글 위치로 스크롤 이동 */
+          const commentElement = document.getElementById(location);
+          if (commentElement) {
+              commentElement.scrollIntoView({ behavior: "smooth", block: "center" }); // 댓글 위치로 스크롤 이동
+          }
+          /* comment_342에서 "_"를 기준으로 분리하여 두 번째 요소인 342를 가져온다.*/
+           const commentId = location.split("_")[1];
+          /* 효과를 주고 싶은 요소에 highlight 클래스 추가 */
+          const commentSpan = document.querySelector("#commentSpan_" + commentId);
+          if (commentSpan) {
+              commentSpan.classList.add("highlight");
+          }
+          /* 2초 후에 highlight 클래스 제거하고 fade-out 클래스 추가 */
+          setTimeout(function() {
+                commentSpan.classList.remove("highlight");
+            }, 4000);
+
+      }
+   };

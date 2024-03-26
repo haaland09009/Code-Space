@@ -37,12 +37,16 @@ public class ProjectCommentController {
 
             /* 알림 넣기 */
             ProjectDTO projectDTO = projectService.findById(projectCommentDTO.getProjectId());
-            NotificationDTO notificationDTO = new NotificationDTO();
-            notificationDTO.setReceiver(projectDTO.getUserId()); // 수신자 pk
-            notificationDTO.setSender(projectCommentDTO.getUserId()); // 발신자 pk
-            notificationDTO.setEntityId(commentId); // 댓글 pk
-            notificationDTO.setNotUrl("/project/" + projectDTO.getId());
-            notificationService.saveProjectComment(notificationDTO, projectDTO);
+            /* 게시물 작성자와 댓글을 작성한 회원이 다른 경우에만 알림을 추가한다.*/
+            if (!projectDTO.getUserId().equals(projectCommentDTO.getUserId())) {
+                NotificationDTO notificationDTO = new NotificationDTO();
+                notificationDTO.setReceiver(projectDTO.getUserId()); // 수신자 pk
+                notificationDTO.setSender(projectCommentDTO.getUserId()); // 발신자 pk
+                notificationDTO.setEntityId(commentId); // 댓글 pk
+                notificationDTO.setNotUrl("/project/" + projectDTO.getId() + "#comment_" + commentId);
+                notificationService.saveProjectComment(notificationDTO, projectDTO);
+            }
+
 
 
             return new ResponseEntity<>(projectCommentDTOList, HttpStatus.OK);

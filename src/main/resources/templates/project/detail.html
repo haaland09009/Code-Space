@@ -414,7 +414,7 @@
 
                                     <!-- 댓글 목록 -->
                                     <div id="comment-list">
-                                        <div class="row mb-2" th:each="comment: ${commentList}">
+                                        <div class="row mb-2" th:each="comment: ${commentList}" th:id="'comment_' + ${comment.id}">
                                             <div class="col ms-1">
 
                                                 <!-- 댓글 작성 정보 -->
@@ -521,7 +521,9 @@
 
                                                 <!-- 댓글 내용 정보 -->
                                                 <div class="row mt-3" th:id="'commentContent_' + ${comment.id}">
-                                                    <div class="col ms-2 boardContent fs-5" th:text="${comment.content}">
+                                                    <div class="col ms-2">
+                                                        <span class="boardContent" th:text="${comment.content}"
+                                                        th:id="'commentSpan_' + ${comment.id}"></span>
                                                     </div>
                                                 </div>
                                                 <!-- 댓글 내용 정보 -->

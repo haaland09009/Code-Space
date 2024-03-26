@@ -15,11 +15,12 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
     @Query(value = "select count(*) from NotificationEntity where receiver = :userEntity and readDate is null")
     int notReadNoticeCount(UserEntity userEntity);
 
-    /*@Query(value = "select count(*) from notification_table where receiver_id = :userId and read_date is null", nativeQuery = true)
-    int notReadNoticeCount(@Param("userId") Long userId);*/
 
     /* 회원 당 알림 조회 */
     List<NotificationEntity> findByReceiverOrderByIdDesc(UserEntity userEntity);
+
+    /* 회원 당 안 읽은 알림만 조회 */
+    List<NotificationEntity> findByReceiverAndReadDateIsNullOrderByIdDesc(UserEntity userEntity);
 
 
 
@@ -30,4 +31,8 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
     void deleteNotification(@Param("notId") Long notId, @Param("entityId") Long id);
 
 
+    /* 알림 읽음 처리 */
+    @Modifying
+    @Query(value = "update NotificationEntity set readDate = sysdate where id = :id")
+    void updateAsRead(Long id);
 }

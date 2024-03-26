@@ -195,14 +195,19 @@
                                     <div class="row mt-2">
                                         <div class="col ps-0 fs-18">
                                             <textarea name=""  cols="10" rows="4" id="replyContent"
-                                                     class="form-control form-control-no-border fs-18"
+                                                     class="form-control form-control-no-border fs-5"
                                             placeholder="답변으로 나누고 싶은 경험이 있으신가요?"
-                                            th:if="${session.userDTO != null}" onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
+                                            th:if="${session.userDTO != null  && session.userDTO.id != qna.userId}" onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
                                             <textarea name=""  cols="10" rows="4"
                                                       class="form-control form-control-no-border fs-18 disabled"
                                                       placeholder="로그인 후 답변을 작성하실 수 있습니다."
                                                       style="pointer-events: none;"
                                             th:if="${session.userDTO == null}"></textarea>
+                                            <textarea name=""  cols="10" rows="4"
+                                                      class="form-control form-control-no-border fs-18 disabled"
+                                                      placeholder="회원님이 작성한 게시물입니다."
+                                                      style="pointer-events: none;"
+                                                      th:if="${session.userDTO != null && session.userDTO.id == qna.userId}"></textarea>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -211,12 +216,22 @@
                                         </div>
                                     </div>
                                     <div class="row mt-3 mb-3">
+                                        <div class="col text-danger fs-5" id="noReplyContentAlert" style="display: none;"
+                                        th:if="${session.userDTO != null && session.userDTO.id != qna.userId}">
+                                            <i class="bi bi-exclamation-circle"></i>
+                                            <span class="ms-1">
+                                                내용을 최소 1자 이상 입력해주세요.
+                                            </span>
+                                        </div>
                                         <div class="col text-end">
                                             <button class="btn mainButton fs-5 me-2 px-3 py-2" onclick="replyReq()"
-                                                    th:if="${session.userDTO != null}">답변 등록하기
+                                                    th:if="${session.userDTO != null && session.userDTO.id != qna.userId}">답변 등록하기
                                             </button>
                                             <button class="btn mainButton disabled fs-5 me-2 px-3 py-2 "
                                                     th:if="${session.userDTO == null}">답변 등록하기
+                                            </button>
+                                            <button class="btn mainButton disabled fs-5 me-2 px-3 py-2 "
+                                                    th:if="${session.userDTO != null && session.userDTO.id == qna.userId}">답변 등록하기
                                             </button>
                                         </div>
                                     </div>
@@ -251,7 +266,8 @@
 
                         </div>
                     </div>
-                    <div class="row mt-4 mb-5" th:each="reply : ${replyList}" th:if="${replyCount != 0}">
+                    <div class="row mt-4 mb-5" th:each="reply : ${replyList}" th:if="${replyCount != 0}"
+                         th:id="'reply_' + ${reply.id}">
                         <div class="col ms-3 border border-1">
 
                             <div class="row mt-4 ms-3" th:if="${bestReplyPkList.contains(reply.id)}">
@@ -400,7 +416,7 @@
                             <!-- 댓글 폼 -->
                             <!-- 댓글 -->
                             <div th:id="'comment-list_' + ${reply.id}">
-                            <div class="row mt-4 border-top" th:each="comment : ${reply.commentList}">
+                            <div class="row mt-4 border-top" th:each="comment : ${reply.commentList}" th:id="'comment_' + ${comment.id}">
                                 <div class="col ms-5">
 
                                     <div class="row mt-3">

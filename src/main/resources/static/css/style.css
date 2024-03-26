@@ -273,3 +273,24 @@ textarea {
 mark {
     padding: 0;
 }
+
+/* 강조하기 */
+.highlight {
+    border-radius: 3px;
+    animation: fadeOut 3s ease; /* 2초 동안 서서히 흰색으로 변하는 애니메이션 적용 */
+}
+
+/* 강조하기 - fadeOut 애니메이션 설정 */
+@keyframes fadeOut {
+    from {
+        background-color: rgba(255, 255, 0, 1); /* 시작 색상: 노란색 */
+    }
+    to {
+        background-color: rgba(255, 255, 255, 0); /* 종료 색상: 투명한 흰색 */
+    }
+}
+
+/* 읽은 알림은 화면 옅어지게 */
+.asRead {
+    opacity: 0.6;
+}

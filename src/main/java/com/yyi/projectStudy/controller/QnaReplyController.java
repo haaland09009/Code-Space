@@ -53,8 +53,8 @@ public class QnaReplyController {
             notificationDTO.setReceiver(qnaDTO.getUserId()); // 수신자 pk
             notificationDTO.setSender(qnaReplyDTO.getUserId()); // 발신자 pk
             notificationDTO.setEntityId(replyId); // 답변 pk
-            notificationDTO.setNotUrl("/qna/" + qnaDTO.getId());
-            notificationService.saveQnaReply(notificationDTO);
+            notificationDTO.setNotUrl("/qna/" + qnaDTO.getId() + "#reply_" + replyId);
+            notificationService.saveQnaNotice(notificationDTO, "qna_reply");
 
             return new ResponseEntity<>(qnaReplyDTOList, HttpStatus.OK);
         } else {

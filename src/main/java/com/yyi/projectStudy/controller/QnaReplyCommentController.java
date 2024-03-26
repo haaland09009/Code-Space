@@ -1,6 +1,7 @@
 package com.yyi.projectStudy.controller;
 
 import com.yyi.projectStudy.dto.*;
+import com.yyi.projectStudy.service.NotificationService;
 import com.yyi.projectStudy.service.QnaReplyCommentService;
 import com.yyi.projectStudy.service.QnaReplyService;
 import com.yyi.projectStudy.service.UserService;
@@ -19,12 +20,13 @@ public class QnaReplyCommentController {
     private final QnaReplyCommentService qnaReplyCommentService;
     private final QnaReplyService qnaReplyService;
     private final UserService userService;
+    private final NotificationService notificationService;
 
-    // 댓글 작성
+    /* 댓글 작성 */
     @PostMapping("/save")
     public ResponseEntity save(@ModelAttribute QnaReplyCommentDTO qnaReplyCommentDTO) {
 
-        // enter 처리
+        /* enter 처리 */
         String content = qnaReplyCommentDTO.getContent();
         content = content.replaceAll("\r\n", "<br>");
         qnaReplyCommentDTO.setContent(content);
@@ -33,6 +35,17 @@ public class QnaReplyCommentController {
         if (commentId != null) {
             List<QnaReplyCommentDTO> qnaReplyCommentDTOList =
                     qnaReplyCommentService.findAll(qnaReplyCommentDTO.getReplyId());
+
+            /* 알림 넣기 */
+            QnaReplyDTO qnaReplyDTO = qnaReplyService.findById(qnaReplyCommentDTO.getReplyId());
+            if (!qnaReplyDTO.getUserId().equals(qnaReplyCommentDTO.getUserId())) {
+                NotificationDTO notificationDTO = new NotificationDTO();
+                notificationDTO.setReceiver(qnaReplyDTO.getUserId()); // 수신자 pk
+                notificationDTO.setSender(qnaReplyCommentDTO.getUserId()); // 발신자 pk
+                notificationDTO.setEntityId(commentId); // 댓글 pk
+                notificationDTO.setNotUrl("/qna/" + qnaReplyDTO.getQnaId() + "#comment_" + commentId);
+                notificationService.saveQnaNotice(notificationDTO, "qna_reply_comment");
+            }
 
             return new ResponseEntity<>(qnaReplyCommentDTOList, HttpStatus.OK);
         } else {
@@ -70,7 +83,7 @@ public class QnaReplyCommentController {
         return qnaReplyDTO.getId();
     }
 
-    // 댓글 삭제
+    /* 댓글 삭제 */
     @PostMapping("/delete/{id}")
     public @ResponseBody void delete(@PathVariable("id") Long id) {
         qnaReplyCommentService.deleteById(id);

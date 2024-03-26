@@ -12,14 +12,23 @@
   }
 
 
-  // 답변 작성
+  /* 답변 작성 */
   const replyReq = () => {
     const qnaId = boardId;
     const content = document.querySelector("#replyContent");
     const userId = sessionId;
 
+    const noReplyContentAlert = document.querySelector("#noReplyContentAlert");
+
+    content.addEventListener("input", () => {
+       if (content.value.trim() !== "") {
+          noReplyContentAlert.style.display = "none"; // 내용이 입력되면 alertBox를 숨깁니다.
+       }
+   });
+
     if (content.value.trim() == "") {
-         alert("내용을 입력하세요.");
+         noReplyContentAlert.style.display = "block";
+//         alert("내용을 입력하세요.");
          content.focus();
          return;
      }
@@ -63,7 +72,7 @@
             output += '</div>';
          } else {
           for (let i in replies) {
-            output += '<div class="row mt-4 mb-5">';
+            output += '<div class="row mt-4 mb-5" id="reply_' + replies[i].id + '">';
             output += '<div class="col ms-3 border border-1">';
 
             if (bestReplyPkList.includes(replies[i].id)) {
@@ -203,7 +212,7 @@
             output += '<div id="comment-list_' + replies[i].id + '">';
             // 여기 사이에 코드 넣어야함
             for (let c in replies[i].commentList) {
-                output += '<div class="row mt-4 border-top">';
+                output += '<div class="row mt-4 border-top" id="comment_' + replies[i].commentList[c].id + '">';
                 output += '<div class="col ms-5">';
                 output += '<div class="row mt-3">';
                 output += '<div class="col-1 user-info-image" onclick="clickUserInfoModal('+ replies[i].commentList[c].userId  +')">';
@@ -788,7 +797,7 @@
          success: function(comments) {
           let output = "";
           for (let i in comments) {
-            output += '<div class="row mt-4 border-top">';
+            output += '<div class="row mt-4 border-top" id="comment_' + comments[i].id + '">';
             output += '<div class="col ms-5">';
             output += '<div class="row mt-3">';
             output += '<div class="col-1  user-info-image" onclick="clickUserInfoModal('+ comments[i].userId  +')">';
@@ -1163,4 +1172,46 @@ window.addEventListener("DOMContentLoaded", function(){
          checkQnaLikeForColor(boardId);
      }
 
+  /* URL에서 댓글 위치를 가져온다. (예: http://localhost:8081/project/149#comment_342) */
+     const url = window.location.href;
+     const commentIndex = url.indexOf("#");
+     if (commentIndex != -1) { // URL에 #이 포함되어 있는 경우
+        const location = url.substring(commentIndex + 1); // # 이후의 문자열을 가져온다.
+
+        /* 댓글 위치로 스크롤 이동 */
+        const commentElement = document.getElementById(location);
+        if (commentElement) {
+            commentElement.scrollIntoView({ behavior: "smooth", block: "center" }); // 댓글 위치로 스크롤 이동
+        }
+        /* comment_342에서 "_"를 기준으로 분리하여 두 번째 요소인 342를 가져온다.*/
+         const contentId = location.split("_")[1];
+
+
+        /* 효과를 주고 싶은 요소에 highlight 클래스 추가 */
+        const replySpan = document.querySelector("#replyContentBox_" + contentId);
+        const commentSpan = document.querySelector("#commentOriginalContent_" + contentId);
+
+        let focusSpan = null;
+        if (replySpan) {
+            focusSpan = replySpan;
+        } else if (commentSpan) {
+            focusSpan = commentSpan;
+        }
+        focusSpan.classList.add("highlight");
+        /* 2초 후에 highlight 클래스 제거하고 fade-out 클래스 추가 */
+        setTimeout(function() {
+            focusSpan.classList.remove("highlight");
+        }, 4000);
+
+
+
+    }
+
+
 });
+
+
+   /* 댓글 위치 스크롤 이동 */
+   window.onload = function() {
+
+   };

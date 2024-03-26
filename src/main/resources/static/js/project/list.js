@@ -97,3 +97,13 @@
     });
 
 
+
+    /* 검색 */
+    document.querySelector("#searchInput").addEventListener("keypress", function(event) {
+      if (event.keyCode === 13) {
+          event.preventDefault(); // 기본 제출 방지
+          document.querySelector("#searchForm").submit(); // 폼 제출
+      }
+  });
+
+

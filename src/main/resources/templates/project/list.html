@@ -52,11 +52,7 @@
                         팀 프로젝트
                     </div>
                 </a>
-          <!--      <a href="/project/pro" class="menu-link2 text-secondary fw-medium">
-                    <div class="col fs-4">
-                        팀 프로젝트
-                    </div>
-                </a>-->
+
             </div>
 
             <div class="row mt-4">
@@ -66,11 +62,7 @@
                         스터디
                     </div>
                 </a>
-           <!--     <a href="/project/study" class="menu-link3 text-secondary fw-medium">
-                    <div class="col fs-4" >
-                        스터디
-                    </div>
-                </a>-->
+
             </div>
 
             <div class="row mt-5">
@@ -157,15 +149,18 @@
 
             </div>
 
-            <div class="row mt-4">
-                <div class="col-10">
-                    <input type="text" class="form-control p-3 fs-5"
-                    placeholder="관심있는 팀 프로젝트를 검색해보세요!">
-                </div>
-                <div class="col d-grid pe-0">
-                    <button class="btn orangeButton fs-5">검색</button>
-                </div>
-            </div>
+            <form id="searchForm" action="/project" method="get">
+                <div class="row mt-4">
+                    <div class="col-10">
+                        <input type="text" class="form-control p-3 fs-5"
+                        name="searchWord" id="searchInput"
+                        placeholder="관심있는 팀 프로젝트나 스터디를 검색해보세요!">
+                    </div>
+                    <div class="col d-grid pe-0">
+                        <button class="btn orangeButton fs-5">검색</button>
+                    </div>
+                 </div>
+            </form>
 
             <!-- 정렬 -->
             <div class="row mt-5 text-secondary">

@@ -2,14 +2,8 @@ package com.yyi.projectStudy.service;
 
 import com.yyi.projectStudy.dto.QnaReplyCommentDTO;
 import com.yyi.projectStudy.dto.QnaReplyDTO;
-import com.yyi.projectStudy.entity.QnaEntity;
-import com.yyi.projectStudy.entity.QnaReplyCommentEntity;
-import com.yyi.projectStudy.entity.QnaReplyEntity;
-import com.yyi.projectStudy.entity.UserEntity;
-import com.yyi.projectStudy.repository.QnaReplyCommentRepository;
-import com.yyi.projectStudy.repository.QnaReplyRepository;
-import com.yyi.projectStudy.repository.QnaRepository;
-import com.yyi.projectStudy.repository.UserRepository;
+import com.yyi.projectStudy.entity.*;
+import com.yyi.projectStudy.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +19,8 @@ public class QnaReplyCommentService {
     private final QnaRepository qnaRepository;
     private final QnaReplyRepository qnaReplyRepository;
     private final UserRepository userRepository;
+    private final NotTypeRepository notTypeRepository;
+    private final NotificationRepository notificationRepository;
 
     // 댓글 작성
     public Long save(QnaReplyCommentDTO qnaReplyCommentDTO) {
@@ -64,8 +60,14 @@ public class QnaReplyCommentService {
     }
 
 
-    // 댓글 삭제
+    /* 댓글 삭제 */
+    @Transactional
     public void deleteById(Long id) {
+        /* 알림 삭제 */
+        NotTypeEntity notTypeEntity = notTypeRepository.findByName("qna_reply_comment").get();
+        Long notId = notTypeEntity.getId();
+        notificationRepository.deleteNotification(notId, id);
+
         qnaReplyCommentRepository.deleteById(id);
     }
 

@@ -25,6 +25,8 @@ public class NotificationDTO {
     private int fileAttached;
     private String storedFileName;
     private String nickname;
+    private String title;
+    private String notContent;
 
     private String formattedDate;
 
@@ -39,6 +41,7 @@ public class NotificationDTO {
         notificationDTO.setNotUrl(notificationEntity.getNotUrl());
         notificationDTO.setContent(notificationEntity.getContent());
         notificationDTO.setRegDate(notificationEntity.getRegDate());
+        notificationDTO.setReadDate(notificationEntity.getReadDate());
 
         /* 알림 발신 사용자 정보 */
         notificationDTO.setFileAttached(notificationEntity.getSender().getFileAttached());

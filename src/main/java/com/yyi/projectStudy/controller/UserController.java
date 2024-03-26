@@ -1,10 +1,8 @@
 package com.yyi.projectStudy.controller;
 
 import com.yyi.projectStudy.dto.*;
-import com.yyi.projectStudy.service.ChatService;
-import com.yyi.projectStudy.service.ProjectService;
-import com.yyi.projectStudy.service.QnaService;
-import com.yyi.projectStudy.service.UserService;
+import com.yyi.projectStudy.service.*;
+import com.yyi.projectStudy.time.StringToDate;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +22,10 @@ public class UserController {
     private final ChatService chatService;
     private final ProjectService projectService;
     private final QnaService qnaService;
+    private final NotificationService notificationService;
+    private final ProjectCommentService projectCommentService;
+    private final QnaReplyService qnaReplyService;
+    private final QnaReplyCommentService qnaReplyCommentService;
 
     /* 로그인 페이지 이동 */
     @GetMapping("/loginPage")
@@ -169,6 +171,73 @@ public class UserController {
 
             model.addAttribute("qnaClipList", qnaClipDTOList);
             return "user/clip";
+        }
+    }
+
+    /* 알림창 조회 */
+    @GetMapping("/notification")
+    public String notificationList(Model model, HttpSession session) {
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+        if (sessionUser == null) {
+            return "redirect:/user/loginPage";
+        } else {
+            List<NotificationDTO> notificationDTOList
+                    = notificationService.findAll(sessionUser.getId(), null);
+            for (NotificationDTO notificationDTO : notificationDTOList) {
+                String notUrl = notificationDTO.getNotUrl();
+                String[] parts = notUrl.split("/");
+                /* ex)  "/project/154#commentId_342"   */
+                String contentPk;
+                if (notUrl.contains("#")) {
+                    // "#commentId_342" 부분을 제거하고 숫자만 추출한다.
+                    contentPk = parts[2].split("#")[0];
+                } else {
+                    // #을 포함하고 있지 않으면 기존의 방식으로 숫자만 가져온다.
+                    contentPk = parts[2];
+                }
+                Long id = Long.parseLong(contentPk); // 문자열을 Long 형으로 변환
+                if (notificationDTO.getNotId() == 1) {
+                    /* 해당 알림이 프로젝트, 스터디 게시물 댓글일 경우 */
+                    ProjectDTO projectDTO = projectService.findById(id);
+
+                    /* 게시글 제목 */
+                    notificationDTO.setTitle(projectDTO.getTitle());
+
+                    /* 게시글에 대한 댓글 */
+                    ProjectCommentDTO projectCommentDTO
+                            = projectCommentService.findById(notificationDTO.getEntityId());
+                    notificationDTO.setNotContent(projectCommentDTO.getContent());
+
+                } else if (notificationDTO.getNotId() == 2) {
+                    /* 해당 알림이 qna 답변일 경우 */
+
+                    /* 게시글 제목 */
+                    QnaDTO qnaDTO = qnaService.findById(id);
+                    notificationDTO.setTitle(qnaDTO.getTitle());
+
+                    /* 게시글에 대한 답변 */
+                    QnaReplyDTO qnaReplyDTO = qnaReplyService.findById(notificationDTO.getEntityId());
+                    notificationDTO.setNotContent(qnaReplyDTO.getContent());
+
+                } else if (notificationDTO.getNotId() == 3) {
+                    /* 해당 알림이 qna 답변에 대한 댓글일 경우 */
+
+                    /* 게시글 제목 */
+                    QnaDTO qnaDTO = qnaService.findById(id);
+                    notificationDTO.setTitle(qnaDTO.getTitle());
+
+                    /* 답변에 대한 댓글 */
+                    QnaReplyCommentDTO qnaReplyCommentDTO
+                            = qnaReplyCommentService.findById(notificationDTO.getEntityId());
+                    notificationDTO.setNotContent(qnaReplyCommentDTO.getContent());
+
+                }
+                /* 날짜 변환하기 */
+                String formatDateTime = StringToDate.formatDateTime(String.valueOf(notificationDTO.getRegDate()));
+                notificationDTO.setFormattedDate(formatDateTime);
+            }
+            model.addAttribute("notificationList", notificationDTOList);
+            return "user/notification";
         }
     }
 

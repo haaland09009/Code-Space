@@ -22,8 +22,8 @@ public class NotificationController {
 
     /* 회원 당 알림 조회 */
     @GetMapping("/findAll/{id}")
-    public ResponseEntity findAll(@PathVariable("id") Long id) {
-        List<NotificationDTO> notificationDTOList = notificationService.findAll(id);
+    public ResponseEntity findAll(@PathVariable("id") Long id, String notRead) {
+        List<NotificationDTO> notificationDTOList = notificationService.findAll(id, notRead);
         if (notificationDTOList != null) {
             for (NotificationDTO notificationDTO : notificationDTOList) {
                 /* 날짜 변환하기 */
@@ -42,5 +42,10 @@ public class NotificationController {
         return notificationService.notReadCount(id);
     }
 
+    /* 알림 읽음 처리 */
+    @GetMapping("/asRead/{id}")
+    public @ResponseBody void asRead(@PathVariable("id") Long id) {
+        notificationService.asRead(id);
+    }
 
 }

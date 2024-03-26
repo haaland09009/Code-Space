@@ -93,14 +93,14 @@
     const getNotificationList = () => {
             $.ajax({
              type: "get",
-             url: "/notification/findAll/" + sessionId,
+             url: "/notification/findAll/" + sessionId + "?notRead='Y'",
              success: function(res) {
                 let output = "";
                  if (res.length == 0) {
                     output += '<div class="text-center mt-3 mb-3 fs-5">읽지 않은 알림이 존재하지 않습니다.</div>';
                 } else {
                   for (let i in res) {
-                    output += '<a href="' + res[i].notUrl + '">';
+                    output += '<a href="' + res[i].notUrl + '" onclick="readNotification(' + res[i].id + ')">';
                     output += '<div class="row contentDiv">';
                     output += '<div class="col ms-3 border-bottom">';
 
@@ -137,18 +137,35 @@
          });
       }
 
+       /* 알림 읽기 */
+       const readNotification = (id) => {
+            $.ajax({
+               type: "get",
+               url: "/notification/asRead/" + id,
+               success: function(res) {
+
+
+               }, error: function(err) {
+                   return;
+               }
+            });
+       }
+
        /*  안 읽은 알림 개수  */
       const notReadNoticeCount = (id) => {
          const notReadNoticeBox = document.querySelector("#notReadNoticeBox");
          const notReadNoticeCount = document.querySelector("#notReadNoticeCount");
+         const notReadNoticeCount1 = document.querySelector("#notReadNoticeCount1");
          $.ajax({
            url: "/notification/notReadCount/" + id,
            success: function(res) {
               if (res > 0) {
                  notReadNoticeBox.style.display = "block";
                  notReadNoticeCount.innerText = res;
+                 notReadNoticeCount1.innerText = res;
                } else {
                  notReadNoticeBox.style.display = "none";
+                 notReadNoticeCount1.innerText = "0";
                }
 
            }, error: function(err) {

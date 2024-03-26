@@ -74,7 +74,6 @@ public class QnaService {
         List<QnaEntity> qnaEntityList;
         if (searchWord != null) {
             searchWord = searchWord.toLowerCase();
-            System.out.println("검색 단어 : " + searchWord);
             qnaEntityList = qnaRepository.findByTitleOrContent(searchWord);
         } else {
             qnaEntityList = qnaRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
@@ -338,14 +337,12 @@ public class QnaService {
             Long qnaId = (qnaIdBigDecimal != null) ? qnaIdBigDecimal.longValue() : null;
             Long replyId = (replyIdBigDecimal != null) ? replyIdBigDecimal.longValue() : null;
             Long commentId = (commentIdBigDecimal != null) ? commentIdBigDecimal.longValue() : null;
-//            Long qnaId = (Long) article[0];
-//            Long replyId = (Long) article[1];
-//            Long commentId = (Long) article[2];
+
             String title = (String) article[3];
             java.sql.Timestamp timestamp = (java.sql.Timestamp) article[4];
             LocalDateTime regDate = timestamp.toLocalDateTime();
             String content = (String) article[5];
-            System.out.println("qnaId : " + qnaId + ", replyId : " + replyId + ", commentId : " + commentId);
+
             if (qnaId != null) {
                 qnaArticleDTO.setQnaId(qnaId);
                 qnaArticleDTO.setTitle(title);

@@ -6,6 +6,8 @@ server:
       charset: UTF-8
       force: true
       enabled: true
+    session:
+      timeout: 86400
 
 # database 연동 설정
 spring:
@@ -21,6 +23,9 @@ spring:
       enabled: true
     thymeleaf:
       cache: false
+
+
+
 
 # mybatis
 #mybatis:

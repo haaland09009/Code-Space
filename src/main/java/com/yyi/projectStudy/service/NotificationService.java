@@ -24,10 +24,15 @@ public class NotificationService {
 
     /* 회원 당 알림 조회 */
     @Transactional
-    public List<NotificationDTO> findAll(Long id) {
+    public List<NotificationDTO> findAll(Long id, String notRead) {
         UserEntity userEntity = userRepository.findById(id).get();
-        List<NotificationEntity> notificationEntityList =
-                notificationRepository.findByReceiverOrderByIdDesc(userEntity);
+        List<NotificationEntity> notificationEntityList;
+        if (notRead == null) {
+            notificationEntityList = notificationRepository.findByReceiverOrderByIdDesc(userEntity);
+        } else {
+            notificationEntityList =
+                    notificationRepository.findByReceiverAndReadDateIsNullOrderByIdDesc(userEntity);
+        }
         List<NotificationDTO> notificationDTOList = new ArrayList<>();
         for (NotificationEntity notificationEntity : notificationEntityList) {
             notificationDTOList.add(NotificationDTO.toNotificationDTO(notificationEntity));
@@ -72,10 +77,11 @@ public class NotificationService {
         return notificationRepository.notReadNoticeCount(userEntity);
     }
 
-    /* qna 답변 알림 넣기 */
-    public void saveQnaReply(NotificationDTO notificationDTO) {
+
+    /* qna 알림 넣기 */
+    public void saveQnaNotice(NotificationDTO notificationDTO, String message) {
         /* 알림 타입 pk 찾기 */
-        NotTypeEntity notTypeEntity = notTypeRepository.findByName("qna_reply").get();
+        NotTypeEntity notTypeEntity = notTypeRepository.findByName(message).get();
 
         /* 수신자 불러오기 */
         Long receiverId = notificationDTO.getReceiver();
@@ -86,10 +92,20 @@ public class NotificationService {
         UserEntity sender = userRepository.findById(notificationDTO.getSender()).get();
 
         /* 내용 저장 */
-        notificationDTO.setContent("님이 회원님의 Q&A 게시물에 답변을 작성했습니다.");
+        if (message.equals("qna_reply")) {
+            notificationDTO.setContent("님이 회원님의 Q&A 게시물에 답변을 작성했습니다.");
+        } else if (message.equals("qna_reply_comment")) {
+            notificationDTO.setContent("님이 회원님이 작성하신 Q&A 답변에 댓글을 작성했습니다.");
+        }
         NotificationEntity notificationEntity =
                 NotificationEntity.toNotificationEntity(notificationDTO, notTypeEntity, receiver, sender);
 
         notificationRepository.save(notificationEntity);
+    }
+
+    /* 알림 읽음 처리 */
+    @Transactional
+    public void asRead(Long id) {
+        notificationRepository.updateAsRead(id);
     }
 }
