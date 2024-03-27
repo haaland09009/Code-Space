@@ -136,7 +136,7 @@
                     <div class="row mt-4" th:if="${qna.hashTag != null}">
                         <div class="col">
                             <span class="text-secondary">
-                                <button type="button" class="btn btn-outline-dark me-3"
+                                <button type="button" class="btn btn-outline-dark me-3 fs-18"
                                         th:each="tag, iterStat : ${#strings.replace(qna.hashTag, '\\s*#\\s*', '#').split('#')}" th:if="${!#strings.isEmpty(tag)}">
                                     <span class="text-danger">#</span>
                                     <span th:text="${tag}"></span>
