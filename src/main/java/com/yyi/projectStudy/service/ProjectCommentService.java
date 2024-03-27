@@ -40,7 +40,7 @@ public class ProjectCommentService {
         }
     }
 
-    // 게시글 당 댓글 조회
+    /* 게시글 당 댓글 조회 */
     @Transactional
     public List<ProjectCommentDTO> findAll(Long projectId) {
         ProjectEntity projectEntity = projectRepository.findById(projectId).get();
@@ -53,7 +53,7 @@ public class ProjectCommentService {
         return projectCommentDTOList;
     }
 
-    // 게시글 당 댓글 수 조회
+    /* 게시글의 댓글 수 조회 */
     @Transactional
     public Long count(Long projectId) {
         ProjectEntity projectEntity = projectRepository.findById(projectId).get();
@@ -71,7 +71,7 @@ public class ProjectCommentService {
         projectCommentRepository.deleteById(id);
     }
 
-    // 댓글 하나 조회
+    /* 댓글 하나 조회 */
     @Transactional
     public ProjectCommentDTO findById(Long id) {
         Optional<ProjectCommentEntity> optionalProjectCommentEntity = projectCommentRepository.findById(id);
@@ -83,55 +83,55 @@ public class ProjectCommentService {
         }
     }
 
-    // 본인이 작성한 댓글인지 확인 여부
+    /* 본인이 작성한 댓글인지 확인 */
     public Long isYourComment(Long id) {
         ProjectCommentEntity projectCommentEntity = projectCommentRepository.findById(id).get();
         return projectCommentEntity.getUserEntity().getId();
     }
 
-    // 댓글 좋아요
+    /* 댓글 좋아요 */
     public void commentLike(ProCmtLikeDTO proCmtLikeDTO) {
         Optional<ProjectCommentEntity> optionalProjectCommentEntity = projectCommentRepository.findById(proCmtLikeDTO.getCommentId());
         if (optionalProjectCommentEntity.isPresent()) {
             ProjectCommentEntity projectCommentEntity = optionalProjectCommentEntity.get();
             UserEntity userEntity = userRepository.findById(proCmtLikeDTO.getUserId()).get();
             if (proCmtLikeRepository.countByProjectCommentEntityAndUserEntity(projectCommentEntity, userEntity) > 0) {
-                // 댓글에 이미 좋아요를 누른 상태이면 취소
+                /* 댓글에 이미 좋아요를 누른 상태이면 취소 */
                 Long id = proCmtLikeRepository.findByProjectCommentEntityAndUserEntity(projectCommentEntity, userEntity).get().getId();
                 proCmtLikeRepository.deleteById(id);
             } else {
-                // 좋아요를 누르지 않았다면
+                /* 좋아요를 누르지 않았다면 좋아요 처리 */
                 ProCmtLikeEntity proCmtLikeEntity = ProCmtLikeEntity.toProCmtLikeEntity(projectCommentEntity, userEntity);
                 proCmtLikeRepository.save(proCmtLikeEntity);
             }
         }
     }
 
-    // 댓글 좋아요 수 확인
+    /* 댓글 좋아요 수 확인 */
     public int commentLikeCount(Long id) {
         ProjectCommentEntity projectCommentEntity = projectCommentRepository.findById(id).get();
         return proCmtLikeRepository.countByProjectCommentEntity(projectCommentEntity);
     }
 
-    // 댓글 싫어요
+    /* 댓글 싫어요 */
     public void commentDisLike(ProCmtDisLikeDTO proCmtDisLikeDTO) {
         Optional<ProjectCommentEntity> optionalProjectCommentEntity = projectCommentRepository.findById(proCmtDisLikeDTO.getCommentId());
         if (optionalProjectCommentEntity.isPresent()) {
             ProjectCommentEntity projectCommentEntity = optionalProjectCommentEntity.get();
             UserEntity userEntity = userRepository.findById(proCmtDisLikeDTO.getUserId()).get();
             if (proCmtDisLikeRepository.countByProjectCommentEntityAndUserEntity(projectCommentEntity, userEntity) > 0) {
-                // 댓글에 이미 좋아요를 누른 상태이면 취소
+                /* 댓글에 이미 싫어요를 누른 상태이면 취소 */
                 Long id = proCmtDisLikeRepository.findByProjectCommentEntityAndUserEntity(projectCommentEntity, userEntity).get().getId();
                 proCmtDisLikeRepository.deleteById(id);
             } else {
-                // 좋아요를 누르지 않았다면
+                /* 싫어요를 누르지 않았다면 싫어요 처리 */
                 ProCmtDisLikeEntity proCmtDisLikeEntity = ProCmtDisLikeEntity.toProCmtDisLikeEntity(projectCommentEntity, userEntity);
                 proCmtDisLikeRepository.save(proCmtDisLikeEntity);
             }
         }
     }
 
-    // 댓글 싫어요 수 확인
+    /* 댓글 싫어요 수 확인 */
     public int commentDisLikeCount(Long id) {
         ProjectCommentEntity projectCommentEntity = projectCommentRepository.findById(id).get();
         return proCmtDisLikeRepository.countByProjectCommentEntity(projectCommentEntity);
@@ -139,21 +139,21 @@ public class ProjectCommentService {
 
 
 
-    // 댓글 좋아요를 눌렀을 때 싫어요 여부 확인
+    /* 댓글 좋아요를 눌렀을 때 싫어요 여부 확인 */
     public int checkCommentDisLike(ProjectCommentDTO projectCommentDTO) {
         ProjectCommentEntity projectCommentEntity = projectCommentRepository.findById(projectCommentDTO.getId()).get();
         UserEntity userEntity = userRepository.findById(projectCommentDTO.getUserId()).get();
         return proCmtDisLikeRepository.countByProjectCommentEntityAndUserEntity(projectCommentEntity, userEntity);
     }
 
-    // 댓글 싫어요를 눌렀을 때 좋아요 여부 확인
+    /* 댓글 싫어요를 눌렀을 때 좋아요 여부 확인 */
     public int checkCommentLike(ProjectCommentDTO projectCommentDTO) {
         ProjectCommentEntity projectCommentEntity = projectCommentRepository.findById(projectCommentDTO.getId()).get();
         UserEntity userEntity = userRepository.findById(projectCommentDTO.getUserId()).get();
         return proCmtLikeRepository.countByProjectCommentEntityAndUserEntity(projectCommentEntity, userEntity);
     }
 
-   /* 댓글 수정하기 */
+    /* 댓글 수정하기 */
     @Transactional
     public void update(ProjectCommentDTO projectCommentDTO) {
         projectCommentRepository.updateComment(projectCommentDTO.getContent(), projectCommentDTO.getId());

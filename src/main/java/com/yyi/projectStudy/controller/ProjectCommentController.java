@@ -46,28 +46,25 @@ public class ProjectCommentController {
                 notificationDTO.setNotUrl("/project/" + projectDTO.getId() + "#comment_" + commentId);
                 notificationService.saveProjectComment(notificationDTO, projectDTO);
             }
-
-
-
             return new ResponseEntity<>(projectCommentDTOList, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("해당 게시글이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
         }
     }
 
-    // 댓글 수 조회
+    /* 게시글의 댓글 수 조회 */
     @GetMapping("/count/{id}")
     public @ResponseBody Long commentCount(@PathVariable("id") Long id) {
         return projectCommentService.count(id);
     }
 
 
-    // 댓글 조회
+    /* 댓글 작성 후 목록 조회 */
     @GetMapping("/getCommentList/{projectId}")
     public ResponseEntity getCommentList(@PathVariable("projectId") Long projectId) {
         if (projectId != null) {
             List<ProjectCommentDTO> projectCommentDTOList = projectCommentService.findAll(projectId);
-            // 댓글마다 좋아요, 싫어요 수 등록
+            /* 댓글마다 좋아요, 싫어요 수 */
             for (ProjectCommentDTO projectCommentDTO : projectCommentDTOList) {
                 int commentLikeCount = projectCommentService.commentLikeCount(projectCommentDTO.getId());
                 projectCommentDTO.setLikeCount(commentLikeCount);
@@ -75,6 +72,7 @@ public class ProjectCommentController {
                 int commentDisLikeCount = projectCommentService.commentDisLikeCount(projectCommentDTO.getId());
                 projectCommentDTO.setDisLikeCount(commentDisLikeCount);
 
+                /* 댓글 작성자의 직군 */
                 JobDTO userJob = userService.findJob(projectCommentDTO.getUserId());
                 projectCommentDTO.setJobName(userJob.getName());
             }
@@ -90,7 +88,7 @@ public class ProjectCommentController {
         projectCommentService.deleteById(id);
     }
 
-    // 본인이 작성한 댓글인지 확인
+    /* 본인이 작성한 댓글인지 확인 */
     @GetMapping("/isYourComment")
     public @ResponseBody boolean isYourComment(@ModelAttribute ProjectCommentDTO projectCommentDTO) {
 
@@ -104,37 +102,37 @@ public class ProjectCommentController {
     }
 
 
-    // 댓글 좋아요
+    /* 댓글 좋아요 */
     @PostMapping("/commentLike")
     public @ResponseBody void commentLike(@ModelAttribute ProCmtLikeDTO proCmtLikeDTO) {
         projectCommentService.commentLike(proCmtLikeDTO);
     }
 
-    // 댓글 좋아요 수 확인
+    /* 댓글 좋아요 수 확인 */
     @GetMapping("/likeCount/{id}")
     public @ResponseBody int commentLikeCount(@PathVariable("id") Long id) {
         return projectCommentService.commentLikeCount(id);
     }
 
-    // 댓글 싫어요
+    /* 댓글 싫어요 */
     @PostMapping("/commentDisLike")
     public @ResponseBody void commentDisLike(@ModelAttribute ProCmtDisLikeDTO proCmtDisLikeDTO) {
         projectCommentService.commentDisLike(proCmtDisLikeDTO);
     }
 
-    // 댓글 싫어요 수 확인
+    /* 댓글 싫어요 수 확인 */
     @GetMapping("/disLikeCount/{id}")
     public @ResponseBody int commentDisLikeCount(@PathVariable("id") Long id) {
         return projectCommentService.commentDisLikeCount(id);
     }
 
-    // 댓글 좋아요를 눌렀을 때 싫어요 여부 확인
+    /* 댓글 좋아요를 눌렀을 때 싫어요 여부 확인 */
     @GetMapping("/checkCommentDisLike")
     public @ResponseBody int checkCommentDisLike(@ModelAttribute ProjectCommentDTO projectCommentDTO) {
         return projectCommentService.checkCommentDisLike(projectCommentDTO);
     }
 
-    // 댓글 싫어요를 눌렀을 때 좋어요 여부 확인
+    /* 댓글 싫어요를 눌렀을 때 좋어요 여부 확인 */
     @GetMapping("/checkCommentLike")
     public @ResponseBody int checkCommentLike(@ModelAttribute ProjectCommentDTO projectCommentDTO) {
         return projectCommentService.checkCommentLike(projectCommentDTO);

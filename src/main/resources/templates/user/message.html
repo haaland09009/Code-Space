@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
     <link rel="stylesheet" th:href="@{/css/style.css}">
-
+    <link rel="stylesheet" th:href="@{/css/user/message.css}">
 </head>
 <style>
 
@@ -21,11 +21,9 @@
 
     <div class="row">
         <div class="col-3" th:include="common/sidemenu :: sidemenu">
-            <!--      <div th:include="common/sidemenu :: sidemenu"></div>-->
         </div>
 
         <div class="col-9">
-
             <div class="row mt-3 mb-4"></div>
             <div class="row">
                 <div class="col-1"></div>
@@ -33,10 +31,10 @@
 
                 <div class="row">
                 <!----------->
-                <div class="col-5">
+                <div class="col-5 border py-3 px-4">
                     <div class="row mt-1">
                         <div class="col fw-semibold fs-4 ms-2">
-                            채팅
+                            메시지 보관함
                         </div>
                         <div class="col me-1 text-end">
                             <button class="btn btn-outline-dark btn-sm rounded rounded-4 fs-16 unreadChatButton"
@@ -46,7 +44,7 @@
                                 <span class="ms-1">안 읽은 메시지</span>
                             </button>
                             <button class="btn btn-outline-dark btn-sm rounded rounded-4 fs-16 unreadChatButton"
-                                    th:if="${session.userDTO == null}"
+                            th:if="${session.userDTO == null}"
                             onclick="location.href='/user/loginPage'">
                                 <i class="bi bi-chat-quote"></i>
                                 <span class="ms-1">안 읽은 메시지</span>
@@ -56,62 +54,56 @@
 
                     <div class="row mt-4">
                         <div class="col px-3">
-                            <input type="text" class="form-control rounded rounded-4 fs-18" placeholder="검색"
-                            style="text-indent: 29px">
-                            <i class="bi bi-search" style="position: relative; bottom: 34px; left: 14px;"></i>
+                            <input type="text" class="form-control rounded rounded-4 fs-18" placeholder="이름으로 검색"
+                            style="text-indent: 29px" id="chatPartner">
+                            <i class="bi bi-search"></i>
                         </div>
                     </div>
 
                     <div class="mt-1 mb-1"></div>
 
-                    <div id="chatRoomList" style="height: 520px; overflow: auto; overflow-x: hidden;" class="px-3">
-                    <div class="row contentDiv" th:each="room : ${chatRoomList}">
-                        <div class="col"  th:onclick="getChatList([[${room.roomId}]])">
-
-                            <div class="row mt-3">
-                                <div class="col-2">
-                                    <img src="/img/user.jpg" class="rounded-circle mt-1" style="width: 55px; height: 55px;"
-                                    th:if="${room.fileAttached == 0}">
-                                    <img th:src="@{|/upload/${room.storedFileName}|}" class="rounded-circle mt-1" style="width: 55px; height: 55px;"
-                                         th:if="${room.fileAttached == 1}">
-                                </div>
-                                <div class="col px-2">
-                                    <div class="row">
-                                        <div class="col">
-                                            <span class=fw-semibold th:text="${room.nickname}"></span>
-                                            <span class="ms-2 text-secondary fs-18" th:text="${room.formattedDate}"></span>
-                                        </div>
-                                        <div class="col-1 me-3 text-end" th:if="${room.isNotReadCount != 0}">
-                                                <div class="redCircle">
-                                                    <span th:text="${room.isNotReadCount}"></span>
-                                                </div>
-                                        </div>
+                    <!-- 채팅방 목록 -->
+                    <div id="chatRoomList" class="px-3">
+                        <div class="row contentDiv" th:each="room : ${chatRoomList}">
+                            <div class="col" th:onclick="getChatList([[${room.roomId}]])">
+                                <div class="row mt-3">
+                                    <div class="col-2">
+                                        <img src="/img/user.jpg" class="rounded-circle mt-1" style="width: 55px; height: 55px;"
+                                        th:if="${room.fileAttached == 0}">
+                                        <img th:src="@{|/upload/${room.storedFileName}|}" class="rounded-circle mt-1" style="width: 55px; height: 55px;"
+                                             th:if="${room.fileAttached == 1}">
                                     </div>
-                                    <div class="row mt-1">
-                                        <div class="col overflow-list fs-18" th:text="${room.content}">
-
+                                    <div class="col px-2">
+                                        <div class="row">
+                                            <div class="col">
+                                                <span class=fw-semibold th:text="${room.nickname}"></span>
+                                                <span class="ms-2 text-secondary fs-18" th:text="${room.formattedDate}"></span>
+                                            </div>
+                                            <div class="col-1 me-3 text-end" th:if="${room.isNotReadCount != 0}">
+                                                    <div class="redCircle">
+                                                        <span th:text="${room.isNotReadCount}"></span>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col overflow-list fs-18" th:text="${room.content}">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="border-bottom mt-3"></div>
                         </div>
-                        <div class="border-bottom mt-3"></div>
                     </div>
-                    </div>
-                    <!--------------------------->
-
-                    <!--------------------------->
-
+                    <!-- 채팅방 목록 -->
                 </div>
-               <!----------->
+                <!----------->
                 <div class="col-6 ms-3">
-
                     <!-- 채팅 시작 전 화면 -->
-                    <div class="row" id="beforeChatScreen" style="display : none;">
+                    <div class="row" id="beforeChatScreen">
                         <div class="col text-center">
 
                             <div style="height: 120px;"></div>
-
                             <div class="row">
                                 <div class="col">
                                     <img src="/img/comment.png" alt="">
@@ -130,16 +122,15 @@
                                 </div>
                             </div>
 
-
                         </div>
                     </div>
 
                 <!-- 채팅 화면 -->
-                 <div class="row" id="chatScreen" style="display : none;">
+                 <div class="row" id="chatScreen">
                      <div class="col-11">
                          <div class="row bg-light p-3 border">
                              <div class="col-1 mt-3 fs-5 fw-semibold" style="cursor: pointer;"
-                             onclick="goBeforeChatScreen()">
+                                    onclick="goBeforeChatScreen()">
                                  <i class="bi bi-arrow-left"></i>
                              </div>
                              <div class="col">
@@ -160,22 +151,22 @@
                              </div>
                              <div class="mt-2"></div>
                          </div>
-<!--                         <div class="border-bottom mt-3 mb-2"></div>-->
+
                          <!-- 채팅 -->
                          <div class="row">
                              <div class="col ps-0 pe-0">
-                                 <div id="chatList" style="height: 400px; overflow: auto; overflow-x: hidden;" class="px-3"></div>
+                                 <div id="chatList" class="px-3"></div>
                                  <!-- 채팅 -->
                                  <div class="mt-5 mb-4"></div>
                                  <div class="row px-3">
                                      <div class="col rounded rounded-4 border d-grid">
                                          <div class="row">
                                              <div class="col">
-                                     <textarea name=""  cols="10" rows="2"
-                                               class="form-control form-control-no-border ps-0" style="resize:none; text-indent: 12px; font-size: 18px"
-                                               placeholder="메시지를 입력해주세요."
-                                               onkeydown="resize(this), checkSendMessage(event)" onkeyup="resize(this)"
-                                               id="chatContent" ></textarea>
+                                                <textarea name=""  cols="10" rows="2"
+                                                   class="form-control form-control-no-border ps-0 fs-18"
+                                                   placeholder="메시지를 입력해주세요."
+                                                   onkeydown="resize(this), checkSendMessage(event)" onkeyup="resize(this)"
+                                                   id="chatContent"></textarea>
                                              </div>
                                          </div>
                                          <div class="row">
@@ -190,18 +181,11 @@
                          </div>
                      </div>
                  </div>
-
-
                 <!-- 채팅 화면 -->
-
-
                 </div>
                 </div>
-
                 </div>
             </div>
-
-
         </div>
     </div>
 </div>
@@ -216,20 +200,16 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
                 <div class="row text-center">
                     <div class="col">
                         메시지를 삭제하시겠습니까?
                     </div>
                 </div>
-
             </div>
-
             <div class="modal-footer">
                 <input type="button" class="btn mainButton fw-semibold" value="확인" onclick="deleteChat()">
                 <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
             </div>
-
         </div>
     </div>
 </div>
@@ -248,7 +228,9 @@
         let selectedChatId = null;
     /*]]>*/
 
-
+    /*<![CDATA[*/
+        let intervalHandler = null;
+    /*]]>*/
 </script>
 <script type="text/javascript" th:src="@{/js/common.js}"></script>
 <script type="text/javascript" th:src="@{/js/user/message.js}"></script>

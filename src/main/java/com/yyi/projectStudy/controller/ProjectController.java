@@ -369,7 +369,7 @@ public class ProjectController {
         model.addAttribute("project", project);
 
         /* enter 처리 */
-//        String content = projectDTO.getContent().replaceAll("\r\n", "<br>");
+/*        String content = projectDTO.getContent().replaceAll("\r\n", "<br>");*/
         String content = projectDTO.getContent().replaceAll("\n", "<br>");
         projectDTO.setContent(content);
 

@@ -23,7 +23,7 @@ public class QnaReplyService {
     private final NotTypeRepository notTypeRepository;
     private final NotificationRepository notificationRepository;
 
-    // 답변 작성
+    /* 답변 작성 */
     public Long save(QnaReplyDTO qnaReplyDTO) {
         Optional<QnaEntity> optionalQnaEntity = qnaRepository.findById(qnaReplyDTO.getQnaId());
         if (optionalQnaEntity.isPresent()) {
@@ -38,7 +38,7 @@ public class QnaReplyService {
     }
 
 
-    // 게시글 당 답변 조회
+    /* 게시글 당 답변 조회 */
     @Transactional
     public List<QnaReplyDTO> findAll(Long qnaId) {
         QnaEntity qnaEntity = qnaRepository.findById(qnaId).get();
@@ -62,19 +62,19 @@ public class QnaReplyService {
     }
 
 
-    // 답글 수 조회
+    /* 답글 수 조회 */
     @Transactional
     public int count(Long id) {
         QnaEntity qnaEntity = qnaRepository.findById(id).get();
         return qnaReplyRepository.countByQnaEntity(qnaEntity);
     }
 
-    // 답변 작성한 user 조회
+    /* 답변 작성한 user 조회 */
     public Long isYourReply(Long id) {
         return qnaReplyRepository.findById(id).get().getUserEntity().getId();
     }
 
-    // 답변 좋아요 클릭
+    /* 답변 좋아요 클릭 */
     public void like(QnaReplyLikeDTO qnaReplyLikeDTO) {
         Optional<QnaReplyEntity> optionalQnaReplyEntity = qnaReplyRepository.findById(qnaReplyLikeDTO.getReplyId());
         if (optionalQnaReplyEntity.isPresent()) {
@@ -90,20 +90,20 @@ public class QnaReplyService {
     }
 
 
-    // 답변 좋아요 수 업데이트
+    /* 답변 좋아요 수 업데이트 */
     public int likeCount(Long id) {
         QnaReplyEntity qnaReplyEntity = qnaReplyRepository.findById(id).get();
         return qnaReplyLikeRepository.countByQnaReplyEntity(qnaReplyEntity);
     }
 
-    // 사용자가 답변에 좋아요를 눌렀는지 확인 (색깔 변경 목적)
+    /* 사용자가 답변에 좋아요를 눌렀는지 확인 (색깔 변경 목적) */
     public int checkReplyLikeForColor(Long replyId, Long userId) {
         QnaReplyEntity qnaReplyEntity = qnaReplyRepository.findById(replyId).get();
         UserEntity userEntity = userRepository.findById(userId).get();
         return qnaReplyLikeRepository.countByQnaReplyEntityAndUserEntity(qnaReplyEntity, userEntity);
     }
 
-    // 답변 하나 조회
+    /* 답변 하나 조회 */
     @Transactional
     public QnaReplyDTO findById(Long id) {
         Optional<QnaReplyEntity> optionalQnaReplyEntity = qnaReplyRepository.findById(id);

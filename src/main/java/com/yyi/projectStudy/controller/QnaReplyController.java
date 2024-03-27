@@ -77,11 +77,11 @@ public class QnaReplyController {
                 JobDTO replyJob = userService.findJob(dto.getUserId());
                 dto.setJobName(replyJob.getName());
 
-                // 좋아요 수
+                /* 좋아요 수 */
                 int likeCount = qnaReplyService.likeCount(dto.getId());
                 dto.setLikeCount(likeCount);
 
-                // 답변에 달린 댓글 가져오기
+                /* 답변에 달린 댓글 가져오기 */
                 List<QnaReplyCommentDTO> qnaReplyCommentDTOList = qnaReplyCommentService.findAll(dto.getId());
                 List<QnaReplyCommentDTO> commentList = new ArrayList<>();
                 for (QnaReplyCommentDTO qnaReplyCommentDTO : qnaReplyCommentDTOList) {
@@ -96,7 +96,7 @@ public class QnaReplyController {
                 }
                 dto.setCommentList(commentList);
 
-                // 댓글 수
+                /* 댓글 수 */
                 int commentCount = qnaReplyCommentService.commentCount(dto.getId());
                 dto.setCommentCount(commentCount);
 
@@ -120,13 +120,13 @@ public class QnaReplyController {
         qnaReplyService.deleteById(id);
     }
 
-    // 답글 수 조회
+    /* 답글 수 조회 */
     @GetMapping("/count/{id}")
     public @ResponseBody int replyCount(@PathVariable("id") Long id) {
         return qnaReplyService.count(id);
     }
 
-    // 본인이 작성한 답변인지의 여부 확인 (좋아요)
+    /* 본인이 작성한 답변인지의 여부 확인 (좋아요 클릭 방지) */
     @GetMapping("isYourReply")
     public @ResponseBody boolean isYourReply(@ModelAttribute QnaReplyDTO qnaReplyDTO) {
         Long userId = qnaReplyDTO.getUserId(); // sessionId
@@ -138,24 +138,23 @@ public class QnaReplyController {
         }
     }
 
-    // 답변 좋아요
+    /* 답변 좋아요 클릭 */
     @PostMapping("like")
     public @ResponseBody void like(@ModelAttribute QnaReplyLikeDTO qnaReplyLikeDTO) {
         qnaReplyService.like(qnaReplyLikeDTO);
     }
 
-    // 답변 좋아요 수 업데이트
+    /* 답변 좋아요 수 업데이트 */
     @GetMapping("likeCount/{id}")
     public @ResponseBody int likeCount(@PathVariable("id") Long id) {
         return qnaReplyService.likeCount(id);
     }
 
-    // 사용자가 답변에 좋아요를 눌렀는지 확인 (색깔 변경 목적)
+    /* 사용자가 답변에 좋아요를 눌렀는지 확인 (색깔 변경 목적) */
     @GetMapping("/checkReplyLikeForColor/{id}")
     public @ResponseBody boolean checkReplyLikeForColor(@PathVariable("id") Long id,
                                                       HttpSession session) {
         UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
-
         int count = qnaReplyService.checkReplyLikeForColor(id, sessionUser.getId());
         if (count > 0) {
             return true;

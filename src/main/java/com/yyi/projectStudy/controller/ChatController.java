@@ -28,7 +28,7 @@ public class ChatController {
     public @ResponseBody String save(@ModelAttribute ChatRoomDTO chatRoomDTO,
                                      @ModelAttribute ChatDTO chatDTO,
                                      HttpSession session)  {
-        /* js에서 세션 존재 여부를 이미 작성했으므로 여기서 작성안함. */
+        /* js에서 세션 존재 여부를 이미 작성했으므로 여기서 세션 존재 여부를 작성하지 않음. */
         UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
 
         /* 발신자 정보 입력 */
@@ -44,7 +44,7 @@ public class ChatController {
         content = content.replaceAll("\r\n", "<br>");
         chatDTO.setContent(content);
 
-        /* 메시지 전송 (반환 : 채팅방 pk) */
+        /* 메시지 전송 (저장 후 반환 : 채팅방 pk) */
         Long savedId = chatService.save(chatDTO, senderDTO, receiverDTO);
         if (savedId != null) {
             return "ok";
@@ -66,6 +66,8 @@ public class ChatController {
         chatDTO.setContent(content);
 
         Long savedId = chatService.sendMessage(chatDTO);
+        /* 나머지 채팅 읽음 처리 */
+        chatService.readChat(chatDTO.getRoomId(), sessionUser.getId());
         if (savedId != null) {
             return "ok";
         } else {

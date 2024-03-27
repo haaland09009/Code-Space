@@ -23,11 +23,10 @@
             if (res[i].isNotReadCount != 0) {
                 output += '<div class="col-1 me-3 text-end">';
                 output += '<div class="redCircle">';
-                output += '<span>' + res[i].isNotReadCount  +'</span>'
+                output += '<span>' + res[i].isNotReadCount  +'</span>';
                 output += '</div>';
                 output += '</div>';
             }
-
             output += '</div>';
             output += '<div class="row mt-1">'
             output += '<div class="col overflow-list fs-18">' + res[i].content + '</div>';
@@ -63,10 +62,10 @@
             }, error: function(err) {
                 return;
             }
-         });
+     });
    }
 
-   /* 안 읽은 메시지 버튼 */
+   /* 안 읽은 메시지 버튼 클릭 */
    const toggleUnreadChatList = (sessionId) => {
        if (sessionId == 0) {
             location.href = "/user/loginPage";
@@ -89,7 +88,6 @@
 
     /* 채팅방 화면 이전 */
     const goBeforeChatScreen = () => {
-
         const chatScreen = document.querySelector("#chatScreen");
         chatScreen.style.display = "none";
 
@@ -97,9 +95,8 @@
         beforeChatScreen.style.display = "block";
     }
 
-    /* 채팅방 접속 */
+    /* 채팅방 접속하기 */
     const getChatList = (roomId) => {
-
         if (sessionId == 0) {
             location.href = "/user/loginPage";
             return;
@@ -111,20 +108,20 @@
         beforeChatScreen.style.display = "none";
 
         $.ajax({
-         type: "get",
-         url: "/chat/readChat/" + roomId,
-         success: function(res) {
+             type: "get",
+             url: "/chat/readChat/" + roomId,
+             success: function(res) {
                 selectedRoomId = roomId;
                 getUserInfo(roomId);
                 getRecentChatList(sessionId);
                 loadChatList(roomId);
                 notReadChatCount(sessionId);
 
-         }, error: function(err) {
-             return;
-         }
-      });
-    }
+             }, error: function(err) {
+                return;
+             }
+          });
+       }
 
 
     /* 채팅 상대방 정보 조회 */
@@ -138,7 +135,6 @@
          success: function(res) {
             nameCol.innerText = res.nickname;
             jobCol.innerText = res.jobName;
-
             if (res.fileAttached == 0) {
                 const imgElement = '<img src="/img/user.jpg" class="rounded-circle" style="width: 55px; height: 55px;">';
                 imgCol.innerHTML = imgElement;
@@ -146,14 +142,11 @@
                 const imgElement = '<img src="/upload/' + res.storedFileName + '" class="rounded-circle" style="width: 55px; height: 55px;">';
                 imgCol.innerHTML = imgElement;
             }
-
          }, error: function(err) {
              return;
          }
       });
     }
-
-
 
 
     /* 채팅방에 있는 채팅 기록 조회 */
@@ -184,21 +177,26 @@
                 if (sessionId != res[i].senderId) {
                     output += '<div class="row mt-2">';
                     output += '<div class="col-6 text-start">';
-                    output += '<button class="btn bg-gray py-2 rounded rounded-4 text-start text-break fs-18">' + res[i].content + '</button>';
+                    output += '<button class="btn bg-gray py-2 rounded rounded-4 text-start text-break fs-18 yourChatButton">' + res[i].content + '</button>';
                     output += '</div>';
                     output += '</div>';
                     output += '<div class="row mt-1">';
-                    output += '<div class="col ms-2 date-element text-secondary chatDate ">' + formatDateTime(res[i].regDate) + '</div>';
+                    output += '<div class="col ms-2 date-element text-secondary chatDate">' + formatAmPmDate(res[i].regDate) + '</div>';
                     output += '</div>';
                 } else if (sessionId == res[i].senderId) {
                     output += '<div class="row mt-2">';
                     output += '<div class="col">' + '</div>';
                     output += '<div class="col justify-content-end text-end">';
-                    output += '<button class="btn btn-outline-dark py-2 rounded rounded-4 text-start fs-18" onclick="deleteChatModal(' + res[i].id + ')">' + res[i].content + '</button>';
+                    output += '<button class="btn btn-outline-dark py-2 rounded rounded-4 text-start fs-18 myChatButton" onclick="deleteChatModal(' + res[i].id + ')">' + res[i].content + '</button>';
                     output += '</div>';
                     output += '</div>';
                     output += '<div class="row mt-1">';
-                    output += '<div class="col text-end date-element me-1 text-secondary chatDate">' + formatDateTime(res[i].regDate) + '</div>';
+                    output += '<div class="col text-end">';
+                    if (res[i].readDate == null) {
+                        output += '<span class="me-1 fs-15 unRead_ChatFont">' + "1" + '</span>';
+                    }
+                    output += '<span class="date-element ms-1 text-secondary chatDate">' + formatAmPmDate(res[i].regDate) + '</span>';
+                    output += '</div>';
                     output += '</div>';
                 }
             }
@@ -206,20 +204,30 @@
 
             if (shouldAutoScroll) {
                 chatBox.scrollTop = chatBox.scrollHeight;
-         }
+            }
+
+        /*    // 3초마다 채팅 업로드
+            if(intervalHandler != null){
+                clearInterval(intervalHandler);
+                intervalHandler = null;
+            }
+
+            intervalHandler = setInterval(() => {
+                loadChatList(roomId);
+            }, 1000);*/
+
          }, error: function(err) {
              return;
          }
       });
     }
 
-   // 채팅 전송 enter 키 처리
+   /* 채팅 전송 enter 키 처리 */
    const checkSendMessage = (event) => {
       if (event.key === "Enter") {
            sendMessage();
          }
-   }
-
+    }
 
     /* 채팅방이 이미 있는 상황에서 메시지 전송하기 */
     const sendMessage = () => {
@@ -254,14 +262,14 @@
           });
     }
 
-    // 채팅 삭제 모달
+    /* 채팅 삭제 모달 */
     const deleteChatModal = (id) => {
         selectedChatId = id;
         const deleteChatModal = bootstrap.Modal.getOrCreateInstance("#deleteChatModal");
 	    deleteChatModal.show();
     }
 
-    // 채팅 삭제
+    /* 채팅 삭제 */
     const deleteChat = () => {
         $.ajax({
              type: "get",
@@ -277,36 +285,30 @@
                  return;
              }
           });
-    }
+        }
 
 
 
-    // 스크롤이 맨 아래에 있는지 확인하는 함수
+    /* 스크롤이 맨 아래에 있는지 확인하는 함수 */
     const isScrolledToBottom = (element) => {
         return element.scrollHeight - element.clientHeight <= element.scrollTop + 1;
     }
 
-    // 사용자가 스크롤을 조작할 때 자동 스크롤을 비활성화하는 이벤트 핸들러
+    /* 사용자가 스크롤을 조작할 때 자동 스크롤을 비활성화하는 이벤트 핸들러 */
     document.querySelector("#chatList").addEventListener("scroll", function (event) {
       const chatListBox = event.target;
       const shouldAutoScroll = isScrolledToBottom(chatListBox);
 
-      // 스크롤이 맨 아래에 있을 경우에만 자동 스크롤 활성화
+      /* 스크롤이 맨 아래에 있을 경우에만 자동 스크롤 활성화 */
       if (shouldAutoScroll) {
         chatListBox.scrollTop = chatListBox.scrollHeight;
       }
     });
 
-
    window.addEventListener("DOMContentLoaded", function(){
-
        if (selectedRoomId == 0) {
             const beforeChatScreen = document.querySelector("#beforeChatScreen");
             beforeChatScreen.style.display = "block";
         }
-
-    /*    setInterval(getRecentChatList(sessionId), 1000);*/
-
-
 
   });

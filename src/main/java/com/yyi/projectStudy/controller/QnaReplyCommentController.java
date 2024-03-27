@@ -53,14 +53,13 @@ public class QnaReplyCommentController {
         }
     }
 
-    // 답변 당 댓글 조회
+    /* 답변 당 댓글 목록 조회 */
     @GetMapping("/getCommentList/{id}")
     public ResponseEntity getCommentList(@PathVariable("id") Long id) {
         QnaReplyDTO qnaReplyDTO = qnaReplyService.findById(id);
         if (qnaReplyDTO != null) {
             List<QnaReplyCommentDTO> qnaReplyCommentDTOList = qnaReplyCommentService.findAll(id);
             for (QnaReplyCommentDTO qnaReplyCommentDTO : qnaReplyCommentDTOList) {
-                // enter 처리
                 String content = qnaReplyCommentDTO.getContent();
                 content = content.replaceAll("<br>", "\n");
                 qnaReplyCommentDTO.setContent(content);
@@ -70,12 +69,12 @@ public class QnaReplyCommentController {
             }
             return new ResponseEntity<>(qnaReplyCommentDTOList, HttpStatus.OK);
         } else {
-            // 만약 답변이 삭제될 시 후처리 해야함.
+            /* 만약 답변이 삭제될 시 후처리 해야함. */
             return new ResponseEntity<>("해당 답변이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
         }
     }
 
-    // 어떤 답변에 댓글이 달린건지 확인 (답변 pk 추출)
+    /* 어떤 답변에 댓글이 달린건지 확인 (답변 pk 추출) */
     @GetMapping("/getReplyPk/{id}")
     public @ResponseBody Long getReplyPk(@PathVariable("id") Long id) {
         QnaReplyCommentDTO qnaReplyCommentDTO = qnaReplyCommentService.findById(id);
@@ -89,7 +88,7 @@ public class QnaReplyCommentController {
         qnaReplyCommentService.deleteById(id);
     }
 
-    // 답변에 달린 댓글 수
+    /* 답변에 달린 댓글 수 */
     @GetMapping("/count/{id}")
     public @ResponseBody int commentCount(@PathVariable("id") Long id) {
         return qnaReplyCommentService.commentCount(id);

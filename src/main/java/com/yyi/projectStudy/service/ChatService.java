@@ -42,6 +42,9 @@ public class ChatService {
             /* 기존 채팅방에 새로운 메시지 저장 - 채팅 dto -> entity 변환 */
             ChatEntity chatEntity = ChatEntity.toChatEntity(chatDTO, chatRoomEntity, sender);
             chatRepository.save(chatEntity);
+
+            /* 나머지 채팅 읽음 처리 */
+            readChat(chatRoomEntity.getId(), sender.getId());
             /* 채팅방 pk 반환 */
             return chatRoomEntity.getId();
         } else {
@@ -54,6 +57,9 @@ public class ChatService {
             /* 전송된 메시지 저장 */
             ChatEntity chatEntity = ChatEntity.toChatEntity(chatDTO, chatRoomEntity, sender);
             chatRepository.save(chatEntity);
+
+            /* 나머지 채팅 읽음 처리 */
+            readChat(roomId, sender.getId());
             return chatRoomEntity.getId();
         }
     }

@@ -1,0 +1,48 @@
+ #chatList {
+    height: 450px;
+    overflow: auto;
+    overflow-x: hidden;
+ }
+
+ #chatContent {
+    resize:none;
+ }
+
+ #chatRoomList {
+    height: 520px;
+    overflow: auto;
+    overflow-x: hidden;
+ }
+
+ #beforeChatScreen {
+    display: none;
+ }
+
+ #chatScreen {
+    display: none;
+ }
+
+ .yourChatButton {
+    /* 텍스트 선택 활성화 */
+    user-select: auto;
+ }
+ .yourChatButton:hover {
+    background-color: #dee2e6;
+ }
+  .myChatButton {
+     /* 텍스트 선택 활성화 */
+     user-select: auto;
+  }
+  .myChatButton:hover {
+     background-color: white;
+     color: black;
+  }
+
+  /* 검색바 위치 조정 */
+  .bi-search {
+    position: relative;
+    bottom: 34px;
+    left: 14px;
+  }
+
+
