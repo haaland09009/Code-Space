@@ -11,19 +11,17 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface QnaRepository extends JpaRepository<QnaEntity, Long> {
-  /*  게시글 조회수 증가
-    update qna_table set read_count = read_count + 1 where id = ?*/
+    /* 게시글 조회수 증가 */
     @Modifying
     @Query(value = "update QnaEntity q set q.readCount = q.readCount + 1 where q.id = :id")
     void updateReadCount(@Param("id") Long id);
+    /* update qna_table set read_count = read_count + 1 where id = ? */
 
-   /* 게시글 수정
-    update qna_table set title = :title, content = :content, updDate = :sysdate where id = ?*/
+   /* 게시글 수정 */
     @Modifying
     @Query(value = "update QnaEntity q set q.title = :title, q.content = :content, q.updDate = sysdate where q.id = :id")
     void updateQna(@Param("title") String title, @Param("content") String content, @Param("id") Long id);
-
-
+    /* update qna_table set title = :title, content = :content, updDate = :sysdate where id = ? */
 
     @Query(value= "SELECT *\n" +
             "FROM (\n" +
@@ -129,17 +127,21 @@ public interface QnaRepository extends JpaRepository<QnaEntity, Long> {
             "   having count(qr.qna_id) = 0)", nativeQuery = true)
     List<Long> getNoReplyQnaList();
 
-/*    select * from qna_table
-    where lower(title) like '%'|| '합격' ||'%'
-    or lower(content) like '%'|| '합격' ||'%'
-    order by id desc*/
+
     /* 검색을 통한 조회 */
-    @Query(value = "select * from qna_table\n" +
-            "where lower(title) like '%'|| :searchWord ||'%'\n" +
-            "or lower(content) like '%'|| :searchWord ||'%'\n" +
-            "order by id desc", nativeQuery = true)
+    @Query(value = "select q from QnaEntity q where lower(q.title) like concat('%', :searchWord, '%')" +
+            "or lower(q.content) like concat('%', :searchWord, '%') order by q.id desc")
     List<QnaEntity> findByTitleOrContent(@Param("searchWord") String keyword);
+    /*    select * from qna_table where lower(title) like '%'|| '합격' ||'%'
+     or lower(content) like '%'|| '합격' ||'%' order by id desc */
 
 
+    /* 해시태그를 통한 조회 */
+    @Query("select q from QnaEntity q join q.qnaTagsEntityList qt where lower(qt.tag) like concat('%', :tagName, '%')" +
+            "or lower(q.title) like concat('%', :tagName, '%') order by q.id desc")
+    List<QnaEntity> findByTagName(@Param("tagName") String tagName);
+    /*  select q.* from qna_table q join qna_tags_table qt on q.id = qt.qna_id
+        where lower(tag) like '%프론트%' order by q.id desc;
+    */
 
 }

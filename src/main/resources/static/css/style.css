@@ -70,11 +70,11 @@
 
 .overflow-mainList {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
     font-size: 18px;
-    min-height: 55px;
+   /* min-height: 55px;*/
 }
 body {
   font-family: 'Pretendard';

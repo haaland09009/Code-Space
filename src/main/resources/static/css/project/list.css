@@ -1,0 +1,23 @@
+.techLogo {
+   width: 42px;
+   height: 42px;
+}
+
+.studyButton {
+    background-color: #EBC680;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+.projectButton {
+    background-color: #EBC680;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+.overflow-board {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

@@ -14,9 +14,6 @@
     overflow-x: hidden;
  }
 
- #beforeChatScreen {
-    display: none;
- }
 
  #chatScreen {
     display: none;

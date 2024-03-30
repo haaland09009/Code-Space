@@ -25,7 +25,7 @@ public class HomeController {
     @GetMapping("/")
     public String mainPage(Model model) {
 
-        // 플젝 스터디
+        /* 플젝 스터디 */
         List<ProjectDTO> projectDTOList = projectService.findAllInMainPage();
         for (ProjectDTO projectDTO : projectDTOList) {
             projectDTO.setCommentCount(projectCommentService.count(projectDTO.getId()));
@@ -39,6 +39,13 @@ public class HomeController {
                 techList.add(techCategoryDTO.getName());
             }
             projectDTO.setTechList(techList);
+
+            List<PositionCategoryDTO> positionCategoryDTOList = projectService.findPositionCategory(projectDTO.getId());
+            List<String> positionList = new ArrayList<>();
+            for (PositionCategoryDTO positionCategoryDTO : positionCategoryDTOList) {
+                positionList.add(positionCategoryDTO.getName());
+            }
+            projectDTO.setPositionList(positionList);
 
             Date startDate = projectDTO.getStartDate();
 

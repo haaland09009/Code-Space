@@ -70,11 +70,15 @@ public class QnaService {
 
     /* 기술, 커리어, 기타 모두 조회 */
     @Transactional
-    public List<QnaDTO> findAll(String searchWord) {
+    public List<QnaDTO> findAll(String searchWord, String tagName) {
         List<QnaEntity> qnaEntityList;
         if (searchWord != null) {
             searchWord = searchWord.toLowerCase();
             qnaEntityList = qnaRepository.findByTitleOrContent(searchWord);
+        } else if (tagName != null) {
+            /* 해시태그를 통한 조회 */
+            tagName = tagName.toLowerCase();
+            qnaEntityList = qnaRepository.findByTagName(tagName);
         } else {
             qnaEntityList = qnaRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
         }
@@ -486,6 +490,7 @@ public class QnaService {
         }
         return qnaDTOList;
     }
+
 
 
 }

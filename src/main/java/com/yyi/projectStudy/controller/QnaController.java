@@ -30,7 +30,7 @@ public class QnaController {
     public String mainPage(Model model,
                            @PathVariable(name = "category", required = false) String category,
                            @RequestParam(name = "sortKey", required = false) String sortKey,
-                           String searchWord) {
+                           String searchWord, String tagName) {
 
         List<QnaDTO> qnaDTOList;
 
@@ -52,15 +52,20 @@ public class QnaController {
             if (sortKey != null) {
                 qnaDTOList = qnaService.getQnaDTOListByReplySort(null);
             } else {
-                qnaDTOList = qnaService.findAll(searchWord);
+                qnaDTOList = qnaService.findAll(searchWord, tagName);
             }
         } else {
-            qnaDTOList = qnaService.findAll(searchWord);
+            qnaDTOList = qnaService.findAll(searchWord, tagName);
         }
 
         /* 검색 키워드가 존재할 경우 */
         if (searchWord != null) {
             model.addAttribute("searchWord", searchWord);
+        }
+
+        /* 해시태그가 존재할 경우 */
+        if (tagName != null) {
+            model.addAttribute("tagName", tagName);
         }
 
         /* 기술, 커리어, 기타 카테고리 여부 dto에 저장 */

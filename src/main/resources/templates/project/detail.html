@@ -459,9 +459,9 @@
 
                                                             <div class="col" th:id="'commentUserInfo_' + ${comment.id}">
                                                                 <div class="row">
-                                                                    <div class="col px-0 fw-semibold fs-5" th:text="${comment.writer}">
-
+                                                                    <div class="col-auto px-0 fw-semibold fs-5" th:text="${comment.writer}">
                                                                     </div>
+
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col px-0 text-secondary fs-18">
@@ -582,8 +582,9 @@
             </div>
 
             <div class="modal-footer">
-                <input type="button" class="btn mainButton fw-semibold" value="확인" onclick="deleteBoard()">
                 <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
+                <input type="button" class="btn mainButton fw-semibold" value="확인" onclick="deleteBoard()">
+
             </div>
 
         </div>
@@ -607,12 +608,12 @@
                         댓글을 삭제하시겠습니까?
                     </div>
                 </div>
-
             </div>
 
+
             <div class="modal-footer">
-                <input type="button" class="btn mainButton fw-semibold" value="확인" onclick="deleteComment()">
                 <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
+                <input type="button" class="btn mainButton fw-semibold" value="확인" onclick="deleteComment()">
             </div>
 
         </div>

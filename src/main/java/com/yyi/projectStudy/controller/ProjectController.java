@@ -172,6 +172,14 @@ public class ProjectController {
                 techList.add(techCategoryDTO.getName());
             }
             projectDTO.setTechList(techList);
+
+            /* 모집 포지션 조회 */
+            List<PositionCategoryDTO> positionCategoryDTOList = projectService.findPositionCategory(projectDTO.getId());
+            List<String> positionList = new ArrayList<>();
+            for (PositionCategoryDTO positionCategoryDTO : positionCategoryDTOList) {
+                positionList.add(positionCategoryDTO.getName());
+            }
+            projectDTO.setPositionList(positionList);
         }
 
 

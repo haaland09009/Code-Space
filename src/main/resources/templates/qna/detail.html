@@ -139,7 +139,7 @@
                                 <button type="button" class="btn btn-outline-dark me-3 fs-18"
                                         th:each="tag, iterStat : ${#strings.replace(qna.hashTag, '\\s*#\\s*', '#').split('#')}" th:if="${!#strings.isEmpty(tag)}">
                                     <span class="text-danger">#</span>
-                                    <span th:text="${tag}"></span>
+                                        <span th:text="${tag}" th:onclick="searchForTag([[${tag}]])"></span>
                                 </button>
                             </span>
                         </div>
@@ -601,8 +601,8 @@
             </div>
 
             <div class="modal-footer">
-                <input type="button" class="btn mainButton" value="확인" onclick="deleteQna()">
                 <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
+                <input type="button" class="btn mainButton" value="확인" onclick="deleteQna()">
             </div>
 
         </div>
@@ -629,8 +629,8 @@
             </div>
 
             <div class="modal-footer">
-                <input type="button" class="btn mainButton" value="확인" onclick="deleteReply()">
                 <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
+                <input type="button" class="btn mainButton" value="확인" onclick="deleteReply()">
             </div>
 
         </div>
@@ -740,9 +740,8 @@
             </div>
 
             <div class="modal-footer">
-                <input type="button" class="btn mainButton fw-semibold" value="확인" onclick="deleteComment()">
                 <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
-
+                <input type="button" class="btn mainButton fw-semibold" value="확인" onclick="deleteComment()">
             </div>
 
         </div>

@@ -27,7 +27,7 @@
                 <!---------------->
                 <div class="col">
                     <!---------------->
-                    <div class="row" th:if="${category == null && searchWord == null}">
+                    <div class="row" th:if="${category == null && searchWord == null && tagName == null}">
                         <!---------------->
                         <div class="col">
                             <div class="row">
@@ -124,10 +124,10 @@
                         <!---------------->
                     </div>
                     <!---------------->
-                    <div class="mt-5" th:if="${category == null && searchWord == null}">
+                    <div class="mt-5" th:if="${category == null && searchWord == null && tagName == null}">
                     </div>
 
-                    <div class="row mt-1" th:if="${(category == null or (category != null && category != 'no-Reply')) && searchWord == null}">
+                    <div class="row mt-1" th:if="${(category == null or (category != null && category != 'no-Reply')) && searchWord == null && tagName == null}">
                         <div class="col-auto sort-item ps-0">
                             <a href="/qna" th:if="${category == null}">
                                 <span class="sortPoint text-secondary">•</span>
@@ -203,7 +203,7 @@
 
                                             </div>
                                             <div class="col overflow-list fs-18"
-                                                 th:utext="${#strings.replace(qna.content, searchWord, '<mark>' + searchWord + '</mark>')}"th:if="${searchWord != null}">
+                                                 th:utext="${#strings.replace(qna.content, searchWord, '<mark>' + searchWord + '</mark>')}" th:if="${searchWord != null}">
 
                                             </div>
                                         </a>
@@ -212,9 +212,9 @@
                                     <div class="row mt-2" th:if="${qna.hashTag != null}">
                                         <div class="col">
                                             <span class="text-secondary">
-                                                    <span th:each="tag, iterStat : ${#strings.replace(qna.hashTag, '\\s*#\\s*', '#').split('#')}" th:if="${!#strings.isEmpty(tag)}">
-                                                        <span th:text="'# ' + ${tag}" class="me-3"></span>
-                                                        <span th:if="${!iterStat.last}"> </span>
+                                                <span th:each="tag, iterStat : ${#strings.replace(qna.hashTag, '\\s*#\\s*', '#').split('#')}" th:if="${!#strings.isEmpty(tag)}">
+                                                    <span th:text="'# ' + ${tag}" class="me-3"></span>
+                                                    <span th:if="${!iterStat.last}"> </span>
                                                 </span>
                                             </span>
                                         </div>

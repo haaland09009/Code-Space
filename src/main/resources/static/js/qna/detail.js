@@ -1166,6 +1166,13 @@
        });
    }
 
+
+   /* 해시태그를 통한 검색 */
+   const searchForTag = (tag) => {
+        const url = "/qna?tagName=" + tag;
+        window.location.href = url;
+   }
+
 window.addEventListener("DOMContentLoaded", function(){
 
     if (sessionId != 0) {
@@ -1211,7 +1218,3 @@ window.addEventListener("DOMContentLoaded", function(){
 });
 
 
-   /* 댓글 위치 스크롤 이동 */
-   window.onload = function() {
-
-   };
