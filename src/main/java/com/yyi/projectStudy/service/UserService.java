@@ -31,7 +31,7 @@ public class UserService {
     private final JobRepository jobRepository;
     private final UserJobRepository userJobRepository;
 
-    // 회원가입 프로세스
+    /* 회원가입 프로세스 */
     public void save(UserDTO userDTO, UserJobDTO userJobDTO) throws IOException {
         if (userDTO.getProfileImageFile().isEmpty()) {
             Long savedUserId = userRepository.save(UserEntity.toUserEntity(userDTO)).getId();
@@ -78,7 +78,7 @@ public class UserService {
         }
     }
 
-    // 로그인 프로세스
+    /* 로그인 프로세스 */
     @Transactional
     public UserDTO login(UserDTO userDTO) {
         Optional<UserEntity> optionalUserEntity = userRepository.findByEmail(userDTO.getEmail());
@@ -94,7 +94,7 @@ public class UserService {
         }
     }
 
-    // 마이페이지 - 회원정보 조회
+    /* 마이페이지 - 회원정보 조회 */
     @Transactional
     public UserDTO findById(Long id) {
         Optional<UserEntity> optionalUserEntity = userRepository.findById(id);
@@ -105,7 +105,7 @@ public class UserService {
         }
     }
 
-    // 모든 직군 조회
+    /* 모든 직군 조회 */
     @Transactional
     public List<JobDTO> findAllJobs() {
         List<JobEntity> jobEntityList = jobRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
@@ -116,7 +116,7 @@ public class UserService {
         return jobDTOList;
     }
 
-    // 회원의 직군 조회
+    /* 회원의 직군 조회 */
     public JobDTO findJob(Long id) {
         UserEntity userEntity = userRepository.findById(id).get();
         UserJobEntity userJobEntity = userJobRepository.findByUserEntity(userEntity).get();
@@ -126,7 +126,7 @@ public class UserService {
     }
 
 
-    // !! 회원정보 수정 (나중에 사진 첨부 수정해야함)
+    /* !! 회원정보 수정 (나중에 사진 첨부 수정해야함) */
     @Transactional
     public void update(UserDTO userDTO, UserJobDTO userJobDTO) {
         userRepository.updateUser(userDTO.getNickname(), userDTO.getEmail(), userDTO.getId());

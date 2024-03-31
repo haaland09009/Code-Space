@@ -6,6 +6,15 @@
      display: none;
      font-size: 18px;
   }
+
 .updated-qna:hover + .updated-text {
    display: block;
+}
+
+.likeStatus:hover {
+    color: black;
+}
+
+.disLikeStatus:hover {
+    color: black;
 }

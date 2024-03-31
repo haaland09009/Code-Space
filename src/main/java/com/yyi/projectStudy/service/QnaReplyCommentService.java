@@ -22,7 +22,7 @@ public class QnaReplyCommentService {
     private final NotTypeRepository notTypeRepository;
     private final NotificationRepository notificationRepository;
 
-    // 댓글 작성
+    /* 댓글 작성 */
     public Long save(QnaReplyCommentDTO qnaReplyCommentDTO) {
         Optional<QnaReplyEntity> optionalQnaReplyEntity = qnaReplyRepository.findById(qnaReplyCommentDTO.getReplyId());
         if (optionalQnaReplyEntity.isPresent()) {
@@ -35,7 +35,7 @@ public class QnaReplyCommentService {
         }
     }
 
-    // 답변 당 댓글 조회
+    /* 답변 당 댓글 조회 */
     @Transactional
     public List<QnaReplyCommentDTO> findAll(Long replyId) {
         QnaReplyEntity qnaReplyEntity = qnaReplyRepository.findById(replyId).get();
@@ -48,7 +48,7 @@ public class QnaReplyCommentService {
         return qnaReplyCommentDTOList;
     }
 
-    // 어떤 답변에 댓글이 달린건지 확인 (답변 pk 추출)
+    /* 어떤 답변에 댓글이 달린건지 확인 (답변 pk 추출) */
     @Transactional
     public QnaReplyCommentDTO findById(Long id) {
         Optional<QnaReplyCommentEntity> optionalQnaReplyCommentEntity = qnaReplyCommentRepository.findById(id);
@@ -71,7 +71,7 @@ public class QnaReplyCommentService {
         qnaReplyCommentRepository.deleteById(id);
     }
 
-    // 답변에 달린 댓글 수
+    /* 답변에 달린 댓글 수 */
     public int commentCount(Long id) {
         QnaReplyEntity qnaReplyEntity = qnaReplyRepository.findById(id).get();
         return qnaReplyCommentRepository.countByQnaReplyEntity(qnaReplyEntity);

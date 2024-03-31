@@ -5,7 +5,11 @@
      color: #ffffff;
      display: none;
   }
-.updated-project:hover + .updated-text {
+ .updated-project:hover + .updated-text {
    display: block;
-}
+ }
 
+ .custom-border {
+    border-right: 2px solid #ddd; /* 원하는 경계선 스타일 및 색상으로 조절 가능 */
+    padding-right: 15px; /* 옵션: 오른쪽 여백 추가 */
+ }

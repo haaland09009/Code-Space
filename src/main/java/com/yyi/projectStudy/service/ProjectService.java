@@ -560,25 +560,5 @@ public class ProjectService {
        return projectDTOS;
    }
 
-/*    @Transactional
-    public List<ProjectDTO> getProjectListOrderByClipAndCategory(Long projectStudyId, String status) {
-        List<Long> projectIdList;
-        if (status != null) {
-            if (status.equals("unrecruited")) {
-                projectIdList = projectRepository.getProjectListOrderByClipAndCategoryAndStatus(projectStudyId, "모집중");
-            } else {
-                projectIdList = projectRepository.getProjectListOrderByClipAndCategoryAndStatus(projectStudyId, "모집완료");
-            }
-        } else {
-            projectIdList = projectRepository.getProjectListOrderByClipAndCategory(projectStudyId);
-        }
-
-        List<ProjectDTO> projectDTOList = new ArrayList<>();
-        for (Long projectId : projectIdList) {
-            ProjectEntity projectEntity = projectRepository.findById(projectId).get();
-            projectDTOList.add(ProjectDTO.toProjectDTO(projectEntity));
-        }
-        return projectDTOList;
-    }*/
 
 }

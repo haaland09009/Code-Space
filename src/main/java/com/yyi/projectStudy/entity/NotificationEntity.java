@@ -51,7 +51,7 @@ public class NotificationEntity extends BaseEntity {
     private LocalDateTime readDate;
 
 
-    /* 알림 저장  */
+    /* 알림 저장 */
     public static NotificationEntity toNotificationEntity(NotificationDTO notificationDTO,
                                                       NotTypeEntity notTypeEntity,
                                                       UserEntity receiver, UserEntity sender) {

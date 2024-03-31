@@ -29,7 +29,7 @@ public class QnaService {
     private final QnaClipRepository qnaClipRepository;
     private final QnaTagsRepository qnaTagsRepository;
 
-    // 토픽 종류 조회
+    /* 토픽 종류 조회 */
     public List<TopicDTO> findAllTopic() {
         List<TopicEntity> topicEntityList = topicRepository.findAll();
         List<TopicDTO> topicDTOList = new ArrayList<>();
@@ -39,14 +39,14 @@ public class QnaService {
         return topicDTOList;
     }
 
-    // 게시글 작성
+    /* 게시글 작성 */
     public Long saveQna(QnaDTO qnaDTO) {
         UserEntity userEntity = userRepository.findById(qnaDTO.getUserId()).get();
         QnaEntity qnaEntity = QnaEntity.toQnaEntity(qnaDTO, userEntity);
         return qnaRepository.save(qnaEntity).getId();
     }
 
-    // 게시글 조회
+    /* 게시글 조회 */
     @Transactional
     public QnaDTO findById(Long savedId) {
         QnaEntity qnaEntity = qnaRepository.findById(savedId).get();
@@ -54,13 +54,13 @@ public class QnaService {
     }
 
 
-    // 토픽 pk 조회
+    /* 토픽 pk 조회 */
     public TopicDTO findByIdForTopic(Long topicId) {
         TopicEntity topicEntity = topicRepository.findById(topicId).get();
         return TopicDTO.toTopicDTO(topicEntity);
     }
 
-    // QNA - TOPIC 저장
+    /* QNA - TOPIC 저장 */
     public void saveQnaTopic(QnaDTO dto, TopicDTO topicDTO) {
         QnaEntity qnaEntity = qnaRepository.findById(dto.getId()).get();
         TopicEntity topicEntity = topicRepository.findById(topicDTO.getId()).get();
@@ -90,7 +90,7 @@ public class QnaService {
     }
 
 
-    // 게시판번호(qnaId)로 토픽 카테고리 조회
+    /* 게시판번호(qnaId)로 토픽 카테고리 조회 */
     public TopicDTO findTopic(Long id) {
         QnaEntity qnaEntity = qnaRepository.findById(id).get();
         QnaTopicEntity qnaTopicEntity = qnaTopicRepository.findByQnaEntity(qnaEntity).get();
@@ -100,19 +100,19 @@ public class QnaService {
     }
 
 
-    // 게시글 삭제
+    /* 게시글 삭제 */
     public void deleteById(Long id) {
         qnaRepository.deleteById(id);
     }
 
-    // 조회수 증가
+    /* 조회수 증가 */
     @Transactional
     public void updateReadCount(Long id) {
         qnaRepository.updateReadCount(id);
     }
 
 
-    // 게시글 수정
+    /* 게시글 수정 */
     @Transactional
     public QnaDTO updateQna(QnaDTO qnaDTO) {
         String content = qnaDTO.getContent();
@@ -124,7 +124,7 @@ public class QnaService {
         return QnaDTO.toQnaDTO(qnaEntity);
     }
 
-    // 게시글 수정 - 토픽 카테고리
+    /* 게시글 수정 - 토픽 카테고리 */
     @Transactional
     public TopicDTO updateQnaTopic(Long id, QnaTopicDTO qnaTopicDTO) {
         QnaEntity qnaEntity = qnaRepository.findById(id).get();
@@ -134,7 +134,7 @@ public class QnaService {
         return TopicDTO.toTopicDTO(topicEntity);
     }
 
-    // 본인이 작성한 게시글인지 확인
+    /* 본인이 작성한 게시글인지 확인 */
     public Long isYourQna(Long id) {
         Optional<QnaEntity> optionalQnaEntity = qnaRepository.findById(id);
         if (optionalQnaEntity.isPresent()) {
@@ -145,14 +145,14 @@ public class QnaService {
         }
     }
 
-    // 게시글 좋아요를 눌렀을 때 싫어요 여부 확인
+    /* 게시글 좋아요를 눌렀을 때 싫어요 여부 확인 */
     public int checkQnaDisLike(QnaDTO qnaDTO) {
         QnaEntity qnaEntity = qnaRepository.findById(qnaDTO.getId()).get();
         UserEntity userEntity = userRepository.findById(qnaDTO.getUserId()).get();
         return qnaDisLikeRepository.countByQnaEntityAndUserEntity(qnaEntity, userEntity);
     }
 
-    // 게시글 좋아요 클릭
+    /* 게시글 좋아요 클릭 */
     public void like(QnaLikeDTO qnaLikeDTO) {
         Optional<QnaEntity> optionalQnaEntity = qnaRepository.findById(qnaLikeDTO.getQnaId());
         if (optionalQnaEntity.isPresent()) {
@@ -167,14 +167,14 @@ public class QnaService {
         }
     }
 
-    // 게시글 좋아요 수 확인
+    /* 게시글 좋아요 수 확인 */
     public int likeCount(Long id) {
         QnaEntity qnaEntity = qnaRepository.findById(id).get();
         return qnaLikeRepository.countByQnaEntity(qnaEntity);
     }
 
 
-    // 게시글 싫어요를 눌렀을 때 좋어요 여부 확인
+    /* 게시글 싫어요를 눌렀을 때 좋어요 여부 확인 */
     public int checkQnaLike(QnaDTO qnaDTO) {
         QnaEntity qnaEntity = qnaRepository.findById(qnaDTO.getId()).get();
         UserEntity userEntity = userRepository.findById(qnaDTO.getUserId()).get();
@@ -182,7 +182,7 @@ public class QnaService {
     }
 
 
-    // 게시글 싫어요 클릭
+    /* 게시글 싫어요 클릭 */
     public void disLike(QnaDisLikeDTO qnaDisLikeDTO) {
         Optional<QnaEntity> optionalQnaEntity = qnaRepository.findById(qnaDisLikeDTO.getQnaId());
         if (optionalQnaEntity.isPresent()) {
@@ -198,20 +198,20 @@ public class QnaService {
     }
 
 
-    // 게시글 싫어요 수 확인
+    /* 게시글 싫어요 수 확인 */
     public int disLikeCount(Long id) {
         QnaEntity qnaEntity = qnaRepository.findById(id).get();
         return qnaDisLikeRepository.countByQnaEntity(qnaEntity);
     }
 
-    // 게시글에 좋아요를 눌렀는지
+    /* 게시글에 좋아요를 눌렀는지 확인 */
     public int checkQnaLikeForColor(Long qnaId, Long userId) {
         QnaEntity qnaEntity = qnaRepository.findById(qnaId).get();
         UserEntity userEntity = userRepository.findById(userId).get();
         return qnaLikeRepository.countByQnaEntityAndUserEntity(qnaEntity, userEntity);
     }
 
-    // 게시글에 싫어요를 눌렀는지
+    /* 게시글에 싫어요를 눌렀는지 확인 */
     public int checkQnaDisLikeForColor(Long qnaId, Long userId) {
         QnaEntity qnaEntity = qnaRepository.findById(qnaId).get();
         UserEntity userEntity = userRepository.findById(userId).get();
@@ -219,16 +219,16 @@ public class QnaService {
     }
 
 
-    // 베스트 답변 찾기
+    /* 베스트 답변 찾기 */
     public List<QnaBestReplyDTO> findBestReplyList() {
         List<QnaReplyEntity> qnaReplyEntityList = qnaReplyRepository.findBestReply();
-        // 위 쿼리 qna_id, id (reply_id) 추출
+       /* qna_id, id (reply_id) 추출 */
         List<QnaBestReplyDTO> bestReplyDTOlist = new ArrayList<>();
         for (QnaReplyEntity qnaReplyEntity : qnaReplyEntityList) {
             QnaBestReplyDTO qnaBestReplyDTO = new QnaBestReplyDTO();
 
             int likeCount = qnaReplyLikeRepository.countByQnaReplyEntity(qnaReplyEntity);
-            // 답변 좋아요
+            /* 답변 좋아요 */
             qnaBestReplyDTO.setLikeCount(likeCount);
 
             Long qnaId = qnaReplyEntity.getQnaEntity().getId();
@@ -252,7 +252,7 @@ public class QnaService {
         return bestReplyDTOlist;
     }
 
-    // 베스트 질문
+    /* 베스트 질문*/
     @Transactional
     public List<QnaBestDTO> findBestQnaList() {
         // 좋아요 많은 순
@@ -301,7 +301,7 @@ public class QnaService {
     }
 
 
-    // 기술, 커리어 조회
+    /* 기술, 커리어 조회 */
     @Transactional
     public List<QnaDTO> findAllByTopic(Long id) {
         TopicEntity topicEntity = topicRepository.findById(id).get();
@@ -315,7 +315,7 @@ public class QnaService {
         return qnaDTOList;
     }
 
-    // 랜덤 추출
+    /* 랜덤 추출 */
     @Transactional
     public List<QnaDTO> randomQnaList(Long id) {
         List<QnaEntity> qnaEntityList = qnaRepository.randomQna(id);
@@ -327,7 +327,7 @@ public class QnaService {
     }
 
 
-    // 활동내역
+    /* 활동내역 */
     @Transactional
     public List<QnaArticleDTO> findArticleList(Long userId) {
         List<Object[]> qnaArticleList = qnaRepository.getQnaArticles(userId);
@@ -391,7 +391,7 @@ public class QnaService {
     }
 
 
-    // 게시물 스크랩
+    /* 게시물 스크랩 */
     public void clip(QnaClipDTO qnaClipDTO) {
         Optional<QnaEntity> optionalQnaEntity = qnaRepository.findById(qnaClipDTO.getQnaId());
         if (optionalQnaEntity.isPresent()) {
@@ -409,14 +409,14 @@ public class QnaService {
     }
 
 
-    // 게시물 스크랩 여부 확인
+    /* 게시물 스크랩 여부 확인 */
     public int checkClipYn(QnaClipDTO qnaClipDTO) {
         QnaEntity qnaEntity = qnaRepository.findById(qnaClipDTO.getQnaId()).get();
         UserEntity userEntity = userRepository.findById(qnaClipDTO.getUserId()).get();
         return qnaClipRepository.countByQnaEntityAndUserEntity(qnaEntity, userEntity);
     }
 
-    // 스크랩 목록
+    /* 스크랩 목록 */
     @Transactional
     public List<QnaClipDTO> getClipList(Long id) {
         UserEntity userEntity = userRepository.findById(id).get();
@@ -429,7 +429,7 @@ public class QnaService {
         return qnaClipDTOList;
     }
 
-    // 해시 태그 추가
+    /* 해시 태그 추가 */
     @Transactional
     public void saveHashTag(QnaDTO dto, String tag) {
         if (findHashTag(dto.getId()) != null) {
@@ -443,7 +443,7 @@ public class QnaService {
     }
 
 
-    // 해시 태그 조회
+    /* 해시 태그 조회 */
     @Transactional
     public QnaTagsDTO findHashTag(Long id) {
         QnaEntity qnaEntity = qnaRepository.findById(id).get();

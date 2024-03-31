@@ -1,39 +1,39 @@
-// 게시글 삭제 모달
+ /* 게시글 삭제 모달 */
  const deleteBoardReq = () => {
      const deleteModal = bootstrap.Modal.getOrCreateInstance("#deleteModal");
      deleteModal.show();
  }
 
- // 게시글 삭제
+ /* 게시글 삭제 */
  const deleteBoard = () => {
      const deleteModal = bootstrap.Modal.getOrCreateInstance("#deleteModal");
      deleteModal.hide();
      location.href = "/project/delete/" + projectPk;
  }
 
- // 본인 댓글 좋아요/싫어요 클릭 오류 모달
-const alertNoLikeModal = () => {
+ /* 본인 댓글에 좋아요 / 싫어요 클릭 시 */
+ const alertNoLikeModal = () => {
     const alertNoLikeModal = bootstrap.Modal.getOrCreateInstance("#alertNoLikeModal");
     alertNoLikeModal.show();
 
     setTimeout(function() {
         alertNoLikeModal.hide();
-    }, 2000);
-}
+        }, 2000);
+    }
 
 
 
- // 본인 댓글 좋아요/싫어요 클릭 오류 모달
-const alertLikeCheckModal = () => {
+ /* 본인 댓글 좋아요/싫어요 클릭 오류 모달 */
+ const alertLikeCheckModal = () => {
     const alertLikeCheckModal = bootstrap.Modal.getOrCreateInstance("#alertLikeCheckModal");
     alertLikeCheckModal.show();
 
     setTimeout(function() {
         alertLikeCheckModal.hide();
     }, 2000);
-}
+ }
 
-  // 댓글 작성
+ /* 댓글 작성 */
  const commentReq = () => {
      const projectId = projectPk;
      const content = document.querySelector("#commentContent");
@@ -43,7 +43,6 @@ const alertLikeCheckModal = () => {
          content.focus();
          return;
      }
-
      $.ajax({
          type: "post",
          url: "/projectComment/save",
@@ -61,7 +60,7 @@ const alertLikeCheckModal = () => {
       });
  }
 
- // 날짜 변환
+ /* 날짜 변환 */
  const formatTime = (timeStamp) => {
    const date = new Date(timeStamp);
    const year = date.getFullYear();
@@ -75,13 +74,12 @@ const alertLikeCheckModal = () => {
    return formattedDate;
  }
 
- // 댓글 수 업데이트 함수
+ /* 댓글 수 업데이트 */
  const updateCommentCount = (id) => {
      $.ajax({
          type: "get",
          url: "/projectComment/count/" + id,
          success: function(res) {
-
              const commentCount = res; // 서버에서 받아온 댓글 수
              document.querySelector("#commentCount").innerText = commentCount; // 댓글 수 업데이트
          },
@@ -92,87 +90,81 @@ const alertLikeCheckModal = () => {
  }
 
 
-    // 댓글 조회
-    const loadComments = (projectId) => {
-         $.ajax({
-         type: "get",
-         url: "/projectComment/getCommentList/" + projectId,
-         success: function(comments) {
-             let output = "";
-             for (let i in comments) {
-                 output += '<div class="row mb-2" id="comment_' + comments[i].id + '">';
-                 output += '<div class="col ms-1">';
-                 output += '<div class="row">';
-                 output += '<div class="col">';
-                 output += '<div class="row">';
-                 output += '<div class="col-2 user-info-image" id="commentUserImage_' + comments[i].id + '" onclick="clickUserInfoModal(' + comments[i].userId + ')">';
+ /* 댓글 목록 조회 */
+ const loadComments = (projectId) => {
+     $.ajax({
+     type: "get",
+     url: "/projectComment/getCommentList/" + projectId,
+     success: function(comments) {
+         let output = "";
+         for (let i in comments) {
+             output += '<div class="row mb-2" id="comment_' + comments[i].id + '">';
+             output += '<div class="col ms-1">';
+             output += '<div class="row">';
+             output += '<div class="col">';
+             output += '<div class="row">';
+             output += '<div class="col-2 user-info-image" id="commentUserImage_' + comments[i].id + '" onclick="clickUserInfoModal(' + comments[i].userId + ')">';
 
-                 if (comments[i].fileAttached == 0) {
-                     output += '<img class="rounded-circle ms-2" style="width: 55px; height: 55px;" src="/img/user.jpg">';
-                 } else if (comments[i].fileAttached == 1) {
-                     output += '<img class="rounded-circle ms-2" style="width: 55px; height: 55px;" src="/upload/' + comments[i].storedFileName + '">';
-                 }
+             if (comments[i].fileAttached == 0) {
+                 output += '<img class="rounded-circle ms-2" style="width: 55px; height: 55px;" src="/img/user.jpg">';
+             } else if (comments[i].fileAttached == 1) {
+                 output += '<img class="rounded-circle ms-2" style="width: 55px; height: 55px;" src="/upload/' + comments[i].storedFileName + '">';
+             }
+             output += '</div>';
 
-                 output += '</div>';
+             if (sessionId != 0 && sessionId == comments[i].userId) {
+                output += '<div class="col" id="commentUpdateForm_' + comments[i].id + '" style="display: none;">';
+                output += '<div class="row">';
+                output += '<div class="col me-3">';
+                output += '<textarea name="" id="commentUpdateContent_' + comments[i].id + '" cols="10" rows="3" class="form-control fs-5"  style="resize:none;" placeholder="댓글을 작성하여 프로젝트와 스터디에 참여해보세요 !" onkeydown="resize(this)" onkeyup="resize(this)">' + comments[i].content +  '</textarea>';
+                output += '</div>';
+                output += '</div>';
 
-                 if (sessionId != 0 && sessionId == comments[i].userId) {
-                    output += '<div class="col" id="commentUpdateForm_' + comments[i].id + '" style="display: none;">';
-                    output += '<div class="row">';
-                    output += '<div class="col me-3">';
-                    output += '<textarea name="" id="commentUpdateContent_' + comments[i].id + '" cols="10" rows="3" class="form-control fs-5"  style="resize:none;" placeholder="댓글을 작성하여 프로젝트와 스터디에 참여해보세요 !" onkeydown="resize(this)" onkeyup="resize(this)">' + comments[i].content +  '</textarea>';
-                    output += '</div>';
-                    output += '</div>';
+                output += '<div class="row mt-2">';
+                output += '<div class="col text-danger" style="display: none;" id="noContentAlert_' + comments[i].id + '">';
+                output += '<i class="bi bi-exclamation-circle">' + '</i>';
+                output += '<span class="ms-2">' + "내용을 최소 1자 이상 입력해주세요." + '</span>';
+                output += '</div>';
+                output += '<div class="col text-end me-3">';
+                output += '<button class="btn btn-outline-dark fs-18" onclick="toggleUpdateCommentPage(' + comments[i].id + ')">' + "취소" + '</button>';
+                output += '<button class="btn mainButton ms-2 fs-18" onclick="updateComment(' + comments[i].id + ')">' + "댓글 쓰기" + '</button>';
+                output += '</div>';
+                output += '</div>';
+                output += '</div>';
+             }
+             output += '<div class="col" id="commentUserInfo_' + comments[i].id + '">';
+             output += '<div class="row">';
+             output += '<div class="col fw-semibold px-0 fs-5">' + comments[i].writer + '</div>';
+             output += '</div>';
+             output += '<div class="row">';
+             output += '<div class="col px-0 text-secondary fs-18">';
+             output += '<span>'  + comments[i].jobName + '</span>';
+             output += '<span class="ms-1">' + "·" + '</span>';
+             output += '<span class="date-element ms-1">' +  formatDateTime(comments[i].regDate) + '</span>';
+             if (comments[i].updDate != null) {
+                output += '<span style="position: relative; white-space: nowrap;">';
+                output += '<span class="ms-2 updatedFont updated-project">' + "수정됨" + '</span>';
+                output += '<span class="updated-text" style="position: absolute; left: 12px">' + "수정일시 : ";
+                output += '<span>' + formatDate(comments[i].updDate) + '</span>'
+                output += '</span>';
+                output += '</span>';
+             }
+             output += '</div>';
+             output += '</div>';
+             output += '</div>';
+             output += '</div>';
+             output += '</div>';
+             output += '<div class="col text-end" id="commentUserLikeInfo_' + comments[i].id + '">';
+             output += '<span>';
+             output += '<img src="/img/like.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForLike(' + comments[i].id + ')">';
+             output += '<span class="me-1" id="cmtLike_' + comments[i].id + '">' + comments[i].likeCount + '</span>';
+             output += '</span>';
+             output += '<span class="ms-2">';
+             output += '<img src="/img/dislike.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForDisLike(' + comments[i].id + ')" >';
+             output += '<span class="me-1" id="cmtDisLike_' + comments[i].id + '">' + comments[i].disLikeCount + '</span>';
+             output += '</span>';
 
-                    output += '<div class="row mt-2">';
-                    output += '<div class="col text-danger" style="display: none;" id="noContentAlert_' + comments[i].id + '">';
-                    output += '<i class="bi bi-exclamation-circle">' + '</i>';
-                    output += '<span class="ms-2">' + "내용을 최소 1자 이상 입력해주세요." + '</span>';
-                    output += '</div>';
-                    output += '<div class="col text-end me-3">';
-                    output += '<button class="btn btn-outline-dark fs-18" onclick="toggleUpdateCommentPage(' + comments[i].id + ')">' + "취소" + '</button>';
-                    output += '<button class="btn mainButton ms-2 fs-18" onclick="updateComment(' + comments[i].id + ')">' + "댓글 쓰기" + '</button>';
-                    output += '</div>';
-                    output += '</div>';
-                    output += '</div>';
-                 }
-
-                 output += '<div class="col" id="commentUserInfo_' + comments[i].id + '">';
-                 output += '<div class="row">';
-                 output += '<div class="col fw-semibold px-0 fs-5">' + comments[i].writer + '</div>';
-                 output += '</div>';
-                 output += '<div class="row">';
-                 output += '<div class="col px-0 text-secondary fs-18">';
-                 output += '<span>'  + comments[i].jobName + '</span>';
-                 output += '<span class="ms-1">' + "·" + '</span>';
-                 output += '<span class="date-element ms-1">' +  formatDateTime(comments[i].regDate) + '</span>';
-                 if (comments[i].updDate != null) {
-                    output += '<span style="position: relative; white-space: nowrap;">';
-                    output += '<span class="ms-2 updatedFont updated-project">' + "수정됨" + '</span>';
-                    output += '<span class="updated-text" style="position: absolute; left: 12px">' + "수정일시 : ";
-                    output += '<span>' + formatDate(comments[i].updDate) + '</span>'
-                    output += '</span>';
-                    output += '</span>';
-                 }
-                 output += '</div>';
-                 output += '</div>';
-                 output += '</div>';
-                 output += '</div>';
-                 output += '</div>';
-                 output += '<div class="col text-end" id="commentUserLikeInfo_' + comments[i].id + '">';
-
-                 output += '<span>';
-                 output += '<img src="/img/like.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForLike(' + comments[i].id + ')">';
-
-                 output += '<span class="me-1" id="cmtLike_' + comments[i].id + '">' + comments[i].likeCount + '</span>';
-                 output += '</span>';
-
-
-                 output += '<span class="ms-2">';
-                 output += '<img src="/img/dislike.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForDisLike(' + comments[i].id + ')" >';
-                 output += '<span class="me-1" id="cmtDisLike_' + comments[i].id + '">' + comments[i].disLikeCount + '</span>';
-                 output += '</span>';
-
-                 if (sessionId == comments[i].userId) {
+             if (sessionId == comments[i].userId) {
                  output += '<span class="text-end ps-0 dropdown" style="cursor: pointer;" id="dropdownComment_' + comments[i].id + '">';
                  output += '<i class="bi bi-three-dots-vertical" style="height: 10px" id="dropButtonComment" data-bs-toggle="dropdown" aria-expanded="false"></i>';
                  output += '<ul class="dropdown-menu" aria-labelledby="dropButtonComment">';
@@ -191,100 +183,87 @@ const alertLikeCheckModal = () => {
                  output += '</li>';
                  output += '</ul>';
                  output += '</span>';
-                 }
-
-                 output += '</div>';
-                 output += '</div>';
-                 output += '<div class="row mt-3" id="commentContent_' + comments[i].id + '">';
-                 output += '<div class="col ms-2">';
-                 output += '<span class="boardContent" id="commentSpan_' + comments[i].id + '">' + comments[i].content + '</span>';
-                 output += '</div>';
-                 output += '</div>';
-
-                 <!-- 답글 작성 -->
-
-                 output += '<div class="row mt-2 mb-2">' + '</div>';
-
-                 <!-- 댓글 사이 경계선 -->
-                 output += '<div class="border-bottom mt-1 mb-3"></div>';
-                 <!-- 댓글 사이 경계선 -->
-                 output += '</div>';
-                 output += '</div>';
              }
-             document.getElementById('comment-list').innerHTML = output;
-
-         },
-         error: function(err) {
-             return;
+             output += '</div>';
+             output += '</div>';
+             output += '<div class="row mt-3" id="commentContent_' + comments[i].id + '">';
+             output += '<div class="col ms-2">';
+             output += '<span class="boardContent" id="commentSpan_' + comments[i].id + '">' + comments[i].content + '</span>';
+             output += '</div>';
+             output += '</div>';
+             output += '<div class="row mt-2 mb-2">' + '</div>';
+             output += '<div class="border-bottom mt-1 mb-3"></div>';
+             output += '</div>';
+             output += '</div>';
          }
-     });
-    }
+         document.getElementById('comment-list').innerHTML = output;
+     },
+     error: function(err) {
+         return;
+     }
+  });
+ }
 
 
 
 
-    // 댓글 삭제 모달
-    const deleteCommentPage = (id) => {
-        selectedCommentId = id;
-        const deleteCommentModal = bootstrap.Modal.getOrCreateInstance("#deleteCommentModal");
-	    deleteCommentModal.show();
-    }
+ /* 댓글 삭제 모달 */
+ const deleteCommentPage = (id) => {
+    selectedCommentId = id;
+    const deleteCommentModal = bootstrap.Modal.getOrCreateInstance("#deleteCommentModal");
+    deleteCommentModal.show();
+ }
 
-    // 댓글 삭제
-    const deleteComment = () => {
-        const id = selectedCommentId;
-        const projectId = projectPk;
-
-        $.ajax({
+ /* 댓글 삭제 */
+ const deleteComment = () => {
+    const id = selectedCommentId;
+    const projectId = projectPk;
+    $.ajax({
          type: "post",
          url: "/projectComment/delete/" + id,
          success: function(res) {
             selectedCommentId = null;
-          	const deleteCommentModal = bootstrap.Modal.getOrCreateInstance("#deleteCommentModal");
-			deleteCommentModal.hide();
+            const deleteCommentModal = bootstrap.Modal.getOrCreateInstance("#deleteCommentModal");
+            deleteCommentModal.hide();
             loadComments(projectId);
             updateCommentCount(projectId);
          },
          error: function(err) {
              return;
          }
-     });
+      });
+     }
 
-    }
-
-
-
-  // 본인이 작성한 댓글인지의 여부 확인 (좋아요)
+  /* 본인이 작성한 댓글인지의 여부 확인 (좋아요) */
   const isYourCommentForLike = (id) => {
        if (sessionId == 0) {
            location.href = "/user/loginPage";
            return;
        }
-
        $.ajax({
-         type: "get",
-         url: "/projectComment/isYourComment",
-         data: {
-            "id": id,
-            "userId": sessionId
-         },
-         success: function(res) {
-            if (res) {
-            // 반환값 true
-                alertNoLikeModal();
-                return;
-            } else {
-                // 반환값 false
-                checkCommentDisLike(id);
-            }
-         },
-         error: function(err) {
-             return;
-         }
-     });
-  }
+             type: "get",
+             url: "/projectComment/isYourComment",
+             data: {
+                "id": id,
+                "userId": sessionId
+             },
+             success: function(res) {
+                if (res) {
+                    /* 반환값 true */
+                    alertNoLikeModal();
+                    return;
+                } else {
+                    /* 반환값 false */
+                    checkCommentDisLike(id);
+                }
+             },
+             error: function(err) {
+                 return;
+             }
+         });
+      }
 
-  // 댓글 좋아요를 눌렀을 때 싫어요 여부 확인
+   /* 댓글 좋아요를 눌렀을 때 싫어요 여부 확인 */
    const checkCommentDisLike = (id) => {
          $.ajax({
          type: "get",
@@ -295,11 +274,11 @@ const alertLikeCheckModal = () => {
          },
          success: function(res) {
             if (res > 0) {
-            // 반환값 true
+                /* 반환값 true */
                 alertLikeCheckModal();
                 return;
             } else {
-                // 반환값 false
+                /* 반환값 false */
                 toggleCommentLike(id);
             }
          },
@@ -310,9 +289,8 @@ const alertLikeCheckModal = () => {
    }
 
 
-    // 댓글 좋아요
+  /* 댓글 좋아요 */
   const toggleCommentLike = (id) => {
-
        $.ajax({
          type: "post",
          url: "/projectComment/commentLike",
@@ -329,7 +307,7 @@ const alertLikeCheckModal = () => {
      });
   }
 
-  // 댓글 좋아요 수 업데이트
+  /* 댓글 좋아요 수 업데이트 */
   const updateCommentLikeCount = (id) => {
        const cmtLikeBox = document.getElementById("cmtLike_" + id);
        $.ajax({
@@ -345,13 +323,12 @@ const alertLikeCheckModal = () => {
   }
 
 
-   // 본인이 작성한 댓글인지의 여부 확인 (싫어요)
+  /* 본인이 작성한 댓글인지의 여부 확인 (싫어요) */
   const isYourCommentForDisLike = (id) => {
        if (sessionId == 0) {
            location.href = "/user/loginPage";
            return;
        }
-
        $.ajax({
          type: "get",
          url: "/projectComment/isYourComment",
@@ -361,11 +338,11 @@ const alertLikeCheckModal = () => {
          },
          success: function(res) {
             if (res) {
-            // 반환값 true
+                /* 반환값 true */
                 alertNoLikeModal();
                 return;
             } else {
-                // 반환값 false
+                /* 반환값 false */
                 checkCommentLike(id);
             }
          },
@@ -375,7 +352,7 @@ const alertLikeCheckModal = () => {
      });
   }
 
-   // 댓글 싫어요를 눌렀을 때 좋아요 여부 확인
+   /* 댓글 싫어요를 눌렀을 때 좋아요 여부 확인 */
    const checkCommentLike = (id) => {
          $.ajax({
          type: "get",
@@ -386,11 +363,9 @@ const alertLikeCheckModal = () => {
          },
          success: function(res) {
             if (res > 0) {
-            // 반환값 true
                 alertLikeCheckModal();
                 return;
             } else {
-                // 반환값 false
                 toggleCommentDisLike(id);
             }
          },
@@ -400,9 +375,8 @@ const alertLikeCheckModal = () => {
      });
    }
 
-  // 댓글 싫어요
+  /* 댓글 싫어요 */
   const toggleCommentDisLike = (id) => {
-
        $.ajax({
          type: "post",
          url: "/projectComment/commentDisLike",
@@ -419,7 +393,7 @@ const alertLikeCheckModal = () => {
      });
   }
 
-// 댓글 싫어요 수 업데이트
+  /* 댓글 싫어요 수 업데이트*/
   const updateCommentDisLikeCount = (id) => {
        const cmtDisLikeBox = document.getElementById("cmtDisLike_" + id);
        $.ajax({
@@ -435,7 +409,7 @@ const alertLikeCheckModal = () => {
   }
 
 
-    // 채팅하기 모달
+    /* 채팅하기 모달 */
     const sendMessageToWriterModal = () => {
        if (sessionId == 0) {
             location.href = "/user/loginPage";
@@ -445,7 +419,7 @@ const alertLikeCheckModal = () => {
 	    sendMessageToWriterModal.show();
     }
 
-    // 메시지 모달 창을 닫을 때 이벤트 처리
+    /* 메시지 모달 창을 닫을 때 이벤트 처리 */
     const sendMessageModalToWriter = bootstrap.Modal.getOrCreateInstance("#sendMessageToWriterModal");
     sendMessageModalToWriter.hide(); // 모달을 닫기 전에 값 초기화
     sendMessageModalToWriter._element.addEventListener("hidden.bs.modal", function () {
@@ -460,7 +434,6 @@ const alertLikeCheckModal = () => {
     }
 
 
-
     /* 게시글 작성자에게 메시지 전송하기 */
     const sendMessageToWriter = () => {
 
@@ -468,7 +441,6 @@ const alertLikeCheckModal = () => {
             location.href = "/user/loginPage";
             return;
         }
-
         const content = document.querySelector("#messageToWriterContent");
         const alertBox = document.querySelector("#alertMessageToWriterBox");
 
@@ -530,7 +502,6 @@ const alertLikeCheckModal = () => {
 
     /* 메시지 전송 */
     const sendMessage = () => {
-
         if (sessionId == 0) {
             location.href = "/user/loginPage";
             return;
@@ -559,12 +530,10 @@ const alertLikeCheckModal = () => {
            },
             success: function(res) {
                 if (res == "ok") {
-                    // 성공시
-
+                    /* 성공시 */
                      content.value = "";
-
-                    const sendSuccessModal = bootstrap.Modal.getOrCreateInstance("#sendSuccessModal");
-                    sendSuccessModal.show();
+                     const sendSuccessModal = bootstrap.Modal.getOrCreateInstance("#sendSuccessModal");
+                     sendSuccessModal.show();
 
                      setTimeout(function() {
                         sendSuccessModal.hide();
@@ -580,7 +549,7 @@ const alertLikeCheckModal = () => {
        });
     }
 
-    // 메시지 모달 창을 닫을 때 이벤트 처리
+    /* 메시지 모달 창을 닫을 때 이벤트 처리 */
     const sendMessageModal1 = bootstrap.Modal.getOrCreateInstance("#sendMessageModal");
     sendMessageModal1.hide(); // 모달을 닫기 전에 값 초기화
     sendMessageModal1._element.addEventListener("hidden.bs.modal", function () {
@@ -594,7 +563,7 @@ const alertLikeCheckModal = () => {
         content.value = "";
     }
 
-    // 게시물 스크랩 여부 확인
+    /* 게시물 스크랩 여부 확인 */
     const checkProjectClip = (id) => {
        const clipBox = document.querySelector(".clipBox");
        $.ajax({
@@ -621,7 +590,7 @@ const alertLikeCheckModal = () => {
   }
 
 
-    // 게시물 스크랩
+    /* 게시물 스크랩 */
     const toggleProjectClip = (id) => {
         if (sessionId == 0) {
             location.href = "/user/loginPage";
@@ -666,7 +635,7 @@ const alertLikeCheckModal = () => {
             commentContent.style.display = "none";
             commentUpdateForm.style.display = "block";
 
-             // 내용의 끝에 커서 설정
+            /* 내용의 끝에 커서 설정 */
             commentUpdateContent.selectionStart = commentUpdateContent.value.length;
             commentUpdateContent.selectionEnd = commentUpdateContent.value.length;
             commentUpdateContent.focus();
@@ -744,6 +713,5 @@ const alertLikeCheckModal = () => {
           setTimeout(function() {
                 commentSpan.classList.remove("highlight");
             }, 4000);
-
       }
    };
