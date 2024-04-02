@@ -7,7 +7,6 @@ $('#techBox').select2 ({
           },
           maximumSelected: function (e) {
                   var t = "최대 " + e.maximum + "개까지 선택하실 수 있습니다.";
-                  /*e.maximum != 1 && (t += "s");*/
                   return t;
           }
       },

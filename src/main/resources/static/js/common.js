@@ -34,6 +34,19 @@
          return formattedDate;
     }
 
+    /* 년.월.일로 변환 */
+    const formatDateYmd = (dateString)  => {
+       const date = new Date(dateString);
+         const year = date.getFullYear();
+         const month = String(date.getMonth() + 1).padStart(2, '0');
+         const day = String(date.getDate()).padStart(2, '0');
+         const hour = String(date.getHours() % 12 || 12).padStart(2, '0'); // 12시간 형식으로 변환하고 0시는 12시로 처리합니다.
+         const minute = String(date.getMinutes()).padStart(2, '0');
+         const ampm = date.getHours() < 12 ? '오전' : '오후';
+         const formattedDate = `${year}.${month}.${day}`;
+         return formattedDate;
+    }
+
     /* 년.월.일 시간으로 변환 */
     const formatAmPmDate = (dateString)  => {
        const date = new Date(dateString);

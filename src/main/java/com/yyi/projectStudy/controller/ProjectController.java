@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -88,51 +90,30 @@ public class ProjectController {
 
     @GetMapping(value = {"", "/category/{category}"})
     public String boardList(Model model,
-                            @PathVariable(name = "category", required = false) String category,
-                            @RequestParam(name = "order", required = false) String order,
-                            @RequestParam(name = "status", required = false) String status,
-                            @PageableDefault(page = 1) Pageable pageable) {
+                            @PathVariable(name = "category", required = false) String category) {
+
+        /* 모집 포지션 목록 불러오기 */
+        List<PositionCategoryDTO> positionCategoryList = projectService.findAllPositionCategoryDTOList();
+        model.addAttribute("positionCategoryList", positionCategoryList);
+
+        /* 기술스택 목록 불러오기 */
+        List<TechCategoryDTO> techCategoryList = projectService.findAllTechCategoryDTOList();
+        model.addAttribute("techCategoryList", techCategoryList);
 
         /* 게시글 목록 불러오기 */
-        Page<ProjectDTO> projectDTOList;
-
+        List<ProjectDTO> projectDTOList;
 
         /* 프로젝트 메뉴를 클릭할 경우 */
         if (category != null && category.equals("pro")) {
             model.addAttribute("category", "pro");
-            projectDTOList = projectService.findProjectStudyInListPage(1L, status, pageable);
-            if ("clip".equals(order)) {
-                projectDTOList = projectService.getProjectListOrderByClipAndCategory(1L, status, pageable);
-            } else if ("comment".equals(order)) {
-                projectDTOList = projectService.getProjectListOrderByCommentAndCategory(1L, status, pageable);
-            }
+            projectDTOList = projectService.findProjectStudyInListPage(1L);
         }
         /*  스터디 메뉴를 선택할 경우 */
         else if (category != null && category.equals("study")) {
             model.addAttribute("category", "study");
-            projectDTOList = projectService.findProjectStudyInListPage(2L, status, pageable);
-            if ("clip".equals(order)) {
-                projectDTOList = projectService.getProjectListOrderByClipAndCategory(2L, status, pageable);
-            } else if ("comment".equals(order)) {
-                projectDTOList = projectService.getProjectListOrderByCommentAndCategory(2L, status, pageable);
-            }
+            projectDTOList = projectService.findProjectStudyInListPage(2L);
         } else {
-            if ("clip".equals(order)) {
-                projectDTOList = projectService.getProjectListOrderByClip(status, pageable);
-            } else if ("comment".equals(order)) {
-                projectDTOList = projectService.getProjectListOrderByComment(status, pageable);
-            } else {
-                projectDTOList = projectService.findAll(status, pageable);
-            }
-        }
-
-        if (status != null) {
-            model.addAttribute("status", status);
-        }
-        if (order != null && order.equals("clip")) {
-            model.addAttribute("order", "clip");
-        } else if (order != null && order.equals("comment")) {
-            model.addAttribute("order", "comment");
+            projectDTOList = projectService.findAll();
         }
 
         /* 게시글 목록 반복문 */
@@ -159,10 +140,6 @@ public class ProjectController {
             /* 게시글 당 스크랩 수 조회 */
             int clipCount = projectService.clipCount(projectDTO.getId());
             projectDTO.setClipCount(clipCount);
-
-
-            //////////////////////////////////////////
-            /* !!! 추후에 진행상태 저장하는 코드 추가할 것 !!*/
 
 
             /* 게시글 당 사용 언어 목록 조회 */
@@ -198,15 +175,8 @@ public class ProjectController {
         }
         model.addAttribute("topProjectList", topProjectDTOList);
 
-        int blockLimit = 10; // (화면에 보여지는 페이지 갯수)
-        int startPage = (((int)(Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
-        int endPage = ((startPage + blockLimit - 1) < projectDTOList.getTotalPages()) ? startPage + blockLimit - 1 : projectDTOList.getTotalPages();
-
 
         model.addAttribute("projectList", projectDTOList);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-
 
         return "project/list";
     }
@@ -451,6 +421,65 @@ public class ProjectController {
         }
     }
 
+    /* 게시글 목록 불러오기 ajax */
+    @GetMapping("/list")
+    public ResponseEntity getProjectList(@RequestParam(value = "techIdList[]", required = false) List<Long> techIdList,
+                                         @RequestParam(value = "positionId", required = false) Long positionId) {
+
+        List<ProjectDTO> projectDTOList;
+        if (techIdList == null && positionId == null) {
+            projectDTOList = projectService.findAll();
+        } else if (techIdList != null && positionId == null) {
+            projectDTOList = projectService.selectTechList(techIdList);
+        } else if (techIdList == null && positionId != null) {
+            projectDTOList = projectService.selectPosition(positionId);
+        } else {
+            projectDTOList = projectService.findAll();
+        }
+        /* 게시글 목록 반복문 */
+        for (ProjectDTO projectDTO : projectDTOList) {
+
+            /* 날짜 변환 */
+            String formatDateTime = StringToDate.formatDateTime(String.valueOf(projectDTO.getRegDate()));
+            projectDTO.setFormattedDate(formatDateTime);
+
+            String content = projectDTO.getContent().replace("<br>", "\n");
+
+            /* 목록 조회 화면에 html 태그 제거 */
+            content = content.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "");
+            content = content.replaceAll("<[^>]*>", " ");
+            projectDTO.setContent(content);
+
+            /* 게시글 당 댓글 수 조회 */
+            projectDTO.setCommentCount(projectCommentService.count(projectDTO.getId()));
+
+            /* 게시글 당 프로젝트, 스터디 여부 조회 */
+            ProjectStudyCategoryDTO projectStudyCategoryDTO = projectService.findProjectStudyCategory(projectDTO.getId());
+            projectDTO.setProjectStudy(projectStudyCategoryDTO.getName());
+
+            /* 게시글 당 스크랩 수 조회 */
+            int clipCount = projectService.clipCount(projectDTO.getId());
+            projectDTO.setClipCount(clipCount);
+
+
+            /* 게시글 당 사용 언어 목록 조회 */
+            List<TechCategoryDTO> techCategoryDTOList = projectService.findTechCategory(projectDTO.getId());
+            List<String> techList = new ArrayList<>();
+            for (TechCategoryDTO techCategoryDTO : techCategoryDTOList) {
+                techList.add(techCategoryDTO.getName());
+            }
+            projectDTO.setTechList(techList);
+
+            /* 모집 포지션 조회 */
+            List<PositionCategoryDTO> positionCategoryDTOList = projectService.findPositionCategory(projectDTO.getId());
+            List<String> positionList = new ArrayList<>();
+            for (PositionCategoryDTO positionCategoryDTO : positionCategoryDTOList) {
+                positionList.add(positionCategoryDTO.getName());
+            }
+            projectDTO.setPositionList(positionList);
+        }
+        return new ResponseEntity<>(projectDTOList, HttpStatus.OK);
+    }
 
 
 
