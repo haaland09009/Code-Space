@@ -3,6 +3,7 @@ package com.yyi.projectStudy.dto;
 import com.yyi.projectStudy.entity.ProjectEntity;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class ProjectDTO {
     private Long id;
     private Long userId;

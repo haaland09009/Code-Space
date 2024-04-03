@@ -41,71 +41,73 @@
         <!-- 왼쪽 바 시작 -->
         <div class="col">
 
-            <div class="row mt-2">
-                <a href="/project" class="menu-link1 text-secondary fw-medium">
-                    <div class="col fs-4">
-                        전체보기
-                    </div>
-                </a>
-            </div>
-
-            <div class="row mt-4">
-
-                <a href="/project/category/pro" class="menu-link2 text-secondary fw-medium">
-                    <div class="col fs-4">
-                        팀 프로젝트
-                    </div>
-                </a>
-
-            </div>
-
-            <div class="row mt-4">
-
-                <a href="/project/category/study" class="menu-link3 text-secondary fw-medium">
-                    <div class="col fs-4" >
-                        스터디
-                    </div>
-                </a>
-
-            </div>
-
-            <div class="row mt-5">
-                <div class="col-8 rounded-1 border">
-
-                    <div class="row mt-3">
-                    <div class="col ms-2">
-
-                        <div class="row">
-                            <div class="col fw-semibold">
-                                Top Writers
-                            </div>
+            <div class="sticky-top bg-white">
+                <div class="row mt-2">
+                    <a href="/project" class="menu-link1 text-secondary fw-medium">
+                        <div class="col fs-4">
+                            전체보기
                         </div>
-                        <div class="mt-3 mb-2"></div>
-                        <!-- Top writers loop -->
-                        <div class="row mt-2" th:each="writer : ${topWriters}">
-                            <div class="col-2">
-                                <img src="/img/user.jpg" class="rounded-circle" alt="" style="width: 30px; height: 30px;"
-                                th:if="${writer.fileAttached == 0}">
-                                <img th:src="@{|/upload/${writer.storedFileName}|}" class="rounded-circle" alt="" style="width: 30px; height: 30px;"
-                                     th:if="${writer.fileAttached == 1}">
-                            </div>
-                            <div class="col-8 mt-1 fw-semibold fs-16 overflow" style="width: 145px"
-                            th:text="${writer.nickname}">
+                    </a>
+                </div>
 
-                            </div>
-                            <div class="col-2 mt-1 text-secondary text-end me-2 fs-16"
-                            th:text="${writer.totalCount}">
+                <div class="row mt-4">
 
-                            </div>
+                    <a href="/project/category/pro" class="menu-link2 text-secondary fw-medium">
+                        <div class="col fs-4">
+                            팀 프로젝트
                         </div>
-                        <!-- Top writers loop -->
-                        <div class="mt-3 mb-2"></div>
-                    </div>
-                    </div>
+                    </a>
 
                 </div>
-            </div>
 
+                <div class="row mt-4">
+
+                    <a href="/project/category/study" class="menu-link3 text-secondary fw-medium">
+                        <div class="col fs-4" >
+                            스터디
+                        </div>
+                    </a>
+
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col-8 rounded-1 border">
+
+                        <div class="row mt-3">
+                            <div class="col ms-2">
+
+                                <div class="row">
+                                    <div class="col fw-semibold">
+                                        Top Writers
+                                    </div>
+                                </div>
+                                <div class="mt-3 mb-2"></div>
+                                <!-- Top writers loop -->
+                                <div class="row mt-2" th:each="writer : ${topWriters}">
+                                    <div class="col-2">
+                                        <img src="/img/user.jpg" class="rounded-circle" alt="" style="width: 30px; height: 30px;"
+                                             th:if="${writer.fileAttached == 0}">
+                                        <img th:src="@{|/upload/${writer.storedFileName}|}" class="rounded-circle" alt="" style="width: 30px; height: 30px;"
+                                             th:if="${writer.fileAttached == 1}">
+                                    </div>
+                                    <div class="col-8 mt-1 fw-semibold fs-16 overflow" style="width: 145px"
+                                         th:text="${writer.nickname}">
+
+                                    </div>
+                                    <div class="col-2 mt-1 text-secondary text-end me-2 fs-16"
+                                         th:text="${writer.totalCount}">
+
+                                    </div>
+                                </div>
+                                <!-- Top writers loop -->
+                                <div class="mt-3 mb-2"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
 
         </div>
         <!-- 왼쪽 바 끝 -->
@@ -113,100 +115,102 @@
         <!-- 가운데 바 시작 -->
         <div class="col-7">
 
-            <div class="row">
-                <div class="col">
-                    <div class="row border rounded-5 fs-5 p-2 me-2 fw-semibold" style="cursor: pointer;" id="toggleTechBox">
-                        <div class="col ms-2 text-secondary" id="techNameBox">
-                            기술 스택
+            <div class="sticky-top bg-white">
+                <div class="row">
+                    <div class="col">
+                        <div class="row border border-2 rounded-5 fs-5 p-2 me-2 fw-semibold" id="toggleTechBox">
+                            <div class="col ms-2 text-secondary overflow" id="techNameBox">
+                                기술 스택
+                            </div>
+                            <div class="col-3 text-end text-secondary fw-semibold">
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
                         </div>
-                        <div class="col-3 text-end text-secondary fw-semibold" >
-                            <i class="bi bi-chevron-down"></i>
+
+                        <div class="row mt-3 bg-white" id="techListBox" style="display: none;">
+                            <div class="col rounded-5 border border-3">
+                                <div class="row">
+                                    <div class="col ms-4 p-3" >
+                                        <button class="bg-white btn rounded-4 fs-5 border border-2 me-3 mt-3 languageBar" th:each="option: ${techCategoryList}"
+                                                th:id="'tech_' + ${option.id}" th:onclick="toggleTech([[${option.id}]])">
+                                            <img src="/img/language/java.svg" class="techLogo me-2" th:if="${option.name == 'Java'}">
+                                            <img src="/img/language/spring.svg" class="techLogo me-2" th:if="${option.name == 'Spring'}">
+                                            <img src="/img/language/springboot.png" class="techLogo me-2" th:if="${option.name == 'Spring Boot'}">
+                                            <img src="/img/language/aws.svg" class="techLogo me-2" th:if="${option.name == 'AWS'}">
+                                            <img src="/img/language/c.svg" class="techLogo me-2" th:if="${option.name == 'C'}">
+                                            <img src="/img/language/docker.svg" class="techLogo me-2" th:if="${option.name == 'Docker'}">
+                                            <img src="/img/language/git.svg" class="techLogo me-2" th:if="${option.name == 'Git'}">
+                                            <img src="/img/language/javascript.svg" class="techLogo me-2" th:if="${option.name == 'JavaScript'}">
+                                            <img src="/img/language/kotlin.png" class="techLogo me-2" th:if="${option.name == 'Kotlin'}">
+                                            <img src="/img/language/mysql.svg" class="techLogo me-2" th:if="${option.name == 'MySQL'}">
+                                            <img src="/img/language/nodejs.svg" class="techLogo me-2" th:if="${option.name == 'NodeJS'}">
+                                            <img src="/img/language/python.svg" class="techLogo me-2" th:if="${option.name == 'Python'}">
+                                            <img src="/img/language/swift.svg" class="techLogo me-2" th:if="${option.name == 'Swift'}">
+                                            <img src="/img/language/typescript.png" class="techLogo me-2" th:if="${option.name == 'TypeScript'}">
+                                            <img src="/img/language/vue.svg" class="techLogo me-2" th:if="${option.name == 'Vue'}">
+                                            <img src="/img/language/react.svg" class="techLogo me-2" th:if="${option.name == 'React'}">
+                                            <img src="/img/language/flutter.svg" class="techLogo me-2" th:if="${option.name == 'Flutter'}">
+                                            <img src="/img/language/oracle.svg" class="techLogo me-2" th:if="${option.name == 'Oracle'}">
+                                            <span th:text="${option.name}" ></span>
+                                        </button>
+
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col ms-4" id="selectedTechList">
+
+                                    </div>
+                                </div>
+                                <div class="mt-3"></div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row mt-3 bg-white" style="display: none;" id="techListBox">
-                        <div class="col rounded-5 border border-3">
-                            <div class="row">
-                                <div class="col ms-4 p-3" >
-                                    <button class="bg-white btn rounded-4 fs-5 border me-3 mt-3" th:each="option: ${techCategoryList}"
-                                     th:id="'tech_' + ${option.id}" th:onclick="insertTech([[${option.id}]])">
-                                        <img src="/img/language/java.svg" class="techLogo me-2" th:if="${option.name == 'Java'}">
-                                        <img src="/img/language/spring.svg" class="techLogo me-2" th:if="${option.name == 'Spring'}">
-                                        <img src="/img/language/springboot.png" class="techLogo me-2" th:if="${option.name == 'Spring Boot'}">
-                                        <img src="/img/language/aws.svg" class="techLogo me-2" th:if="${option.name == 'AWS'}">
-                                        <img src="/img/language/c.svg" class="techLogo me-2" th:if="${option.name == 'C'}">
-                                        <img src="/img/language/docker.svg" class="techLogo me-2" th:if="${option.name == 'Docker'}">
-                                        <img src="/img/language/git.svg" class="techLogo me-2" th:if="${option.name == 'Git'}">
-                                        <img src="/img/language/javascript.svg" class="techLogo me-2" th:if="${option.name == 'JavaScript'}">
-                                        <img src="/img/language/kotlin.png" class="techLogo me-2" th:if="${option.name == 'Kotlin'}">
-                                        <img src="/img/language/mysql.svg" class="techLogo me-2" th:if="${option.name == 'MySQL'}">
-                                        <img src="/img/language/nodejs.svg" class="techLogo me-2" th:if="${option.name == 'NodeJS'}">
-                                        <img src="/img/language/python.svg" class="techLogo me-2" th:if="${option.name == 'Python'}">
-                                        <img src="/img/language/swift.svg" class="techLogo me-2" th:if="${option.name == 'Swift'}">
-                                        <img src="/img/language/typescript.png" class="techLogo me-2" th:if="${option.name == 'TypeScript'}">
-                                        <img src="/img/language/vue.svg" class="techLogo me-2" th:if="${option.name == 'Vue'}">
-                                        <img src="/img/language/react.svg" class="techLogo me-2" th:if="${option.name == 'React'}">
-                                        <img src="/img/language/flutter.svg" class="techLogo me-2" th:if="${option.name == 'Flutter'}">
-                                        <img src="/img/language/oracle.svg" class="techLogo me-2" th:if="${option.name == 'Oracle'}">
-                                        <span th:text="${option.name}" ></span>
-                                    </button>
+                    <div class="col">
+                        <div class="row border border-2 rounded-5 fs-5 p-2 me-2 fw-semibold" id="togglePositionBox">
+                            <div class="col ms-2 text-secondary" id="positionNameBox">
+                                모집 포지션
 
+                            </div>
+                            <div class="col-3 text-end text-secondary fw-semibold">
+                                <i class="bi bi-chevron-down" ></i>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3 bg-white" id="positionListBox" style="display: none;">
+                            <div class="col rounded-5 border border-3">
+                                <div class="row mt-1 p-1 fs-5 positionElement">
+                                    <div class="col ms-2" onclick="selectPosition(0)" id="position_0"> 전체 </div>
+                                </div>
+                                <div class="row mt-1 p-1 fs-5 positionElement" th:each="option: ${positionCategoryList}">
+                                    <div class="col ms-2" th:text="${option.name}" th:id="'position_' + ${option.id}"
+                                         th:onclick="selectPosition([[${option.id}]])">
+
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row mt-3">
-                                <div class="col ms-4" id="selectedTechList">
-
-                                </div>
-                            </div>
-                            <div class="mt-3"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="row border rounded-5 fs-5 p-2 me-2 fw-semibold" style="cursor: pointer;" id="togglePositionBox">
-                        <div class="col ms-2 text-secondary" id="positionNameBox">
-                            포지션
-
-                        </div>
-                        <div class="col-3 text-end text-secondary fw-semibold">
-                            <i class="bi bi-chevron-down" ></i>
                         </div>
                     </div>
 
-                    <div class="row mt-3 bg-white" style="display: none;" id="positionListBox">
-                        <div class="col rounded-5 border border-3">
-                            <div class="row mt-1 p-1 fs-5" style="cursor: pointer;">
-                                <div class="col ms-2" onclick="selectPosition(0)" id="position_0"> 전체 </div>
-                            </div>
-                            <div class="row mt-1 p-1 fs-5" th:each="option: ${positionCategoryList}" style="cursor: pointer;">
-                                <div class="col ms-2" th:text="${option.name}" th:id="'position_' + ${option.id}"
-                                     th:onclick="selectPosition([[${option.id}]])">
-
-                                </div>
+                    <div class="col">
+                        <div class="row border border-2 rounded-5 fs-5 p-2 me-2" id="toggleClipBox">
+                            <div class="col">
+                                <i class="bi bi-bookmark" id="clipIconBox"></i>
+                                <span class="ms-1 text-secondary fw-semibold" id="clipNameBox"> 내 북마크 보기 </span>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="col">
-                    <div class="row border rounded-5 fs-5 p-2 me-2">
-                        <div class="col">
-                            <i class="bi bi-bookmark-fill" style="color: #FFD700"></i>
-                            <span class="ms-1 text-secondary fw-semibold"> 내 북마크 보기 </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="row border rounded-5 fs-5 p-2 me-2">
-                        <div class="col text-secondary fw-semibold">
-                            👀 모집중만 보기
+                    <div class="col">
+                        <div class="row border border-2 rounded-5 fs-5 p-2 me-2" id="toggleStatusBox">
+                            <div class="col text-secondary fw-semibold" id="statusNameBox">
+                                👀 모집중만 보기
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-5 mb-3"></div>
+            <div class="mt-4 mb-2"></div>
 
             <!-- 목록 -->
             <div class="row border-top border-2"></div>
@@ -449,6 +453,10 @@
 
      /*<![CDATA[*/
         let selectedPosId = null;
+     /*]]>*/
+
+     /*<![CDATA[*/
+        let projectStatus = null;
      /*]]>*/
 
     var techIdList = new Array();

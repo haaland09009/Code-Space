@@ -424,18 +424,17 @@ public class ProjectController {
     /* 게시글 목록 불러오기 ajax */
     @GetMapping("/list")
     public ResponseEntity getProjectList(@RequestParam(value = "techIdList[]", required = false) List<Long> techIdList,
-                                         @RequestParam(value = "positionId", required = false) Long positionId) {
+                                         @RequestParam(value = "positionId", required = false) Long positionId,
+                                         @RequestParam(value = "status", required = false) String status) {
 
-        List<ProjectDTO> projectDTOList;
-        if (techIdList == null && positionId == null) {
-            projectDTOList = projectService.findAll();
-        } else if (techIdList != null && positionId == null) {
-            projectDTOList = projectService.selectTechList(techIdList);
-        } else if (techIdList == null && positionId != null) {
-            projectDTOList = projectService.selectPosition(positionId);
-        } else {
-            projectDTOList = projectService.findAll();
-        }
+
+        System.out.println("techIdList: " + techIdList);
+        System.out.println("positionId: " + positionId);
+        System.out.println("status: " + status);
+        System.out.println(status.getClass().getName());
+        System.out.println("============");
+        List<ProjectDTO> projectDTOList = projectService.findByCondition(techIdList, positionId, status);
+
         /* 게시글 목록 반복문 */
         for (ProjectDTO projectDTO : projectDTOList) {
 

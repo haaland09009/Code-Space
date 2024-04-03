@@ -36,6 +36,8 @@ public class ProjectService {
     private final ProjectStudyCategoryLinkRepository projectStudyCategoryLinkRepository;
     private final ProjectTechCategoryLinkRepository projectTechCategoryLinkRepository;
 
+    private final ProjectCustom projectCustom;
+
     private static final int PAGE_LIMIT = 6; // 한 페이지에 존재하는 게시글 수
 
 
@@ -426,27 +428,28 @@ public class ProjectService {
     }
 
 
-   /* 기술스택 선택하여 게시물 조회 */
-    @Transactional
-   public List<ProjectDTO> selectTechList(List<Long> techIdList) {
-       List<ProjectEntity> projectEntityList = projectRepository.selectTechList(techIdList);
-       List<ProjectDTO> projectDTOList = new ArrayList<>();
-       for (ProjectEntity projectEntity : projectEntityList) {
-          projectDTOList.add(ProjectDTO.toProjectDTO(projectEntity));
-       }
-       return projectDTOList;
-   }
-
-    /* 포지션 선택하여 게시물 조회 */
-    @Transactional
-    public List<ProjectDTO> selectPosition(Long positionId) {
-        List<ProjectEntity> projectEntityList = projectRepository.selectPosition(positionId);
+    /* 조건에 따른 게시물 조회 */
+ /*   @Transactional
+    public List<ProjectDTO> findByCondition(List<Long> techIdList, Long positionId) {
+        List<ProjectEntity> projectEntityList;
+        if (techIdList == null && positionId == null) {
+            projectEntityList = projectRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        } else if (techIdList != null && positionId == null) {
+            projectEntityList = projectRepository.selectTechList(techIdList);
+        } else if (techIdList == null && positionId != null) {
+            projectEntityList = projectRepository.selectPosition(positionId);
+        } else {
+            projectEntityList = projectRepository.selectTechAndPosition(techIdList, positionId);
+        }
         List<ProjectDTO> projectDTOList = new ArrayList<>();
         for (ProjectEntity projectEntity : projectEntityList) {
             projectDTOList.add(ProjectDTO.toProjectDTO(projectEntity));
         }
         return projectDTOList;
+    }*/
+
+    @Transactional
+    public List<ProjectDTO> findByCondition(List<Long> techList, Long positionId, String status) {
+        return projectCustom.findByCondition(techList, positionId, status);
     }
-
-
 }

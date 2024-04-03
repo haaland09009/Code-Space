@@ -23,6 +23,9 @@ spring:
       enabled: true
     thymeleaf:
       cache: false
+  properties:
+    hibernate:
+      default_batch_fetch_size: 1000
 
 
 

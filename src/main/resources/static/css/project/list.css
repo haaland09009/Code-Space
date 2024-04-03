@@ -3,10 +3,20 @@
    height: 35px;
 }
 
+.removeAllButton {
+    border: none;
+}
+
 .selectButton {
     background-color: rgb(239, 243, 250);
     font-weight: medium;
+    border: none; /* 클릭 시 테두리 제거 */
 }
+.selectButton:hover {
+    background-color: rgb(239, 243, 250);
+    transform: scale(1.05);
+    transition: transform 0.2s ease-in-out;
+ }
 
 .studyButton {
     background-color: #EBC680;
@@ -33,3 +43,51 @@
 .checkbox-font {
     color: rgb(0, 185, 174)!important;
 }
+
+.languageBar:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease-in-out;
+}
+
+
+
+.transparent_logo {
+    opacity: 0.3;
+}
+
+.full_logo {
+    opacity: 1;
+}
+
+#toggleTechBox {
+    cursor: pointer;
+}
+
+#techNameBox {
+    width: 100px;
+}
+
+#togglePositionBox {
+    cursor: pointer;
+}
+
+.positionElement {
+    cursor: pointer;
+}
+
+.positionElement:hover {
+    color: rgba(13, 110, 253, 1);
+}
+
+#toggleStatusBox {
+    cursor: pointer;
+}
+
+#toggleClipBox {
+    cursor: pointer;
+}
+
+.clipColor {
+    color: #FFD700;
+}
+
