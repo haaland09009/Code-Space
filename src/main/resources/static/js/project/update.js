@@ -130,7 +130,6 @@ $(".datepicker").datepicker({
         height: '500px',                        // 에디터 영역의 높이 값 (OOOpx || auto)
         initialEditType: 'markdown',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
         previewStyle: 'vertical',                // 마크다운 프리뷰 스타일 (tab || vertical)
-//        initialValue: boardContent
     });
 
 

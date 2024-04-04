@@ -68,8 +68,8 @@ public class ProjectController {
                         @RequestParam(name = "techId", required = false) List<Long> techIdList) {
 
         /* 작성 내용 줄바꿈 후 dto에 저장 */
-        String content = projectDTO.getContent().replaceAll("\n", "<br>");
-        projectDTO.setContent(content);
+       /* String content = projectDTO.getContent().replaceAll("\n", "<br>");*/
+        /*projectDTO.setContent(content);*/
 
         /* 게시글 작성 후 해당 게시글의 pk 반환 */
         Long savedId = projectService.save(projectDTO);
@@ -201,8 +201,8 @@ public class ProjectController {
 
         /* enter 처리 */
         ProjectDTO projectDTO = projectService.findById(id);
-        String content = projectDTO.getContent().replaceAll("<br>", "\n");
-        projectDTO.setContent(content);
+       /* String content = projectDTO.getContent().replaceAll("<br>", "\n");
+        projectDTO.setContent(content);*/
         model.addAttribute("project", projectDTO);
 
         /* 프로젝트, 스터디 여부 조회 */
@@ -321,7 +321,8 @@ public class ProjectController {
             /* 줄바꿈 처리 */
             ProjectDTO projectDTO = projectService.findById(id);
             String content = projectDTO.getContent();
-            content = content.replaceAll("<br>", "\n");
+            /*content = content.replaceAll("<br>", "\n");*/
+
             projectDTO.setContent(content);
 
             model.addAttribute("project", projectDTO);
@@ -348,8 +349,8 @@ public class ProjectController {
 
         /* enter 처리 */
 /*        String content = projectDTO.getContent().replaceAll("\r\n", "<br>");*/
-        String content = projectDTO.getContent().replaceAll("\n", "<br>");
-        projectDTO.setContent(content);
+  /*      String content = projectDTO.getContent().replaceAll("\n", "<br>");*/
+  /*      projectDTO.setContent(content);*/
 
 
         /* 수정된 카테고리 코두 조회 */
@@ -425,15 +426,21 @@ public class ProjectController {
     @GetMapping("/list")
     public ResponseEntity getProjectList(@RequestParam(value = "techIdList[]", required = false) List<Long> techIdList,
                                          @RequestParam(value = "positionId", required = false) Long positionId,
-                                         @RequestParam(value = "status", required = false) String status) {
+                                         @RequestParam(value = "status", required = false) String status,
+                                         @RequestParam(value = "categoryId", required = false) Long categoryId,
+                                         @RequestParam(value = "clipYn", required = false) String clipYn,
+                                         HttpSession session) {
 
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+        List<ProjectDTO> projectDTOList;
+       
+        if (sessionUser != null) {
+            Long userId = sessionUser.getId();
+            projectDTOList = projectService.findByCondition(techIdList, positionId, status, categoryId, clipYn, userId);
 
-        System.out.println("techIdList: " + techIdList);
-        System.out.println("positionId: " + positionId);
-        System.out.println("status: " + status);
-        System.out.println(status.getClass().getName());
-        System.out.println("============");
-        List<ProjectDTO> projectDTOList = projectService.findByCondition(techIdList, positionId, status);
+        } else {
+            projectDTOList = projectService.findByCondition(techIdList, positionId, status, categoryId, clipYn, 0L);
+        }
 
         /* 게시글 목록 반복문 */
         for (ProjectDTO projectDTO : projectDTOList) {
@@ -476,6 +483,8 @@ public class ProjectController {
                 positionList.add(positionCategoryDTO.getName());
             }
             projectDTO.setPositionList(positionList);
+
+
         }
         return new ResponseEntity<>(projectDTOList, HttpStatus.OK);
     }

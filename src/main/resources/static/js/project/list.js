@@ -17,9 +17,11 @@
     } else if (pathname == '/project/category/pro') {
         document.querySelector('.menu-link2').classList.add('text-black');
         document.querySelector('.menu-link2').classList.add('fw-semibold');
+        selectedCategoryId = 1;
     } else if (pathname == '/project/category/study') {
         document.querySelector('.menu-link3').classList.add('text-black');
         document.querySelector('.menu-link3').classList.add('fw-semibold');
+        selectedCategoryId = 2;
     }
 
 
@@ -157,8 +159,21 @@
      }
   });
 
+
    /* 북마크 선택 box */
    document.querySelector("#toggleClipBox").addEventListener("click", function() {
+
+       if (sessionId == 0) {
+          location.href  = "/user/loginPage";
+          return;
+       }
+
+        if (clipYn == null) {
+          clipYn = 'yes';
+        } else {
+          clipYn = null;
+        }
+
        const toggleClipBox = document.querySelector("#toggleClipBox");
        const clipNameBox = document.querySelector("#clipNameBox");
        const clipIconBox = document.querySelector("#clipIconBox");
@@ -176,7 +191,10 @@
           clipIconBox.classList.add("bi-bookmark-fill");
           clipIconBox.classList.add("clipColor");
        }
+
+       reloadProjectList();
     });
+
 
 
   /* 기술스택 추가, 삭제 여부 */
@@ -345,7 +363,9 @@
        data: {
            techIdList: techIdList.length > 0 ? techIdList : [],
            positionId: (selectedPosId == 0 || selectedPosId == null) ? null : selectedPosId,
-            status: projectStatus != null ? projectStatus : null
+           status: projectStatus != null ? projectStatus : null,
+           categoryId: selectedCategoryId,
+           clipYn: clipYn != null ? clipYn : null
        },
        success: function(res) {
         let output = "";
@@ -452,6 +472,8 @@
   }
 
 
+
+
 window.addEventListener('scroll', function() {
     var scrollHeight = window.pageYOffset; // 스크롤한 높이 확인
     var targetHeight = 200; // 스크롤을 내려서 sticky를 적용해야하는 높이
@@ -462,6 +484,7 @@ window.addEventListener('scroll', function() {
             /* 원하는 높이에 도달하면 padding-top 값을 늘린다. */
             element.style.paddingTop = '20px';
             element.style.paddingBottom = '20px';
+
         } else {
             /* 원하는 높이에 도달하지 않으면 padding-top 값을 초기화 */
             element.style.paddingTop = '0';

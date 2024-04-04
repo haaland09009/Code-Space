@@ -127,7 +127,7 @@
                     <div class="mt-5" th:if="${category == null && searchWord == null && tagName == null}">
                     </div>
 
-                    <div class="row mt-1" th:if="${(category == null or (category != null && category != 'no-Reply')) && searchWord == null && tagName == null}">
+                    <div class="row mt-1" th:if="${(category == null or (category != null && category != 'no-Reply'))}">
                         <div class="col-auto sort-item ps-0">
                             <a href="/qna" th:if="${category == null}">
                                 <span class="sortPoint text-secondary">•</span>
@@ -272,6 +272,8 @@
   /*<![CDATA[*/
       let searchWord = [[${searchWord}]];
   /*]]>*/
+
+
 
 </script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>

@@ -36,6 +36,7 @@ public class ProjectDTO {
     private List<String> positionList = new ArrayList<>();
     private List<String> techList = new ArrayList<>();
     private String projectStudy;
+    private Long projectStudyId;
     private int clipCount;
     private String formattedDate;
 

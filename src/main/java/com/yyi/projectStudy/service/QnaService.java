@@ -28,6 +28,7 @@ public class QnaService {
     private final QnaReplyCommentRepository qnaReplyCommentRepository;
     private final QnaClipRepository qnaClipRepository;
     private final QnaTagsRepository qnaTagsRepository;
+    private final QnaCustom qnaCustom;
 
     /* 토픽 종류 조회 */
     public List<TopicDTO> findAllTopic() {
@@ -492,5 +493,14 @@ public class QnaService {
     }
 
 
-
+    @Transactional
+    public List<QnaDTO> findByCondition(String category, String sortKey, String searchWord, String tagName) {
+        List<Long> qnaIdList = qnaCustom.findByCondition(category, sortKey, searchWord, tagName);
+        List<QnaDTO> qnaDTOList = new ArrayList<>();
+        for (Long qnaId : qnaIdList) {
+            QnaEntity qnaEntity = qnaRepository.findById(qnaId).get();
+            qnaDTOList.add(QnaDTO.toQnaDTO(qnaEntity));
+        }
+        return qnaDTOList;
+    }
 }

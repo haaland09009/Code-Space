@@ -5,5 +5,6 @@ import com.yyi.projectStudy.dto.ProjectDTO;
 import java.util.List;
 
 public interface ProjectCustom {
-    List<ProjectDTO> findByCondition(List<Long> techList, Long positionId, String status);
+    List<ProjectDTO> findByCondition(List<Long> techList, Long positionId, String status,
+                                     Long categoryId, String clipYn, Long userId);
 }

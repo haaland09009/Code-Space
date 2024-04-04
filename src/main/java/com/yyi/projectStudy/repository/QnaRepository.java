@@ -3,6 +3,7 @@ package com.yyi.projectStudy.repository;
 import com.yyi.projectStudy.dto.QnaBestReplyDTO;
 import com.yyi.projectStudy.entity.QnaEntity;
 import com.yyi.projectStudy.entity.QnaLikeEntity;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +11,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface QnaRepository extends JpaRepository<QnaEntity, Long> {
+@Primary
+public interface QnaRepository extends JpaRepository<QnaEntity, Long>, QnaCustom {
     /* 게시글 조회수 증가 */
     @Modifying
     @Query(value = "update QnaEntity q set q.readCount = q.readCount + 1 where q.id = :id")

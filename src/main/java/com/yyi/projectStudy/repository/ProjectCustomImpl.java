@@ -5,10 +5,9 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.yyi.projectStudy.dto.ProjectDTO;
-import com.yyi.projectStudy.entity.ProjectEntity;
-import com.yyi.projectStudy.entity.QProjectEntity;
-import com.yyi.projectStudy.entity.QProjectPositionCategoryLinkEntity;
-import com.yyi.projectStudy.entity.QProjectTechCategoryLinkEntity;
+import com.yyi.projectStudy.dto.UserDTO;
+import com.yyi.projectStudy.entity.*;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 
@@ -20,10 +19,14 @@ public class ProjectCustomImpl implements ProjectCustom {
 
     @Override
     public List<ProjectDTO> findByCondition(List<Long> techIdList, Long positionId,
-                                            String status) {
+                                            String status, Long categoryId, String clipYn,
+                                            Long userId) {
         QProjectEntity p = QProjectEntity.projectEntity;
         QProjectTechCategoryLinkEntity pt = QProjectTechCategoryLinkEntity.projectTechCategoryLinkEntity;
         QProjectPositionCategoryLinkEntity pp = QProjectPositionCategoryLinkEntity.projectPositionCategoryLinkEntity;
+        QProjectStudyCategoryLinkEntity psc = QProjectStudyCategoryLinkEntity.projectStudyCategoryLinkEntity;
+        QProjectClipEntity pc = QProjectClipEntity.projectClipEntity;
+
 
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -41,6 +44,16 @@ public class ProjectCustomImpl implements ProjectCustom {
 
         if (StringUtils.hasText(status)) {
             builder.and(p.status.eq(status));
+        }
+
+        if (categoryId != null) {
+            query = query.join(p.projectStudyCategoryLinkEntityList, psc);
+            builder.and(psc.projectStudyCategoryEntity.id.eq(categoryId));
+        }
+
+        if (StringUtils.hasText(clipYn)) {
+            query = query.join(p.projectClipEntityList, pc);
+            builder.and(pc.userEntity.id.eq(userId));
         }
 
         query = query.where(builder).orderBy(p.id.desc());
