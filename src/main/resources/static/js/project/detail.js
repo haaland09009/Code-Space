@@ -1,8 +1,28 @@
  /* 게시글 삭제 모달 */
  const deleteBoardReq = () => {
-     const deleteModal = bootstrap.Modal.getOrCreateInstance("#deleteModal");
-     deleteModal.show();
+    $.ajax({
+      type: "get",
+      url: "/project/checkCommentCount/" + projectPk,
+      success: function(res) {
+         if (res > 0)  {
+             const noDeleteModal = bootstrap.Modal.getOrCreateInstance("#noDeleteModal");
+             noDeleteModal.show();
+             setTimeout(function() {
+                 noDeleteModal.hide();
+             }, 4000);
+         } else {
+             /* 작성된 댓글이 없다면 삭제 모달 띄우기 */
+              const deleteModal = bootstrap.Modal.getOrCreateInstance("#deleteModal");
+              deleteModal.show();
+         }
+      },
+      error: function(err) {
+          return;
+      }
+  });
  }
+
+
 
  /* 게시글 삭제 */
  const deleteBoard = () => {

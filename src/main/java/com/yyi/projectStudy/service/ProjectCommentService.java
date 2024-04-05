@@ -55,7 +55,7 @@ public class ProjectCommentService {
 
     /* 게시글의 댓글 수 조회 */
     @Transactional
-    public Long count(Long projectId) {
+    public int count(Long projectId) {
         ProjectEntity projectEntity = projectRepository.findById(projectId).get();
         return projectCommentRepository.countByProjectEntity(projectEntity);
     }

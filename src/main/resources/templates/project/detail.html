@@ -303,7 +303,7 @@
                                                                          <img src="/img/language/nodejs.svg" class="lanLogo me-2" th:if="${tech.name == 'NodeJS'}">
                                                                          <img src="/img/language/python.svg" class="lanLogo me-2" th:if="${tech.name == 'Python'}">
                                                                          <img src="/img/language/swift.svg" class="lanLogo me-2" th:if="${tech.name == 'Swift'}">
-                                                                         <img src="/img/language/typescript.png" class="lanLogo me-2" th:if="${tech.name == 'TypeScript'}">
+                                                                         <img src="/img/language/typescript.svg" class="lanLogo me-2" th:if="${tech.name == 'TypeScript'}">
                                                                          <img src="/img/language/vue.svg" class="lanLogo me-2" th:if="${tech.name == 'Vue'}">
                                                                          <img src="/img/language/react.svg" class="lanLogo me-2" th:if="${tech.name == 'React'}">
                                                                          <img src="/img/language/flutter.svg" class="lanLogo me-2" th:if="${tech.name == 'Flutter'}">
@@ -493,6 +493,32 @@
     </div>
 </div>
 
+<!-- 게시물 삭제 불가 alert -->
+<div class="modal" id="noDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-body text-center">
+                <div class="row mt-3">
+                    <div class="col fs-4 fw-semibold">
+                        게시물 삭제 불가
+                    </div>
+                </div>
+                <div class="row mt-2 text-secondary">
+                    <div class="col">
+                        댓글이 존재하는 게시물은 삭제하실 수 없습니다.
+                    </div>
+                </div>
+                <div class="row mt-4 mb-3 d-flex justify-content-center">
+                    <div class="col-11 d-grid">
+                        <button class="btn btn-primary fs-5" data-bs-dismiss="modal"> 확인</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 게시물 삭제 불가 alert -->
 
 <!-- 게시글 삭제 alert -->
 <div class="modal" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

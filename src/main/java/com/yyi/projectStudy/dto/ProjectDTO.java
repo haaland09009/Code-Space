@@ -32,7 +32,7 @@ public class ProjectDTO {
     private String writer;
     private int fileAttached;
     private String storedFileName;
-    private Long commentCount;
+    private int commentCount;
     private List<String> positionList = new ArrayList<>();
     private List<String> techList = new ArrayList<>();
     private String projectStudy;

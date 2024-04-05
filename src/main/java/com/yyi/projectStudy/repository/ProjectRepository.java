@@ -14,8 +14,8 @@ import java.util.List;
 @Primary
 
 public interface ProjectRepository extends JpaRepository<ProjectEntity, Long>, ProjectCustom {
-    // 게시글 조회수 증가
-    // update project_table set read_count = read_count + 1 where id = ?
+    /* 게시글 조회수 증가 */
+    /*  update project_table set read_count = read_count + 1 where id = ? */
     @Modifying
     @Query(value = "update ProjectEntity p set p.readCount = p.readCount + 1 where p.id = :id")
     void updateReadCount(@Param("id") Long id);
@@ -77,51 +77,6 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long>, P
         order by pt.id desc */
 
 
-
-    /* 기술스택을 선택하여 게시물 조회 */
-    @Query(value = "select distinct p from ProjectEntity p join projectTechCategoryLinkEntityList pt" +
-                    " where pt.techCategoryEntity.id in :techIdList order by p.id desc")
-    List<ProjectEntity> selectTechList(@Param("techIdList") List<Long> techIdList);
-    /*
-        select distinct p.*
-        from project_table p
-        join project_tech_category_link_table pt on p.id = pt.project_id
-        where pt.tech_id in (1,3)
-        order by p.id desc;
-    */
-
-
-
-    /* 포지션을 선택하여 게시물 조회 */
-    @Query(value = "select distinct p from ProjectEntity p join projectPositionCategoryLinkEntityList pp" +
-                    " where pp.positionCategoryEntity.id = :positionId order by p.id desc")
-    List<ProjectEntity> selectPosition(@Param("positionId") Long positionId);
-   /*
-        select distinct(p.id) from project_table p
-        join project_position_category_link_table pp
-        on p.id = pp.project_id
-        where pp.position_id = 23;
-   */
-
-
-    /* 기술스택, 포지션을 모두 선택하여 게시물 조회 */
-    @Query(value = "select distinct p from ProjectEntity p " +
-                    "join projectTechCategoryLinkEntityList pt " +
-                    "join projectPositionCategoryLinkEntityList pp " +
-                    "where pt.techCategoryEntity.id in :techIdList " +
-                    "and pp.positionCategoryEntity.id = :positionId " +
-                    "order by p.id desc")
-    List<ProjectEntity> selectTechAndPosition(@Param("techIdList") List<Long> techIdList,
-                                              @Param("positionId") Long positionId);
-   /*
-    select distinct(p.id) from project_table p
-    join project_tech_category_link_table pt
-    on p.id = pt.project_id
-    join project_position_category_link_table pp
-    on p.id = pp.project_id
-    where pt.tech_id IN (1,2) and pp.position_id = 1
-    order by p.id desc;
-    */
 
 
 }

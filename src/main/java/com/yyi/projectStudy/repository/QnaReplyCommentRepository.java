@@ -12,10 +12,12 @@ import java.util.List;
 
 public interface QnaReplyCommentRepository extends JpaRepository<QnaReplyCommentEntity, Long> {
 
-    // select * from qna_reply_comment_table where reply_id = ? order by id desc
+    /* 답변에 달린 댓글 목록 */
+    /* select * from qna_reply_comment_table where reply_id = ? order by id desc */
     List<QnaReplyCommentEntity> findAllByQnaReplyEntityOrderByIdDesc(QnaReplyEntity qnaReplyEntity);
 
-    // select count(*) from qna_reply_comment_table where reply_id = ?
+    /* 답변에 달린 댓글 수 */
+    /* select count(*) from qna_reply_comment_table where reply_id = ? */
     int countByQnaReplyEntity(QnaReplyEntity qnaReplyEntity);
 
     /* 댓글 수정 처리 */

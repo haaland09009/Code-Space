@@ -1,10 +1,28 @@
-   // 게시글 삭제 모달
+   /* 게시글 삭제 모달 */
    const deleteQnaReq = () => {
-     const deleteModal = bootstrap.Modal.getOrCreateInstance("#deleteQnaModal");
-     deleteModal.show();
-   }
+     $.ajax({
+        type: "get",
+        url: "/qna/checkReplyCount/" + boardId,
+        success: function(res) {
+           if (res > 0)  {
+               const noDeleteModal = bootstrap.Modal.getOrCreateInstance("#noDeleteModal");
+               noDeleteModal.show();
+               setTimeout(function() {
+                   noDeleteModal.hide();
+               }, 4000);
+           } else {
+               /* 작성된 답변이 없다면 삭제 모달 띄우기 */
+               const deleteModal = bootstrap.Modal.getOrCreateInstance("#deleteQnaModal");
+               deleteModal.show();
+           }
+        },
+        error: function(err) {
+            return;
+        }
+    });
+  }
 
-     // 게시글 삭제
+   /* 게시글 삭제 */
    const deleteQna = () => {
      const deleteModal = bootstrap.Modal.getOrCreateInstance("#deleteQnaModal");
      deleteModal.hide();
@@ -50,7 +68,7 @@
       });
   }
 
-  // 답변 load
+  /* 답변 load */
   const loadReplies = (qnaId) => {
     $.ajax({
      type: "get",
@@ -310,7 +328,7 @@
      });
   }
 
-  // 답글 수 업데이트 함수
+ /* 답글 수 업데이트 */
  const updateReplyCount = (id) => {
      $.ajax({
          type: "get",
@@ -327,14 +345,32 @@
  }
 
 
-    // 답변 삭제 모달
+    /* 답변 삭제 불가 */
     const deleteReplyPage = (id) => {
-        selectedReplyId = id;
-        const deleteReplyModal = bootstrap.Modal.getOrCreateInstance("#deleteReplyModal");
-	    deleteReplyModal.show();
+       $.ajax({
+             type: "get",
+             url: "/qnaReply/checkCommentCount/" + id,
+             success: function(res) {
+                if (res > 0)  {
+                    const noDeleteReplyModal = bootstrap.Modal.getOrCreateInstance("#noDeleteReplyModal");
+                    noDeleteReplyModal.show();
+                    setTimeout(function() {
+                        noDeleteReplyModal.hide();
+                    }, 4000);
+                } else {
+                    /* 작성된 댓글이 없다면 삭제 모달 띄우기 */
+                    selectedReplyId = id;
+                    const deleteReplyModal = bootstrap.Modal.getOrCreateInstance("#deleteReplyModal");
+                    deleteReplyModal.show();
+                }
+             },
+             error: function(err) {
+                 return;
+             }
+         });
     }
 
-    // 답변 삭제
+    /* 답변 삭제 */
     const deleteReply = () => {
         const id = selectedReplyId;
         const qnaId = boardId;
@@ -983,7 +1019,7 @@
     }
 
 
-    // 게시물 스크랩 여부 확인
+    /* 게시물 스크랩 여부 확인 */
     const checkQnaClip = (id) => {
        const clipBox = document.querySelector(".clipBox");
        $.ajax({
@@ -1010,7 +1046,7 @@
   }
 
 
-    // 게시물 스크랩
+    /* 게시물 스크랩 */
     const toggleQnaClip = (id) => {
         $.ajax({
              type: "post",

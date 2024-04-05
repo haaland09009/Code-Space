@@ -4,8 +4,8 @@
  }
 
 .form-control:focus {
-    border-color: #000000;
-    box-shadow: 0 0 0 0.1rem rgba(128, 128, 128, 1); /* 검은색으로 변경 */
+    border-color: #334155;
+    box-shadow: 0 0 0 0.1rem rgba(51, 65, 85, 1); /* 검은색으로 변경 */
 }
 
 .form-select:focus {
@@ -340,5 +340,24 @@ mark {
     background-color: #bebebe;
     border-radius: 10px;
     box-shadow: inset 0px 0px 5px white;
+  }
+
+
+  /*  스크롤 */
+  textarea::-webkit-scrollbar {
+      width: 10px;
+    }
+  textarea::-webkit-scrollbar-thumb {
+      background-color: #505050;
+      border-radius: 10px;
+    }
+  textarea::-webkit-scrollbar-track {
+      background-color: #bebebe;
+      border-radius: 10px;
+      box-shadow: inset 0px 0px 5px white;
+    }
+
+  .my_underline {
+     text-decoration-line: underline;
   }
 

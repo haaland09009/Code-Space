@@ -30,10 +30,13 @@ public class QnaController {
     public String mainPage(Model model,
                            @PathVariable(name = "category", required = false) String category,
                            @RequestParam(name = "sortKey", required = false) String sortKey,
-                           String searchWord, String tagName) {
+                           String searchWord,
+                           @RequestParam(name = "tagName", required = false) String tagName) {
 
+
+        /*List<QnaDTO> qnaDTOList = qnaService.findByCondition(category, sortKey, searchWord, tagName);
+*/
         List<QnaDTO> qnaDTOList;
-
         if (category != null && category.equals("tech")) {
             if (sortKey != null) {
                 qnaDTOList = qnaService.getQnaDTOListByReplySort(1L);
@@ -56,6 +59,11 @@ public class QnaController {
             }
         } else {
             qnaDTOList = qnaService.findAll(searchWord, tagName);
+        }
+
+
+        if (category != null) {
+            model.addAttribute("category", category);
         }
 
         /* 검색 키워드가 존재할 경우 */
@@ -327,6 +335,12 @@ public class QnaController {
         return "qna/detail";
     }
 
+
+    /* 게시물 삭제 이전에 작성된 답변 수 확인 */
+    @GetMapping("/checkReplyCount/{id}")
+    public @ResponseBody int checkReplyCount(@PathVariable("id") Long id) {
+        return qnaReplyService.count(id);
+    }
 
     /* 게시글 삭제 */
     @GetMapping("/delete/{id}")

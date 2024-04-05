@@ -17,7 +17,7 @@ public interface ProjectCommentRepository extends JpaRepository<ProjectCommentEn
 
     /* 게시글 당 댓글 수 조회 */
     /* select count(*) from project_comment_table where project_id = ? */
-    Long countByProjectEntity(ProjectEntity projectEntity);
+    int countByProjectEntity(ProjectEntity projectEntity);
 
     /* 댓글 수정하기 */
     /* update project_comment_table set content = ?, updDate = sysdate where id = ?*/

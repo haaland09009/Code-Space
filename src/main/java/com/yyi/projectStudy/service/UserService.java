@@ -126,7 +126,7 @@ public class UserService {
     }
 
 
-    /* !! 회원정보 수정 (나중에 사진 첨부 수정해야함) */
+    /*  회원정보 수정 */
     @Transactional
     public void update(UserDTO userDTO, UserJobDTO userJobDTO) {
         userRepository.updateUser(userDTO.getNickname(), userDTO.getEmail(), userDTO.getId());
@@ -154,5 +154,42 @@ public class UserService {
     }
 
 
+    /* 회원 이미지 수정 */
+    @Transactional
+    public UserDTO updateUserImg(UserDTO userDTO) throws IOException {
+        if (userDTO.getProfileImageFile() == null) {
+            // 1. 기존 이미지가 존재한다면 삭제
+            UserEntity userEntity = userRepository.findById(userDTO.getId()).get();
+            Optional<UserImageFileEntity> optionalUserImageFileEntity
+                    = userImageFileRepository.findByUserEntity(userEntity);
+            if (optionalUserImageFileEntity.isPresent()) {
+                userImageFileRepository.deleteUserImg(userEntity.getId());
+            }
+            // 2. 회원 이미지 존재 여부 수정
+            userRepository.updateUserFileAttached(0, userDTO.getId());
+        } else {
+            // 1. DTO에 담긴 이미지 파일 꺼내기
+            MultipartFile profileImageFile = userDTO.getProfileImageFile();
 
+            // 2. 파일의 이름 가져옴 (실제 사용자가 올린 파일 이름)
+            String originalFilename = profileImageFile.getOriginalFilename();
+
+            // 3. 서버 저장용 이름으로 수정 : 내 사진.jpg --> 8423424252525_내사진.jpg (currentTimeMills() -> 이거 대신 UUID도 사용가능)
+            String storedFileName = System.currentTimeMillis() + "_" + originalFilename;
+
+            // 4. 저장 경로 설정 (해당 폴더는 미리 만들어진 상태여야 한다.)
+            String savePath = "C:/toyProject_img/" + storedFileName;
+
+            // 5. 해당 경로에 파일 저장
+            profileImageFile.transferTo(new File(savePath));
+
+            // 6. 회원 이미지 수정
+            userImageFileRepository.updateUserImg(originalFilename, storedFileName, userDTO.getId());
+
+            // 7. 회원 이미지 존재 여부 수정
+            userRepository.updateUserFileAttached(1, userDTO.getId());
+        }
+        UserEntity userEntity = userRepository.findById(userDTO.getId()).get();
+        return UserDTO.toUserDTO(userEntity);
+    }
 }

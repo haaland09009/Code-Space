@@ -103,12 +103,21 @@ public class UserController {
         }
     }
 
-   /* !!! (나중에 사진까지 수정하는 기능 추가해야함) */
+
     /* 회원 정보 수정  */
     @PostMapping("/updateProcess")
     public String updateProcess(@ModelAttribute UserDTO userDTO,
                                 @ModelAttribute UserJobDTO userJobDTO) {
         userService.update(userDTO, userJobDTO);
+        return "redirect:/user/myPage";
+    }
+
+    /* 회원 이미지 수정 */
+    @PostMapping("/updateUserImg")
+    public String updateUserImg(@ModelAttribute UserDTO userDTO,
+                                HttpSession session) throws IOException {
+        UserDTO updatedUser = userService.updateUserImg(userDTO);
+        session.setAttribute("userDTO", updatedUser);
         return "redirect:/user/myPage";
     }
 

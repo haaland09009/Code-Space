@@ -1,5 +1,5 @@
 
-  // 회원정보 수정
+  /* 회원정보 수정 */
   const checkValueAndSubmit = () => {
       const nickname = document.querySelector("#userNickname");
       const email = document.querySelector("#userEmail");
@@ -43,4 +43,16 @@
            const frm = document.querySelector("#frm");
            frm.submit();
          }
+  }
+
+  /* 회원 이미지 변경 모달 열기 */
+  const updateUserImgModal = () => {
+       const updateUserImgModal = bootstrap.Modal.getOrCreateInstance("#updateUserImgModal");
+       updateUserImgModal.show();
+  }
+
+  /* 기본 이미지 변경 물어보기 */
+  const deleteUserImgModal = () => {
+      const deleteUserImgModal = bootstrap.Modal.getOrCreateInstance("#deleteUserImgModal");
+      deleteUserImgModal.show();
   }

@@ -27,7 +27,7 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
 
     /* 알림 삭제 */
     @Modifying
-    @Query(value = "delete from notification_table where not_id = :notId and entity_id = :entityId", nativeQuery = true)
+    @Query(value = "delete from NotificationEntity n where n.notTypeEntity.id = :notId and n.entityId = :entityId")
     void deleteNotification(@Param("notId") Long notId, @Param("entityId") Long id);
 
 

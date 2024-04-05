@@ -54,7 +54,7 @@ public class ProjectCommentController {
 
     /* 게시글의 댓글 수 조회 */
     @GetMapping("/count/{id}")
-    public @ResponseBody Long commentCount(@PathVariable("id") Long id) {
+    public @ResponseBody int commentCount(@PathVariable("id") Long id) {
         return projectCommentService.count(id);
     }
 

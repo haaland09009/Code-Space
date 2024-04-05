@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.yyi.projectStudy.dto.ProjectDTO;
+import com.yyi.projectStudy.dto.ProjectSearchDTO;
 import com.yyi.projectStudy.dto.UserDTO;
 import com.yyi.projectStudy.entity.*;
 import jakarta.servlet.http.HttpSession;
@@ -17,15 +18,21 @@ import java.util.List;
 public class ProjectCustomImpl implements ProjectCustom {
     private final JPAQueryFactory queryFactory;
 
+    QProjectEntity p = QProjectEntity.projectEntity;
+    QProjectTechCategoryLinkEntity pt = QProjectTechCategoryLinkEntity.projectTechCategoryLinkEntity;
+    QProjectPositionCategoryLinkEntity pp = QProjectPositionCategoryLinkEntity.projectPositionCategoryLinkEntity;
+    QProjectStudyCategoryLinkEntity psc = QProjectStudyCategoryLinkEntity.projectStudyCategoryLinkEntity;
+    QProjectClipEntity pc = QProjectClipEntity.projectClipEntity;
+
     @Override
-    public List<ProjectDTO> findByCondition(List<Long> techIdList, Long positionId,
-                                            String status, Long categoryId, String clipYn,
-                                            Long userId) {
-        QProjectEntity p = QProjectEntity.projectEntity;
-        QProjectTechCategoryLinkEntity pt = QProjectTechCategoryLinkEntity.projectTechCategoryLinkEntity;
-        QProjectPositionCategoryLinkEntity pp = QProjectPositionCategoryLinkEntity.projectPositionCategoryLinkEntity;
-        QProjectStudyCategoryLinkEntity psc = QProjectStudyCategoryLinkEntity.projectStudyCategoryLinkEntity;
-        QProjectClipEntity pc = QProjectClipEntity.projectClipEntity;
+    public List<ProjectDTO> findByCondition(ProjectSearchDTO projectSearchDTO) {
+
+        List<Long> techIdList = projectSearchDTO.getTechIdList();
+        Long positionId = projectSearchDTO.getPositionId();
+        String status = projectSearchDTO.getStatus();
+        Long categoryId = projectSearchDTO.getCategoryId();
+        String clipYn = projectSearchDTO.getClipYn();
+        Long userId = projectSearchDTO.getUserId();
 
 
         BooleanBuilder builder = new BooleanBuilder();

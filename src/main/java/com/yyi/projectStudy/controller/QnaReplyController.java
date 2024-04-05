@@ -114,6 +114,12 @@ public class QnaReplyController {
         }
     }
 
+    /* 답변에 작성된 댓글 수 확인 */
+    @GetMapping("/checkCommentCount/{id}")
+    public @ResponseBody int checkCommentCount(@PathVariable("id") Long id) {
+        return qnaReplyCommentService.commentCount(id);
+    }
+
     /* 답변 삭제 */
     @PostMapping("/delete/{id}")
     public @ResponseBody void delete(@PathVariable("id") Long id) {

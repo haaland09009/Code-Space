@@ -449,8 +449,7 @@ public class ProjectService {
     }*/
 
     @Transactional
-    public List<ProjectDTO> findByCondition(List<Long> techList, Long positionId, String status,
-                                            Long categoryId, String clipYn, Long userId) {
-        return projectCustom.findByCondition(techList, positionId, status, categoryId, clipYn, userId);
+    public List<ProjectDTO> findByCondition(ProjectSearchDTO projectSearchDTO) {
+        return projectCustom.findByCondition(projectSearchDTO);
     }
 }
