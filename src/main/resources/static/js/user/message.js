@@ -1,9 +1,15 @@
 
+
+
     /* 사용자의 채팅방 load */
     const loadChatRoomList = (res) => {
         let output = "";
         for (let i in res) {
-            output += '<div class="row contentDiv">';
+            if (selectedRoomId == res[i].roomId) {
+                output += '<div class="row selectedContent">';
+            } else {
+                output += '<div class="row contentDiv">';
+            }
             output += '<div class="col" onclick="getChatList('+ res[i].roomId +')">';
             output += '<div class="row mt-3">';
             output += '<div class="col-2">';
@@ -33,8 +39,9 @@
             output += '</div>';
             output += '</div>';
             output += '</div>';
-            output += '<div class="border-bottom mt-3">' + '</div>';
+
             output += '</div>';
+            output += '<div class="border-bottom mt-3">' + '</div>';
             output += '</div>';
         }
         document.querySelector("#chatRoomList").innerHTML = output;
@@ -187,10 +194,10 @@
                     output += '<div class="row mt-2">';
                     output += '<div class="col">' + '</div>';
                     output += '<div class="col justify-content-end text-end">';
-                    output += '<button class="btn btn-outline-dark py-2 rounded rounded-4 text-start fs-18 myChatButton" onclick="deleteChatModal(' + res[i].id + ')">' + res[i].content + '</button>';
+                    output += '<button class="btn btn-outline-dark py-2 rounded rounded-4 text-start fs-18 myChatButton" onclick="checkReadYn(' + res[i].id + ')">' + res[i].content + '</button>';
                     output += '</div>';
                     output += '</div>';
-                    output += '<div class="row mt-1">';
+                    output += '<div class="row">';
                     output += '<div class="col text-end">';
                     if (res[i].readDate == null) {
                         output += '<span class="me-1 fs-15 unRead_ChatFont">' + "1" + '</span>';
@@ -206,21 +213,28 @@
                 chatBox.scrollTop = chatBox.scrollHeight;
             }
 
-        /*    // 3초마다 채팅 업로드
-            if(intervalHandler != null){
-                clearInterval(intervalHandler);
-                intervalHandler = null;
-            }
+            /*
+            // 3초마다 채팅 업로드
+                if(intervalHandler != null){
+                    clearInterval(intervalHandler);
+                    intervalHandler = null;
+                }
 
-            intervalHandler = setInterval(() => {
-                loadChatList(roomId);
-            }, 1000);*/
+                intervalHandler = setInterval(() => {
+                    loadChatList(roomId);
+                }, 1000);
+                */
 
          }, error: function(err) {
              return;
          }
       });
     }
+
+
+
+
+
 
    /* 채팅 전송 enter 키 처리 */
    const checkSendMessage = (event) => {
@@ -262,14 +276,35 @@
           });
     }
 
-    /* 채팅 삭제 모달 */
-    const deleteChatModal = (id) => {
+    /* 메시지 삭제 이전 읽음 여부 확인 */
+    const checkReadYn = (id) => {
+        /* id 설정 */
         selectedChatId = id;
-        const deleteChatModal = bootstrap.Modal.getOrCreateInstance("#deleteChatModal");
-	    deleteChatModal.show();
+
+        $.ajax({
+            type: "get",
+            url: "/chat/checkReadYn/" + selectedChatId,
+            success: function(res) {
+               if (res) {
+                   const noDeleteChatModal = bootstrap.Modal.getOrCreateInstance("#noDeleteChatModal");
+                   noDeleteChatModal.show();
+                   setTimeout(function() {
+                       noDeleteChatModal.hide();
+                   }, 4000);
+               } else {
+                   /* 상대방이 읽지 않았다면 삭제 모달 띄우기 */
+                   const deleteChatModal = bootstrap.Modal.getOrCreateInstance("#deleteChatModal");
+                   deleteChatModal.show();
+               }
+            },
+            error: function(err) {
+                return;
+            }
+        });
     }
 
-    /* 채팅 삭제 */
+
+    /* 메시지 삭제 */
     const deleteChat = () => {
         $.ajax({
              type: "get",

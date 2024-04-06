@@ -35,7 +35,7 @@ public class ChatService {
         UserEntity receiver = UserEntity.toUserEntity(receiverDTO);
 
         /* 해당 발신자와 수신자 정보로 등록된 채팅방이 존재하는지 조회 */
-        Optional<ChatRoomEntity> optionalChatRoomEntity = chatRoomRepository.existsChatRoom(receiver.getId(), sender.getId());
+        Optional<ChatRoomEntity> optionalChatRoomEntity = chatRoomRepository.existsChatRoom(receiver, sender);
         if (optionalChatRoomEntity.isPresent()) {
             /* 기존 채팅방이 이미 존재한다면 */
             ChatRoomEntity chatRoomEntity = optionalChatRoomEntity.get();
@@ -137,9 +137,8 @@ public class ChatService {
             chatDTO.setFormattedDate(formatDateTime);
 
             /* 채팅 안 읽은 개수 */
-            Long roomId = chatRoomEntity.getId();
-            Long userId = userRepository.findById(id).get().getId();
-            int isNotReadCount = chatRepository.countChatIsNotRead(roomId, userId);
+            UserEntity userEntity = userRepository.findById(id).get();
+            int isNotReadCount = chatRepository.countChatIsNotRead(chatRoomEntity, userEntity);
             chatDTO.setIsNotReadCount(isNotReadCount);
 
             if (!id.equals(sender.getId())) {
@@ -202,9 +201,11 @@ public class ChatService {
     }
 
     /* 채팅방 접속 - 채팅읽기 */
-    @Transactional
     public void readChat(Long roomId, Long sessionId) {
-        List<ChatEntity> chatEntityList = chatRepository.checkChatIsNotRead(roomId, sessionId);
+        ChatRoomEntity chatRoomEntity = chatRoomRepository.findById(roomId).get();
+        UserEntity userEntity = userRepository.findById(sessionId).get();
+        List<ChatEntity> chatEntityList =
+                chatRepository.checkChatIsNotRead(chatRoomEntity, userEntity);
         for (ChatEntity chatEntity : chatEntityList) {
             chatRepository.readChat(chatEntity.getId());
         }
@@ -219,6 +220,16 @@ public class ChatService {
     public int notReadCount(Long id) {
         UserEntity userEntity = userRepository.findById(id).get();
         return chatRepository.notReadCount(userEntity);
+    }
+
+    /* 메시지 삭제하기 전에 상대방이 읽었는지 확인 */
+    public boolean checkReadYn(Long id) {
+        ChatEntity chatEntity = chatRepository.findById(id).get();
+        if (chatEntity.getReadDate() != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 

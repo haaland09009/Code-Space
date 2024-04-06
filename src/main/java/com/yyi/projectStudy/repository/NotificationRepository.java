@@ -23,8 +23,6 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
     List<NotificationEntity> findByReceiverAndReadDateIsNullOrderByIdDesc(UserEntity userEntity);
 
 
-
-
     /* 알림 삭제 */
     @Modifying
     @Query(value = "delete from NotificationEntity n where n.notTypeEntity.id = :notId and n.entityId = :entityId")
@@ -35,4 +33,5 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
     @Modifying
     @Query(value = "update NotificationEntity set readDate = sysdate where id = :id")
     void updateAsRead(Long id);
+
 }

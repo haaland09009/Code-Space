@@ -17,8 +17,8 @@ public interface ProjectPositionCategoryLinkRepository extends JpaRepository<Pro
     /* 포지션 삭제 */
     void deleteByProjectEntity(ProjectEntity projectEntity);
 
-    // 포지션 수정
+    /* 포지션 수정 */
     @Modifying
-    @Query("UPDATE ProjectPositionCategoryLinkEntity p SET p.positionCategoryEntity.id = :positionId WHERE p.projectEntity.id = :projectId")
+    @Query("update ProjectPositionCategoryLinkEntity p set p.positionCategoryEntity.id = :positionId where p.projectEntity.id = :projectId")
     void updatePosition(@Param("positionId") Long positionId, @Param("projectId") Long projectId);
 }

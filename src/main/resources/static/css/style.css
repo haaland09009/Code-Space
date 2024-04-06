@@ -118,7 +118,7 @@ body {
     /*border: none;*/
 }
 .cateButton:hover {
-    background-color: rgb(239, 243, 250);
+    background-color: rgb(239, 243, 250);ㄴ
 }
 
 .endButton {
@@ -184,6 +184,11 @@ textarea {
 }
 .contentDiv:hover {
     background-color : #f8f9fa!important;
+}
+
+.selectedContent {
+    background-color: rgb(226, 232, 240);
+    cursor: pointer;
 }
 
 .fs-14 {
@@ -298,33 +303,10 @@ mark {
     opacity: 0.6;
 }
 
-/* 채팅 바 스크롤 설정 */
-#chatRoomList::-webkit-scrollbar {
-    width: 10px;
-  }
-#chatRoomList::-webkit-scrollbar-thumb {
-    background-color: #3C467D;
-    border-radius: 10px;
-  }
-#chatRoomList::-webkit-scrollbar-track {
-    background-color: #bebebe;
-    border-radius: 10px;
-    box-shadow: inset 0px 0px 5px white;
-  }
 
 
-#chatList::-webkit-scrollbar {
-  width: 10px;
-}
-#chatList::-webkit-scrollbar-thumb {
-  background-color: #3C467D;
-  border-radius: 10px;
-}
-#chatList::-webkit-scrollbar-track {
-  background-color: #bebebe;
-  border-radius: 10px;
-  box-shadow: inset 0px 0px 5px white;
-}
+
+
 
 .unRead_ChatFont {
     color: #ff6f0f;

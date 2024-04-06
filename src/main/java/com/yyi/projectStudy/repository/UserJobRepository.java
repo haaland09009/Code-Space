@@ -10,13 +10,13 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface UserJobRepository extends JpaRepository<UserJobEntity, Long> {
-    // 회원의 직군 조회
+    /* 회원의 직군 조회 */
     Optional<UserJobEntity> findByUserEntity(UserEntity userEntity);
 
-    // 회원의 직군 수정
-    // update user_job_table set job_id = ? where user_id = ?
+    /* 회원의 직군 수정 */
     @Modifying
-    @Query(value = "update UserJobEntity u set u.jobEntity.id = :jobId where u.userEntity.id = :userId")
+    @Query(value = "update UserJobEntity u set u.jobEntity.id = :jobId " +
+                    "where u.userEntity.id = :userId")
     void updateUserJob(@Param("jobId") Long jobId,
                        @Param("userId") Long userId);
 }

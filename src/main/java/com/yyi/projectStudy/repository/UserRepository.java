@@ -13,7 +13,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email);
 
     /* 회원정보 수정 */
-    /* update user_table set nickname = ?, email = ? where id = ?; */
     @Modifying
     @Query(value = "update UserEntity set nickname = :nickname, email = :email where id = :id")
     void updateUser(@Param("nickname") String nickname,
@@ -21,7 +20,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
                     @Param("id") Long id);
 
     /* 회원 프사 존재 여부 수정 */
-    /* update user_table set file_attached = ? where id = ? */
     @Modifying
     @Query(value = "update UserEntity set fileAttached = :fileAttached where id = :id")
     void updateUserFileAttached(@Param("fileAttached") int fileAttached,

@@ -12,11 +12,9 @@ import java.util.List;
 
 public interface QnaReplyRepository extends JpaRepository<QnaReplyEntity, Long> {
     /* 게시글 당 답변 조회 */
-    /* select * from qna_reply_table where qna_id = ? order by id desc; */
     List<QnaReplyEntity> findAllByQnaEntityOrderByIdDesc(QnaEntity qnaEntity);
 
     /* 답변 수 조회 */
-    /* select count(*) from qna_reply_table where qna_id = ? */
     int countByQnaEntity(QnaEntity qnaEntity);
 
 

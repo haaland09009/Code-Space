@@ -12,9 +12,9 @@ import java.util.Optional;
 public interface ProjectPeriodCategoryLinkRepository extends JpaRepository<ProjectPeriodCategoryLinkEntity, Long> {
     Optional<ProjectPeriodCategoryLinkEntity> findByProjectEntity_Id(Long id);
 
-    // 진행 기간 수정
+    /* 진행 기간 수정 */
     @Modifying
-    @Query("UPDATE ProjectPeriodCategoryLinkEntity p SET p.periodCategoryEntity.id = :periodId WHERE p.projectEntity.id = :projectId")
+    @Query("update ProjectPeriodCategoryLinkEntity p set p.periodCategoryEntity.id = :periodId where p.projectEntity.id = :projectId")
     void updatePeriod(@Param("periodId") Long periodId, @Param("projectId") Long projectId);
 
 }

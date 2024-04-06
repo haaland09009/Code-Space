@@ -15,21 +15,24 @@ import java.util.List;
 
 public interface ProjectRepository extends JpaRepository<ProjectEntity, Long>, ProjectCustom {
     /* 게시글 조회수 증가 */
-    /*  update project_table set read_count = read_count + 1 where id = ? */
     @Modifying
     @Query(value = "update ProjectEntity p set p.readCount = p.readCount + 1 where p.id = :id")
     void updateReadCount(@Param("id") Long id);
 
     /* 게시글 수정 */
     @Modifying
-    @Query(value = "update ProjectEntity p set p.title = :title, p.content = :content, p.startDate = :startDate, p.headCount = :headCount, p.updDate = sysdate where p.id = :id")
+    @Query(value = "update ProjectEntity p set p.title = :title, " +
+                    "p.content = :content, p.startDate = :startDate, " +
+                    "p.headCount = :headCount, p.updDate = sysdate where p.id = :id")
     void updateProject(@Param("title") String title, @Param("content") String content,
-                       @Param("startDate") Date startDate, @Param("headCount") int headCount, @Param("id") Long id);
+                       @Param("startDate") Date startDate, @Param("headCount") int headCount,
+                       @Param("id") Long id);
 
 
 
    /* 메인 페이지 HOT 프로젝트 / 스터디 조회 (일단 조회수 순, 나중에 수정해야함!!!) */
-    @Query(value = "select * from (select * from project_table where status = '모집중' order by read_count desc) where rownum <= 6", nativeQuery = true)
+    @Query(value = "select * from (select * from project_table where status = '모집중'" +
+                    " order by read_count desc) where rownum <= 6", nativeQuery = true)
     List<ProjectEntity> findAllByOrderByReadCountDesc();
 
 
@@ -71,10 +74,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long>, P
     @Query(value = "select p from ProjectEntity p join projectStudyCategoryLinkEntityList psc\n" +
                     "where psc.projectStudyCategoryEntity.id = :projectStudyId order by p.id desc")
     List<ProjectEntity> getProjectListByCategory(@Param("projectStudyId") Long projectStudyId);
-      /* select pt.* from project_study_category_link_table psc
-        join project_table pt on psc.project_id = pt.id
-        where project_study_id = 1
-        order by pt.id desc */
+
 
 
 

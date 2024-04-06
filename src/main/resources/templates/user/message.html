@@ -192,29 +192,65 @@
 </div>
 
 <!--  Modal -->
-<!-- 답변 삭제 alert -->
-<div class="modal" id="deleteChatModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+<!-- 메시지 삭제 불가 alert -->
+<div class="modal" id="noDeleteChatModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-light">
-                <h5 class="modal-title">메시지 삭제하기</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row text-center">
-                    <div class="col">
-                        메시지를 삭제하시겠습니까?
+
+            <div class="modal-body text-center">
+                <div class="row mt-3">
+                    <div class="col fs-4 fw-semibold">
+                        메시지 삭제 불가
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
-                <input type="button" class="btn mainButton fw-semibold" value="확인" onclick="deleteChat()">
+                <div class="row mt-2 text-secondary">
+                    <div class="col">
+                        상대방이 읽은 메시지는 삭제하실 수 없습니다.
+                    </div>
+                </div>
+                <div class="row mt-4 mb-3 d-flex justify-content-center">
+                    <div class="col-11 d-grid">
+                        <button class="btn mainButton fs-5" data-bs-dismiss="modal"> 확인</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<!-- 답변 삭제 alert -->
+<!-- 메시지 삭제 불가 alert -->
+
+
+<!-- 삭제 alert -->
+<div class="modal" id="deleteChatModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body py-4">
+                <div class="row">
+                    <div class="col ms-4">
+                        <div class="row nt-2">
+                            <div class="col fw-semibold fs-4">
+                                메시지 삭제
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col text-secondary">
+                                메시지를 삭제하시겠습니까?
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col text-end">
+                                <button type="button" class="btn btn-outline-dark fs-5 me-1" data-bs-dismiss="modal">취소</button>
+                                <input type="button" class="btn mainButton fw-semibold fs-5 me-2" value="확인" onclick="deleteChat()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 삭제 alert -->
 <script th:inline="javascript">
 
     /*<![CDATA[*/

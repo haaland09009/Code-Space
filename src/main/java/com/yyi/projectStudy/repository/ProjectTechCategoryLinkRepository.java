@@ -19,10 +19,5 @@ public interface ProjectTechCategoryLinkRepository extends JpaRepository<Project
     /* 기술스택 삭제 */
     void deleteByProjectEntity(ProjectEntity projectEntity);
 
-    int countByProjectEntityAndTechCategoryEntity(ProjectEntity projectEntity, TechCategoryEntity techCategoryEntity);
 
-    // 기술스택 수정
-    @Modifying
-    @Query("UPDATE ProjectTechCategoryLinkEntity p SET p.techCategoryEntity.id = :techId WHERE p.projectEntity.id = :projectId")
-    void updateTech(@Param("techId") Long techId, @Param("projectId") Long projectId);
 }

@@ -434,8 +434,8 @@ public class QnaService {
     @Transactional
     public void saveHashTag(QnaDTO dto, String tag) {
         if (findHashTag(dto.getId()) != null) {
-            Long qnaId = dto.getId();
-            qnaTagsRepository.updateTags(qnaId, tag);
+            QnaEntity qnaEntity = qnaRepository.findById(dto.getId()).get();
+            qnaTagsRepository.updateTags(qnaEntity, tag);
         } else {
             QnaEntity qnaEntity = qnaRepository.findById(dto.getId()).get();
             QnaTagsEntity qnaTagsEntity = QnaTagsEntity.toQnaTagsEntity(qnaEntity, tag);

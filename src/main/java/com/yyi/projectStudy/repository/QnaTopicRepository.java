@@ -12,17 +12,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface QnaTopicRepository extends JpaRepository<QnaTopicEntity, Long> {
-    // 게시판번호(qnaId)로 토픽번호(topicId) 조회
-    // select * from qna_topic_table where qna_id = 1;
+    /* 게시판번호(qnaId)로 토픽번호(topicId) 조회 */
     Optional<QnaTopicEntity> findByQnaEntity(QnaEntity qnaEntity);
 
-    // 토픽번호로 게시판 조회
-    // select * from qna_topic_table where topic_id = ? order by qna_id desc;
+    /* 토픽번호로 게시판 조회 */
     List<QnaTopicEntity> findByTopicEntityOrderByQnaEntityIdDesc(TopicEntity topicEntity);
 
 
-    // 토픽번호 수정
-    // update qna_topic_table set topic_id = :topic_id where id = :id;
+    /* 토픽 번호 수정 */
     @Modifying
     @Query(value = "update QnaTopicEntity q set q.topicEntity.id = :topicId where q.id = :id")
     void updateQnaTopic(@Param("topicId") Long topicId, @Param("id") Long id);

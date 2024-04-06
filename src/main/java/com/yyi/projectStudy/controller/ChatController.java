@@ -151,4 +151,11 @@ public class ChatController {
     }
 
 
+    /* 메시지 삭제하기 전에 상대방이 읽었는지 확인 */
+    @GetMapping("/checkReadYn/{id}")
+    public @ResponseBody boolean checkReadYn(@PathVariable("id") Long id) {
+
+        return chatService.checkReadYn(id);
+    }
+
 }

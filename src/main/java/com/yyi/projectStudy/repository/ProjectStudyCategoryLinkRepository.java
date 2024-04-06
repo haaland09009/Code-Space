@@ -11,12 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProjectStudyCategoryLinkRepository extends JpaRepository<ProjectStudyCategoryLinkEntity, Long> {
-    /* 프로젝트, 스터디 여부 확인 1 */
+    /* 프로젝트, 스터디 여부 확인  */
     Optional<ProjectStudyCategoryLinkEntity> findByProjectEntity_Id(Long id);
 
     /* 프로젝트, 스터디 여부 수정 */
     @Modifying
-    @Query("UPDATE ProjectStudyCategoryLinkEntity p SET p.projectStudyCategoryEntity.id = :projectStudyId WHERE p.projectEntity.id = :projectId")
+    @Query("update ProjectStudyCategoryLinkEntity p set p.projectStudyCategoryEntity.id = :projectStudyId " +
+            "where p.projectEntity.id = :projectId")
     void updateProjectStudy(@Param("projectStudyId") Long projectStudyId, @Param("projectId") Long projectId);
 
 

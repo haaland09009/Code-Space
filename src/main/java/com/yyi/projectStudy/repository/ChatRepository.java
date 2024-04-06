@@ -13,7 +13,6 @@ import java.util.List;
 public interface ChatRepository extends JpaRepository<ChatEntity, Long> {
 
     /* 채팅방에 있는 채팅 기록 모두 조회 */
-    /* select * from chat_table where room_id = ? order by id asc;*/
     List<ChatEntity> findByChatRoomEntityOrderByIdAsc(ChatRoomEntity chatRoomEntity);
 
     /* 채팅방 조회 */
@@ -123,16 +122,15 @@ ORDER BY
 
 
     /* 채팅방 중에서 안 읽은 채팅 개수 확인 */
-    /* SELECT count(*) FROM chat_table where room_id = 2 and sender_id != 43 and read_date is null; */
-    @Query(value = "select count(*) from chat_table where room_id = :roomId and sender_id != :userId and read_date is null", nativeQuery = true)
-    int countChatIsNotRead(@Param("roomId") Long roomId,
-                           @Param("userId") Long userId);
+    @Query(value = "select count(*) from ChatEntity c where c.chatRoomEntity = :chatRoomEntity " +
+                    "and c.sender != :userEntity and c.readDate is null")
+    int countChatIsNotRead(ChatRoomEntity chatRoomEntity, UserEntity userEntity);
 
     /* 채팅방 중에서 안 읽은 채팅 pk 확인*/
-    /* SELECT * FROM chat_table where room_id = 2 and sender_id != 43 and read_date is null; */
-    @Query(value = "select * from chat_table where room_id = :roomId and sender_id != :userId and read_date is null", nativeQuery = true)
-    List<ChatEntity> checkChatIsNotRead(@Param("roomId") Long roomId,
-                                        @Param("userId") Long userId);
+    @Query(value = "select c from ChatEntity c where c.chatRoomEntity = :chatRoomEntity " +
+                    "and c.sender != :userEntity and c.readDate is null")
+    List<ChatEntity> checkChatIsNotRead(ChatRoomEntity chatRoomEntity, UserEntity userEntity);
+
 
     /* 채팅방 접속 - 채팅 읽음 처리 */
     @Modifying
@@ -141,21 +139,12 @@ ORDER BY
 
 
     /* 안 읽은 채팅 총 개수 */
-/*    SELECT COUNT(*) FROM chat_table ct
-    JOIN chat_room_table cr ON ct.room_id = cr.id
-    WHERE ct.sender_id != 43 AND
-            (cr.sender_id = 43 OR cr.receiver_id = 43)
-    AND ct.read_date IS NULL
-
-    select count(*) from ChatEntity ct
-    JOIN ChatRoomEntity cr
-    WHERE ct.sender != userEntity AND
-            (cr.sender = :userEntity OR cr.receiver = :userEntity)
-    AND ct.readDate is null */
     @Query(value = "select count(*) from ChatEntity ct\n" +
-            "join ct.chatRoomEntity cr\n" +
-            "where ct.sender != :userEntity and\n" +
-            "(cr.sender = :userEntity or cr.receiver = :userEntity)\n" +
-            "and ct.readDate is null")
+                    "join ct.chatRoomEntity cr\n" +
+                    "where ct.sender != :userEntity and\n" +
+                    "(cr.sender = :userEntity or cr.receiver = :userEntity)\n" +
+                    "and ct.readDate is null")
     int notReadCount(UserEntity userEntity);
+
+
 }

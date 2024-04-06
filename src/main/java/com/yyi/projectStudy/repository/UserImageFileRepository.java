@@ -14,11 +14,9 @@ public interface UserImageFileRepository extends JpaRepository<UserImageFileEnti
     Optional<UserImageFileEntity> findByUserEntity(UserEntity userEntity);
 
     /* 회원 이미지 수정 */
-    /* update user_image_file_table set original_file_name = :originalFileName,
-        stored_file_name = :storedFileName where user_id = ? */
     @Modifying
     @Query(value = "update UserImageFileEntity u set u.originalFileName = :originalFileName," +
-            "u.storedFileName = :storedFileName where u.userEntity.id = :userId")
+                    "u.storedFileName = :storedFileName where u.userEntity.id = :userId")
     void updateUserImg(@Param("originalFileName") String originalFileName,
                        @Param("storedFileName") String storedFileName,
                        @Param("userId") Long userId);
