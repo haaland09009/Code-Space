@@ -65,6 +65,7 @@
                                                 <span th:if="${tech.name == 'Django'}">•</span>
                                                 <span th:if="${tech.name == 'PHP'}" class="text-secondary">•</span>
                                                 <span th:if="${tech.name == 'MySQL'}" style="color: #ff6f0f">•</span>
+                                                <span th:if="${tech.name == 'Oracle'}" class="text-danger">•</span>
                                                 <span class="ms-1" th:text="${tech.name}"></span>
                                             </button>
                                         </div>
@@ -350,18 +351,17 @@
                                                       th:if="${session.userDTO != null}"
                                                       placeholder="댓글을 작성하여 프로젝트와 스터디에 참여해보세요 !"
                                                       onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
-                                            <textarea cols="10" rows="4"
-                                                      class="form-control fs-5" style="resize:none; pointer-events: none;"
-                                            th:if="${session.userDTO == null}"
-                                            placeholder="로그인 후 댓글을 작성하실 수 있습니다."></textarea>
+                                                <textarea cols="10" rows="4"
+                                                          class="form-control fs-5" style="resize:none; cursor: pointer;" onclick="location.href='/user/loginPage'"
+                                                th:if="${session.userDTO == null}">로그인 후 댓글을 작성하실 수 있습니다.</textarea>
                                         </div>
                                     </div>
                                     <div class="row mt-3">
                                         <div class="col text-end">
-                                            <button class="btn mainButton px-3 fs-5" onclick="commentReq()"
-                                                    th:if="${session.userDTO != null}">댓글 쓰기</button>
-                                            <button class="btn mainButton px-3 disabled fs-5"
-                                                    th:if="${session.userDTO == null}">댓글 쓰기</button>
+                                            <button class="btn mainButton px-3 fs-5 rounded-1" onclick="commentReq()"
+                                                    th:if="${session.userDTO != null}">댓글 작성하기</button>
+                                            <button class="btn mainButton px-3 disabled fs-5 rounded-1"
+                                                    th:if="${session.userDTO == null}">댓글 작성하기</button>
                                         </div>
                                     </div>
                                     <!-- 댓글 입력 폼 -->
@@ -393,7 +393,7 @@
                                                                              onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row mt-2">
+                                                                <div class="row mt-3">
                                                                     <div class="col text-danger" th:id="'noContentAlert_' + ${comment.id}">
                                                                         <i class="bi bi-exclamation-circle"></i>
                                                                         <span class="ms-1">
@@ -401,8 +401,8 @@
                                                                         </span>
                                                                     </div>
                                                                     <div class="col text-end me-3">
-                                                                        <button class="btn btn-outline-dark fs-18" th:onclick="toggleUpdateCommentPage([[${comment.id}]])">취소</button>
-                                                                        <button class="btn mainButton ms-1 fs-18" th:onclick="updateComment([[${comment.id}]])">댓글 쓰기</button>
+                                                                        <button class="btn btn-outline-dark fs-18 rounded-1" th:onclick="toggleUpdateCommentPage([[${comment.id}]])">취소</button>
+                                                                        <button class="btn mainButton ms-1 fs-18 rounded-1" th:onclick="updateComment([[${comment.id}]])">댓글 수정하기</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -511,7 +511,7 @@
                 </div>
                 <div class="row mt-4 mb-3 d-flex justify-content-center">
                     <div class="col-11 d-grid">
-                        <button class="btn btn-primary fs-5" data-bs-dismiss="modal"> 확인</button>
+                        <button class="btn mainButton fs-5" data-bs-dismiss="modal"> 확인</button>
                     </div>
                 </div>
             </div>
@@ -520,24 +520,33 @@
 </div>
 <!-- 게시물 삭제 불가 alert -->
 
+
+
 <!-- 게시글 삭제 alert -->
 <div class="modal" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-light">
-                <h5 class="modal-title">게시글 삭제</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row text-center">
-                    <div class="col">
-                        게시글을 삭제하시겠습니까?
+            <div class="modal-body py-4">
+                <div class="row">
+                    <div class="col ms-4">
+                        <div class="row nt-2">
+                            <div class="col fw-semibold fs-4">
+                                게시글 삭제
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col text-secondary">
+                                게시글을 삭제하시겠습니까?
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col text-end">
+                                <button type="button" class="btn btn-outline-dark fs-5 me-1" data-bs-dismiss="modal">취소</button>
+                                <input type="button" class="btn mainButton fw-semibold fs-5 me-2" value="확인" onclick="deleteBoard()">
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
-                <input type="button" class="btn mainButton fw-semibold" value="확인" onclick="deleteBoard()">
             </div>
         </div>
     </div>
@@ -548,20 +557,27 @@
 <div class="modal" id="deleteCommentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-light">
-                <h5 class="modal-title">댓글 삭제</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row text-center">
-                    <div class="col">
-                        댓글을 삭제하시겠습니까?
+            <div class="modal-body py-4">
+                <div class="row">
+                    <div class="col ms-4">
+                        <div class="row nt-2">
+                            <div class="col fw-semibold fs-4">
+                                댓글 삭제
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col text-secondary">
+                                댓글을 삭제하시겠습니까?
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col text-end">
+                                <button type="button" class="btn btn-outline-dark fs-5 me-1" data-bs-dismiss="modal">취소</button>
+                                <input type="button" class="btn mainButton fw-semibold fs-5 me-2" value="확인" onclick="deleteComment()">
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
-                <input type="button" class="btn mainButton fw-semibold" value="확인" onclick="deleteComment()">
             </div>
         </div>
     </div>

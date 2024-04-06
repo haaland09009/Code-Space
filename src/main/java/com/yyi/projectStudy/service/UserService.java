@@ -156,14 +156,17 @@ public class UserService {
 
     /* 회원 이미지 수정 */
     @Transactional
-    public UserDTO updateUserImg(UserDTO userDTO) throws IOException {
+    public void updateUserImg(UserDTO userDTO) throws IOException {
+        UserEntity userEntity = userRepository.findById(userDTO.getId()).get();
         if (userDTO.getProfileImageFile() == null) {
+            System.out.println("새로 들어온 이미지가 없어요");
             // 1. 기존 이미지가 존재한다면 삭제
-            UserEntity userEntity = userRepository.findById(userDTO.getId()).get();
             Optional<UserImageFileEntity> optionalUserImageFileEntity
                     = userImageFileRepository.findByUserEntity(userEntity);
             if (optionalUserImageFileEntity.isPresent()) {
-                userImageFileRepository.deleteUserImg(userEntity.getId());
+                System.out.println("기존에 이미지가 잇씁니다.");
+                UserImageFileEntity userImageFileEntity = optionalUserImageFileEntity.get();
+                userImageFileRepository.deleteById(userImageFileEntity.getId());
             }
             // 2. 회원 이미지 존재 여부 수정
             userRepository.updateUserFileAttached(0, userDTO.getId());
@@ -183,13 +186,20 @@ public class UserService {
             // 5. 해당 경로에 파일 저장
             profileImageFile.transferTo(new File(savePath));
 
-            // 6. 회원 이미지 수정
-            userImageFileRepository.updateUserImg(originalFilename, storedFileName, userDTO.getId());
-
-            // 7. 회원 이미지 존재 여부 수정
-            userRepository.updateUserFileAttached(1, userDTO.getId());
+            // 6. 회원 이미지 수정 or 추가
+            Optional<UserImageFileEntity> optionalUserImageFileEntity
+                    = userImageFileRepository.findByUserEntity(userEntity);
+            if (optionalUserImageFileEntity.isPresent()) {
+                /* 기존에 이미지가 존재했다면 업데이트 */
+                userImageFileRepository.updateUserImg(originalFilename, storedFileName, userDTO.getId());
+            } else {
+                /* 기존에 이미지가 없었다면 이미지 추가 */
+                UserImageFileEntity userImageFileEntity
+                    = UserImageFileEntity.toUserImageFileEntity(userEntity, originalFilename, storedFileName);
+                userImageFileRepository.save(userImageFileEntity);
+                /* 회원 이미지 존재 여부 수정 */
+                userRepository.updateUserFileAttached(1, userDTO.getId());
+            }
         }
-        UserEntity userEntity = userRepository.findById(userDTO.getId()).get();
-        return UserDTO.toUserDTO(userEntity);
     }
 }

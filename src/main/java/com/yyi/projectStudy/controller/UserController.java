@@ -116,7 +116,9 @@ public class UserController {
     @PostMapping("/updateUserImg")
     public String updateUserImg(@ModelAttribute UserDTO userDTO,
                                 HttpSession session) throws IOException {
-        UserDTO updatedUser = userService.updateUserImg(userDTO);
+        userService.updateUserImg(userDTO);
+        UserDTO updatedUser = userService.findById(userDTO.getId());
+
         session.setAttribute("userDTO", updatedUser);
         return "redirect:/user/myPage";
     }

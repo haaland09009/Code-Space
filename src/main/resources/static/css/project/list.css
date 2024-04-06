@@ -7,6 +7,10 @@
     border: none;
 }
 
+.cateButton {
+    pointer-events: none;
+}
+
 .selectButton {
     background-color: rgb(239, 243, 250);
     font-weight: medium;

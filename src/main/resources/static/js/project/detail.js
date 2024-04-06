@@ -140,14 +140,14 @@
                 output += '</div>';
                 output += '</div>';
 
-                output += '<div class="row mt-2">';
+                output += '<div class="row mt-3">';
                 output += '<div class="col text-danger" style="display: none;" id="noContentAlert_' + comments[i].id + '">';
                 output += '<i class="bi bi-exclamation-circle">' + '</i>';
                 output += '<span class="ms-2">' + "내용을 최소 1자 이상 입력해주세요." + '</span>';
                 output += '</div>';
                 output += '<div class="col text-end me-3">';
-                output += '<button class="btn btn-outline-dark fs-18" onclick="toggleUpdateCommentPage(' + comments[i].id + ')">' + "취소" + '</button>';
-                output += '<button class="btn mainButton ms-2 fs-18" onclick="updateComment(' + comments[i].id + ')">' + "댓글 쓰기" + '</button>';
+                output += '<button class="btn btn-outline-dark fs-18 rounded-1" onclick="toggleUpdateCommentPage(' + comments[i].id + ')">' + "취소" + '</button>';
+                output += '<button class="btn mainButton ms-2 fs-18 rounded-1" onclick="updateComment(' + comments[i].id + ')">' + "댓글 수정하기" + '</button>';
                 output += '</div>';
                 output += '</div>';
                 output += '</div>';

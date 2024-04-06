@@ -8,6 +8,9 @@
  .updated-project:hover + .updated-text {
    display: block;
  }
+ .cateButton {
+    pointer-events: none;
+ }
 
  .custom-border {
     border-right: 2px solid #ddd; /* 원하는 경계선 스타일 및 색상으로 조절 가능 */

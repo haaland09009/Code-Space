@@ -45,6 +45,8 @@
          }
   }
 
+
+
   /* 회원 이미지 변경 모달 열기 */
   const updateUserImgModal = () => {
        const updateUserImgModal = bootstrap.Modal.getOrCreateInstance("#updateUserImgModal");
@@ -53,6 +55,20 @@
 
   /* 기본 이미지 변경 물어보기 */
   const deleteUserImgModal = () => {
+      const updateUserImgModal = bootstrap.Modal.getOrCreateInstance("#updateUserImgModal");
+      updateUserImgModal.hide();
       const deleteUserImgModal = bootstrap.Modal.getOrCreateInstance("#deleteUserImgModal");
       deleteUserImgModal.show();
+  }
+
+  /* 회원 이미지 수정 유효성 검사 */
+  const checkImgValueAndSubmit = () => {
+      const image = document.querySelector("#profile_img_link");
+      const noImageAlert = document.querySelector("#noImageAlert");
+      if (!image || !image.files || image.files.length == 0) {
+         noImageAlert.style.display = "block";
+      } else {
+         const frm = document.querySelector("#imgFrm");
+         frm.submit();
+      }
   }

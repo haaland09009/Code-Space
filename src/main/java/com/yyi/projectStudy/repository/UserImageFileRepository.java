@@ -23,9 +23,5 @@ public interface UserImageFileRepository extends JpaRepository<UserImageFileEnti
                        @Param("storedFileName") String storedFileName,
                        @Param("userId") Long userId);
 
-    /* 회원 이미지 삭제 */
-    /* delete from user_image_file_table where user_id = ? */
-    @Modifying
-    @Query(value = "delete from UserImageFileEntity u where u.userEntity.id = :userId")
-    void deleteUserImg(@Param("userId") Long userId);
+
 }

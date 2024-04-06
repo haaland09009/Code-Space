@@ -30,11 +30,13 @@
                     <div class="row">
                         <div class="col">
                             <button class="btn btn-sm cateButton fs-18"
+                                    onclick="location.href='/qna/topic/tech'"
                                     th:if="${topic.name == '기술'}">
                                 <i class="bi bi-pencil text-success fw-semibold"></i>
                                 <span class="ms-1" th:text="${topic.name}"></span>
                             </button>
                             <button class="btn btn-sm cateButton fs-18"
+                                    onclick="location.href='/qna/topic/career'"
                                     th:if="${topic.name == '커리어'}">
                                 <i class="bi bi-bag fw-semibold" style="color: #712cf9;"></i>
                                 <span class="ms-1" th:text="${topic.name}"></span>
@@ -121,9 +123,11 @@
                         <div class="col">
                             <span class="text-secondary">
                                 <button type="button" class="btn btn-outline-dark me-3 fs-18"
-                                        th:each="tag, iterStat : ${#strings.replace(qna.hashTag, '\\s*#\\s*', '#').split('#')}" th:if="${!#strings.isEmpty(tag)}">
+                                        th:each="tag, iterStat : ${#strings.replace(qna.hashTag, '\\s*#\\s*', '#').split('#')}"
+                                        th:if="${!#strings.isEmpty(tag)}"
+                                        th:onclick="searchForTag([[${tag}]])">
                                     <span class="text-danger">#</span>
-                                        <span th:text="${tag}" th:onclick="searchForTag([[${tag}]])"></span>
+                                        <span th:text="${tag}" ></span>
                                 </button>
                             </span>
                         </div>
@@ -181,10 +185,11 @@
                                             placeholder="답변으로 나누고 싶은 경험이 있으신가요?"
                                             th:if="${session.userDTO != null  && session.userDTO.id != qna.userId}" onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
                                             <textarea name=""  cols="10" rows="4"
-                                                      class="form-control form-control-no-border fs-18 disabled"
+                                                      class="form-control form-control-no-border fs-18"
                                                       placeholder="로그인 후 답변을 작성하실 수 있습니다."
-                                                      style="pointer-events: none;"
-                                            th:if="${session.userDTO == null}"></textarea>
+                                                      style="cursor: pointer;"
+                                                      onclick="location.href='/user/loginPage'"
+                                                      th:if="${session.userDTO == null}"></textarea>
                                             <textarea name=""  cols="10" rows="4"
                                                       class="form-control form-control-no-border fs-18 disabled"
                                                       placeholder="회원님이 작성한 게시물입니다."
@@ -206,13 +211,13 @@
                                             </span>
                                         </div>
                                         <div class="col text-end">
-                                            <button class="btn mainButton fs-5 me-2 px-3 py-2" onclick="replyReq()"
+                                            <button class="btn mainButton fs-5 me-2 px-3 py-2 rounded-1" onclick="replyReq()"
                                                     th:if="${session.userDTO != null && session.userDTO.id != qna.userId}">답변 등록하기
                                             </button>
-                                            <button class="btn mainButton disabled fs-5 me-2 px-3 py-2 "
+                                            <button class="btn mainButton disabled fs-5 me-2 px-3 py-2 rounded-1"
                                                     th:if="${session.userDTO == null}">답변 등록하기
                                             </button>
-                                            <button class="btn mainButton disabled fs-5 me-2 px-3 py-2 "
+                                            <button class="btn mainButton disabled fs-5 me-2 px-3 py-2 rounded-1"
                                                     th:if="${session.userDTO != null && session.userDTO.id == qna.userId}">답변 등록하기
                                             </button>
                                         </div>
@@ -367,9 +372,10 @@
                                                           placeholder="여러분의 소중한 댓글을 남겨주세요."
                                                           th:if="${session.userDTO != null}" onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
                                                 <textarea name=""  cols="10" rows="3"
-                                                          class="form-control fs-18 disabled form-control-no-border ps-0"
+                                                          class="form-control fs-18 form-control-no-border ps-0"
                                                           placeholder="로그인 후 댓글을 작성하실 수 있습니다."
-                                                          style="resize:none; pointer-events: none;"
+                                                          style="resize:none; cursor: pointer;"
+                                                          onclick="location.href='/user/loginPage'"
                                                           th:if="${session.userDTO == null}"></textarea>
                                             </div>
                                         </div>
@@ -377,11 +383,11 @@
                                             <div class="col text-end">
                                                 <button class="btn mainButton text-secondary fs-18" th:onclick="writeComment([[${reply.id}]])"
                                                         th:if="${session.userDTO != null}"
-                                                        style="background-color: #e9ecef;"> 등록
+                                                        style="background-color: #e9ecef;"> 댓글 등록하기
                                                 </button>
                                                 <button class="btn mainButton disabled text-secondary fs-18"
                                                         th:if="${session.userDTO == null}"
-                                                        style="background-color: #e9ecef;">등록
+                                                        style="background-color: #e9ecef;"> 댓글 등록하기
                                                 </button>
                                             </div>
                                         </div>
@@ -441,8 +447,8 @@
                                                         </span>
                                                     </div>
                                                     <div class="col text-end me-3">
-                                                        <button class="btn btn-outline-dark fs-18" th:onclick="toggleUpdateCommentPage([[${comment.id}]])">취소</button>
-                                                        <button class="btn mainButton ms-1 fs-18" th:onclick="updateComment([[${comment.id}]])">댓글 쓰기</button>
+                                                        <button class="btn btn-outline-dark fs-18 rounded-1" th:onclick="toggleUpdateCommentPage([[${comment.id}]])">취소</button>
+                                                        <button class="btn mainButton ms-1 fs-18 rounded-1" th:onclick="updateComment([[${comment.id}]])">댓글 수정하기</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -542,7 +548,7 @@
                 </div>
                 <div class="row mt-4 mb-3 d-flex justify-content-center">
                     <div class="col-11 d-grid">
-                        <button class="btn btn-primary fs-5" data-bs-dismiss="modal"> 확인</button>
+                        <button class="btn mainButton fs-5" data-bs-dismiss="modal"> 확인</button>
                     </div>
                 </div>
             </div>
@@ -556,22 +562,28 @@
 <div class="modal" id="deleteQnaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-light">
-                <h5 class="modal-title">게시글 삭제</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row text-center">
-                    <div class="col">
-                        게시글을 삭제하시겠습니까?
+            <div class="modal-body py-4">
+                <div class="row">
+                    <div class="col ms-4">
+                        <div class="row nt-2">
+                            <div class="col fw-semibold fs-4">
+                                게시글 삭제
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col text-secondary">
+                                게시글을 삭제하시겠습니까?
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col text-end">
+                                <button type="button" class="btn btn-outline-dark fs-5 me-1" data-bs-dismiss="modal">취소</button>
+                                <input type="button" class="btn mainButton fw-semibold fs-5 me-2" value="확인" onclick="deleteQna()">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
-                <input type="button" class="btn mainButton" value="확인" onclick="deleteQna()">
-            </div>
-
         </div>
     </div>
 </div>
@@ -596,7 +608,7 @@
                 </div>
                 <div class="row mt-4 mb-3 d-flex justify-content-center">
                     <div class="col-11 d-grid">
-                        <button class="btn btn-primary fs-5" data-bs-dismiss="modal"> 확인</button>
+                        <button class="btn mainButton fs-5" data-bs-dismiss="modal"> 확인</button>
                     </div>
                 </div>
             </div>
@@ -610,20 +622,27 @@
 <div class="modal" id="deleteReplyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-light">
-                <h5 class="modal-title">답변 삭제하기</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row text-center">
-                    <div class="col">
-                        답변을 삭제하시겠습니까?
+            <div class="modal-body py-4">
+                <div class="row">
+                    <div class="col ms-4">
+                        <div class="row nt-2">
+                            <div class="col fw-semibold fs-4">
+                                답변 삭제
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col text-secondary">
+                                답변을 삭제하시겠습니까?
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col text-end">
+                                <button type="button" class="btn btn-outline-dark fs-5 me-1" data-bs-dismiss="modal">취소</button>
+                                <input type="button" class="btn mainButton fw-semibold fs-5 me-2" value="확인" onclick="deleteReply()">
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
-                <input type="button" class="btn mainButton" value="확인" onclick="deleteReply()">
             </div>
         </div>
     </div>
@@ -703,20 +722,27 @@
 <div class="modal" id="deleteCommentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-light">
-                <h5 class="modal-title">댓글 삭제</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row text-center">
-                    <div class="col">
-                        댓글을 삭제하시겠습니까?
+            <div class="modal-body py-4">
+                <div class="row">
+                    <div class="col ms-4">
+                        <div class="row nt-2">
+                            <div class="col fw-semibold fs-4">
+                                댓글 삭제
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col text-secondary">
+                                댓글을 삭제하시겠습니까?
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col text-end">
+                                <button type="button" class="btn btn-outline-dark fs-5 me-1" data-bs-dismiss="modal">취소</button>
+                                <input type="button" class="btn mainButton fw-semibold fs-5 me-2" value="확인" onclick="deleteComment()">
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
-                <input type="button" class="btn mainButton fw-semibold" value="확인" onclick="deleteComment()">
             </div>
         </div>
     </div>
