@@ -24,7 +24,7 @@
             output += '<div class="row">';
             output += '<div class="col">';
             output += '<span class="fw-semibold me-1">' + res[i].nickname +  '</span>';
-            output += '<span class="ms-2 text-secondary date-element fs-18">' + formatDateTime(res[i].regDate)  + '</span>';
+            output += '<span class="ms-2 text-secondary date-element fs-18">' + formatChatTime(res[i].regDate)  + '</span>';
             output += '</div>';
             if (res[i].isNotReadCount != 0) {
                 output += '<div class="col-1 me-3 text-end">';

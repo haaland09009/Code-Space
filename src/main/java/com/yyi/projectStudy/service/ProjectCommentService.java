@@ -90,7 +90,7 @@ public class ProjectCommentService {
     }
 
     /* 댓글 좋아요 */
-    public void commentLike(ProCmtLikeDTO proCmtLikeDTO) {
+    public boolean commentLike(ProCmtLikeDTO proCmtLikeDTO) {
         Optional<ProjectCommentEntity> optionalProjectCommentEntity = projectCommentRepository.findById(proCmtLikeDTO.getCommentId());
         if (optionalProjectCommentEntity.isPresent()) {
             ProjectCommentEntity projectCommentEntity = optionalProjectCommentEntity.get();
@@ -99,12 +99,15 @@ public class ProjectCommentService {
                 /* 댓글에 이미 좋아요를 누른 상태이면 취소 */
                 Long id = proCmtLikeRepository.findByProjectCommentEntityAndUserEntity(projectCommentEntity, userEntity).get().getId();
                 proCmtLikeRepository.deleteById(id);
+                return false;
             } else {
                 /* 좋아요를 누르지 않았다면 좋아요 처리 */
                 ProCmtLikeEntity proCmtLikeEntity = ProCmtLikeEntity.toProCmtLikeEntity(projectCommentEntity, userEntity);
                 proCmtLikeRepository.save(proCmtLikeEntity);
+                return true;
             }
         }
+        return false;
     }
 
     /* 댓글 좋아요 수 확인 */
@@ -114,7 +117,7 @@ public class ProjectCommentService {
     }
 
     /* 댓글 싫어요 */
-    public void commentDisLike(ProCmtDisLikeDTO proCmtDisLikeDTO) {
+    public boolean commentDisLike(ProCmtDisLikeDTO proCmtDisLikeDTO) {
         Optional<ProjectCommentEntity> optionalProjectCommentEntity = projectCommentRepository.findById(proCmtDisLikeDTO.getCommentId());
         if (optionalProjectCommentEntity.isPresent()) {
             ProjectCommentEntity projectCommentEntity = optionalProjectCommentEntity.get();
@@ -123,12 +126,15 @@ public class ProjectCommentService {
                 /* 댓글에 이미 싫어요를 누른 상태이면 취소 */
                 Long id = proCmtDisLikeRepository.findByProjectCommentEntityAndUserEntity(projectCommentEntity, userEntity).get().getId();
                 proCmtDisLikeRepository.deleteById(id);
+                return false;
             } else {
                 /* 싫어요를 누르지 않았다면 싫어요 처리 */
                 ProCmtDisLikeEntity proCmtDisLikeEntity = ProCmtDisLikeEntity.toProCmtDisLikeEntity(projectCommentEntity, userEntity);
                 proCmtDisLikeRepository.save(proCmtDisLikeEntity);
+                return true;
             }
         }
+        return false;
     }
 
     /* 댓글 싫어요 수 확인 */
@@ -158,5 +164,21 @@ public class ProjectCommentService {
     public void update(ProjectCommentDTO projectCommentDTO) {
         projectCommentRepository.updateComment(projectCommentDTO.getContent(), projectCommentDTO.getId());
     }
+
+    /* 댓글 좋아요 여부 체크 (아이콘) */
+    public int checkLike(Long commentId, Long userId) {
+        ProjectCommentEntity projectCommentEntity = projectCommentRepository.findById(commentId).get();
+        UserEntity userEntity = userRepository.findById(userId).get();
+        return proCmtLikeRepository.countByProjectCommentEntityAndUserEntity(projectCommentEntity, userEntity);
+    }
+
+    /* 댓글 싫어요 여부 체크 (아이콘) */
+    public int checkDisLike(Long commentId, Long userId) {
+        ProjectCommentEntity projectCommentEntity = projectCommentRepository.findById(commentId).get();
+        UserEntity userEntity = userRepository.findById(userId).get();
+        return proCmtDisLikeRepository.countByProjectCommentEntityAndUserEntity(projectCommentEntity, userEntity);
+    }
+
+
 }
 

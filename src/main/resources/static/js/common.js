@@ -60,6 +60,7 @@
          return formattedDate;
     }
 
+   /* 분 단위로 변환하는 함수 */
    const formatDateTime = (dateString) => {
 
        const date = new Date(dateString);
@@ -114,6 +115,66 @@
      const formattedDateTime = year + '-' + ('0' + month).slice(-2) + '-' + ('0' + day).slice(-2) + ' ' + period + ' ' + ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2);
      return formattedDateTime;
    }
+
+   const isYesterday = (date, now) => {
+       const yesterday = new Date(now);
+       yesterday.setDate(now.getDate() - 1);
+
+       return date.getFullYear() === yesterday.getFullYear() &&
+              date.getMonth() === yesterday.getMonth() &&
+              date.getDate() === yesterday.getDate();
+   }
+
+   /* 일 단위로 변환하는 함수 (메시지 전용) */
+   const formatChatTime = (dateString) => {
+       const date = new Date(dateString);
+       const now = new Date();
+
+       const daysDiff = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+
+       if (daysDiff == 0 && !isYesterday(date, now)) {
+           return formatHourAndMinute(date);
+       } else {
+           return formatMonthAndDate(date);
+       }
+   }
+
+   /* 오전, 오후 구분 함수 */
+   const formatHourAndMinute = (date) => {
+       let hour = date.getHours();
+       const minute = date.getMinutes();
+       const period = (hour < 12) ? "오전" : "오후";
+
+       // 0시일 경우, 12로 변경
+       if (hour == 0) {
+           hour = 12;
+       }
+       // 오후인 경우 12를 빼서 12시간 형식으로 변경
+       else if (hour > 12) {
+           hour -= 12;
+       }
+
+       return `${period} ${hour}:${minute.toString().padStart(2, '0')}`;
+     }
+
+     /* 년,월,일 변환 함수 */
+     const formatMonthAndDate = (date) => {
+         const year = date.getFullYear();
+         const month = date.getMonth() + 1;
+         const day = date.getDate();
+
+         const now = new Date();
+         const nowYear = now.getFullYear();
+
+         // 현재 연도와 비교
+         if (year == nowYear) {
+             return `${month}월 ${day}일`;
+         } else {
+             return `${year}년 ${month}월 ${day}일`;
+         }
+     }
+
+
 
     /* 알림 조회 */
     const getNotificationList = () => {

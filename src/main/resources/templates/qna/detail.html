@@ -338,7 +338,7 @@
                                             </div>
                                             <div class="col mt-1 text-end">
                                                 <button class="btn btn-outline-dark fs-18" th:onclick="toggleUpdateReplyPage([[${reply.id}]])">취소</button>
-                                                <button class="ms-1 btn mainButton fs-18" th:onclick="updateReply([[${reply.id}]])">답변 등록하기</button>
+                                                <button class="ms-1 btn mainButton fs-18" th:onclick="updateReply([[${reply.id}]])">답변 수정하기</button>
                                             </div>
                                         </div>
                                     </div>
@@ -347,12 +347,12 @@
                                     <div class="col fs-18">
                                         <span style="cursor: pointer;" th:onclick="isYourReplyForLike([[${reply.id}]])" th:id="'replyLikeSpan_' + ${reply.id}"
                                         th:if="${reply.isLike == 0}" >
-                                            <img src="/img/like.png" style="width: 23px; height: 23px;">
+                                            <img src="/img/thumbs-up.png" style="width: 23px; height: 23px;">
                                             <span>좋아요</span><span class="ms-1" th:id="'replyLike_' + ${reply.id}" th:text="${reply.likeCount}"></span>
                                         </span>
                                         <span style="cursor: pointer;" th:onclick="isYourReplyForLike([[${reply.id}]])" th:id="'replyLikeSpan_' + ${reply.id}"
                                               th:if="${reply.isLike == 1}" class="text-black">
-                                            <img src="/img/like.png" style="width: 23px; height: 23px;">
+                                            <img src="/img/thumbs-up-fill.png" style="width: 23px; height: 23px;">
                                             <span>좋아요</span><span class="ms-1" th:id="'replyLike_' + ${reply.id}" th:text="${reply.likeCount}"></span>
                                         </span>
                                         <span style="cursor: pointer;" th:id="'toggleReplyButton_' + ${reply.id}"

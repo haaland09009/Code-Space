@@ -61,7 +61,8 @@ public class ProjectCommentController {
 
     /* 댓글 작성 후 목록 조회 */
     @GetMapping("/getCommentList/{projectId}")
-    public ResponseEntity getCommentList(@PathVariable("projectId") Long projectId) {
+    public ResponseEntity getCommentList(@PathVariable("projectId") Long projectId, HttpSession session) {
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
         if (projectId != null) {
             List<ProjectCommentDTO> projectCommentDTOList = projectCommentService.findAll(projectId);
             /* 댓글마다 좋아요, 싫어요 수 */
@@ -71,6 +72,16 @@ public class ProjectCommentController {
 
                 int commentDisLikeCount = projectCommentService.commentDisLikeCount(projectCommentDTO.getId());
                 projectCommentDTO.setDisLikeCount(commentDisLikeCount);
+
+                if (sessionUser == null) {
+                    projectCommentDTO.setLikeYn(0);
+                    projectCommentDTO.setDisLikeYn(0);
+                } else {
+                    int likeYn = projectCommentService.checkLike(projectCommentDTO.getId(), sessionUser.getId());
+                    int disLikeYn = projectCommentService.checkDisLike(projectCommentDTO.getId(), sessionUser.getId());
+                    projectCommentDTO.setLikeYn(likeYn);
+                    projectCommentDTO.setDisLikeYn(disLikeYn);
+                }
 
                 /* 댓글 작성자의 직군 */
                 JobDTO userJob = userService.findJob(projectCommentDTO.getUserId());
@@ -104,8 +115,8 @@ public class ProjectCommentController {
 
     /* 댓글 좋아요 */
     @PostMapping("/commentLike")
-    public @ResponseBody void commentLike(@ModelAttribute ProCmtLikeDTO proCmtLikeDTO) {
-        projectCommentService.commentLike(proCmtLikeDTO);
+    public @ResponseBody boolean commentLike(@ModelAttribute ProCmtLikeDTO proCmtLikeDTO) {
+        return projectCommentService.commentLike(proCmtLikeDTO);
     }
 
     /* 댓글 좋아요 수 확인 */
@@ -116,8 +127,8 @@ public class ProjectCommentController {
 
     /* 댓글 싫어요 */
     @PostMapping("/commentDisLike")
-    public @ResponseBody void commentDisLike(@ModelAttribute ProCmtDisLikeDTO proCmtDisLikeDTO) {
-        projectCommentService.commentDisLike(proCmtDisLikeDTO);
+    public @ResponseBody boolean commentDisLike(@ModelAttribute ProCmtDisLikeDTO proCmtDisLikeDTO) {
+        return projectCommentService.commentDisLike(proCmtDisLikeDTO);
     }
 
     /* 댓글 싫어요 수 확인 */

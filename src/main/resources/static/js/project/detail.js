@@ -175,12 +175,20 @@
              output += '</div>';
              output += '</div>';
              output += '<div class="col text-end" id="commentUserLikeInfo_' + comments[i].id + '">';
-             output += '<span>';
-             output += '<img src="/img/like.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForLike(' + comments[i].id + ')">';
+             output += '<span id="commentLike_' + comments[i].id + '">';
+             if (comments[i].likeYn == 0) {
+                output += '<img src="/img/thumbs-up.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForLike(' + comments[i].id + ')">';
+             } else if (comments[i].likeYn == 1) {
+                output += '<img src="/img/thumbs-up-fill.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForLike(' + comments[i].id + ')">';
+             }
              output += '<span class="me-1" id="cmtLike_' + comments[i].id + '">' + comments[i].likeCount + '</span>';
              output += '</span>';
-             output += '<span class="ms-2">';
-             output += '<img src="/img/dislike.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForDisLike(' + comments[i].id + ')" >';
+             output += '<span id="commentDisLike_' + comments[i].id + '" class="ms-2">';
+             if (comments[i].disLikeYn == 0) {
+                output += '<img src="/img/thumbs-down.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForDisLike(' + comments[i].id + ')" >';
+             } else if (comments[i].disLikeYn == 1) {
+                output += '<img src="/img/thumbs-down-fill.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForDisLike(' + comments[i].id + ')" >';
+             }
              output += '<span class="me-1" id="cmtDisLike_' + comments[i].id + '">' + comments[i].disLikeCount + '</span>';
              output += '</span>';
 
@@ -311,6 +319,8 @@
 
   /* 댓글 좋아요 */
   const toggleCommentLike = (id) => {
+       const commentLikeElement = document.querySelector('#commentLike_' + id);
+       const imgElement = commentLikeElement.querySelector('img');
        $.ajax({
          type: "post",
          url: "/projectComment/commentLike",
@@ -319,7 +329,12 @@
             "userId": sessionId
          },
          success: function(res) {
-             updateCommentLikeCount(id);
+            if (res) {
+               imgElement.src = "/img/thumbs-up-fill.png";
+            } else {
+               imgElement.src = "/img/thumbs-up.png"
+            }
+            updateCommentLikeCount(id);
          },
          error: function(err) {
              return;
@@ -397,6 +412,8 @@
 
   /* 댓글 싫어요 */
   const toggleCommentDisLike = (id) => {
+       const commentDisLikeElement = document.querySelector('#commentDisLike_' + id);
+       const imgElement = commentDisLikeElement.querySelector('img');
        $.ajax({
          type: "post",
          url: "/projectComment/commentDisLike",
@@ -405,6 +422,11 @@
             "userId": sessionId
          },
          success: function(res) {
+              if (res) {
+                  imgElement.src = "/img/thumbs-down-fill.png";
+              } else {
+                  imgElement.src = "/img/thumbs-down.png"
+              }
              updateCommentDisLikeCount(id);
          },
          error: function(err) {

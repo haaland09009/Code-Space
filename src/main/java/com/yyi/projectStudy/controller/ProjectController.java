@@ -221,6 +221,8 @@ public class ProjectController {
         PeriodCategoryDTO periodCategoryDTO = projectService.findPeriodCategory(id);
         model.addAttribute("periodCategory", periodCategoryDTO);
 
+        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
+
         /* 게시글에 작성된 댓글 목록 조회 */
         List<ProjectCommentDTO> projectCommentDTOList = projectCommentService.findAll(id);
         for (ProjectCommentDTO projectCommentDTO : projectCommentDTOList) {
@@ -240,6 +242,17 @@ public class ProjectController {
             /* 댓글 작성자의 직군 조회 */
             JobDTO userJob = userService.findJob(projectCommentDTO.getUserId());
             projectCommentDTO.setJobName(userJob.getName());
+
+            /* 댓글 좋아요, 싫어요 여부 (아이콘) */
+            if (sessionUser == null) {
+                projectCommentDTO.setLikeYn(0);
+                projectCommentDTO.setDisLikeYn(0);
+            } else {
+                int likeYn = projectCommentService.checkLike(projectCommentDTO.getId(), sessionUser.getId());
+                int disLikeYn = projectCommentService.checkDisLike(projectCommentDTO.getId(), sessionUser.getId());
+                projectCommentDTO.setLikeYn(likeYn);
+                projectCommentDTO.setDisLikeYn(disLikeYn);
+            }
         }
         /* 게시글에 작성된 총 댓글 수 조회 */
         int commentCount = projectCommentService.count(id);
@@ -249,7 +262,6 @@ public class ProjectController {
 
 
         /* 회원 당 게시글 스크랩 여부 확인 */
-        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
         if (sessionUser != null) {
             ProjectClipDTO projectClipDTO = new ProjectClipDTO();
             projectClipDTO.setProjectId(id);

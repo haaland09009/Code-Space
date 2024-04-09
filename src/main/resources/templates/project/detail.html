@@ -428,14 +428,18 @@
                                                         </div>
                                                     </div>
                                                     <div class="col text-end me-1" th:id="'commentUserLikeInfo_' + ${comment.id}">
-                                                        <span>
-                                                            <img src="/img/like.png" style="width: 30px; height: 30px; cursor: pointer;"
-                                                            th:onclick="isYourCommentForLike([[${comment.id}]])">
+                                                        <span th:id="'commentLike_' + ${comment.id}">
+                                                            <img src="/img/thumbs-up.png" style="width: 30px; height: 30px; cursor: pointer;"
+                                                            th:onclick="isYourCommentForLike([[${comment.id}]])" th:if="${comment.likeYn == 0}">
+                                                            <img src="/img/thumbs-up-fill.png" style="width: 30px; height: 30px; cursor: pointer;"
+                                                             th:onclick="isYourCommentForLike([[${comment.id}]])" th:if="${comment.likeYn == 1}">
                                                             <span th:id="'cmtLike_' + ${comment.id}" th:text="${comment.likeCount}"></span>
                                                         </span>
-                                                        <span class="ms-1">
-                                                             <img src="/img/dislike.png" style="width: 30px; height: 30px; cursor: pointer;"
-                                                                  th:onclick="isYourCommentForDisLike([[${comment.id}]])">
+                                                        <span th:id="'commentDisLike_' + ${comment.id}" class="ms-1">
+                                                             <img src="/img/thumbs-down.png" style="width: 30px; height: 30px; cursor: pointer;"
+                                                                  th:onclick="isYourCommentForDisLike([[${comment.id}]])" th:if="${comment.disLikeYn == 0}">
+                                                             <img src="/img/thumbs-down-fill.png" style="width: 30px; height: 30px; cursor: pointer;"
+                                                                  th:onclick="isYourCommentForDisLike([[${comment.id}]])" th:if="${comment.disLikeYn == 1}">
                                                             <span th:id="'cmtDisLike_' + ${comment.id}" th:text="${comment.disLikeCount}"></span>
                                                         </span>
                                                         <span class="ms-1 text-end ps-0 dropdown" style="cursor: pointer;"

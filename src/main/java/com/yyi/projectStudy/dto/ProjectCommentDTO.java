@@ -25,6 +25,9 @@ public class ProjectCommentDTO {
     private int likeCount;
     private int disLikeCount;
     private String formattedDate;
+    /* 댓글 좋아요 여부 */
+    private int likeYn;
+    private int disLikeYn;
 
     // Entity -> DTO
     public static ProjectCommentDTO toProjectCommentDTO(ProjectCommentEntity projectCommentEntity) {

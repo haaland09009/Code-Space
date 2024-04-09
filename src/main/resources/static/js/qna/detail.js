@@ -172,7 +172,7 @@
                 output += '</div>';
                 output += '<div class="col mt-1 text-end">';
                 output += '<button class="btn btn-outline-dark fs-18" onclick="toggleUpdateReplyPage('+ replies[i].id +')">' + "취소" + '</button>';
-                output += '<button class="ms-2 btn mainButton fs-18" onclick="updateReply('+ replies[i].id +')">' + "답변 등록하기" + '</button>';
+                output += '<button class="ms-2 btn mainButton fs-18" onclick="updateReply('+ replies[i].id +')">' + "답변 수정하기" + '</button>';
                 output += '</div>';
                 output += '</div>';
                 output += '</div>';
@@ -186,10 +186,12 @@
 
             if (replies[i].isLike == 0) {
                 output += '<span style="cursor: pointer;" onclick="isYourReplyForLike(' + replies[i].id + ')" id="replyLikeSpan_' + replies[i].id + '">';
+                output += '<img src="/img/thumbs-up.png" style="width: 23px; height: 23px; cursor: pointer;">';
             } else {
                 output += '<span style="cursor: pointer;" onclick="isYourReplyForLike(' + replies[i].id + ')" class="text-black" id="replyLikeSpan_' + replies[i].id + '">';
+                output += '<img src="/img/thumbs-up-fill.png" style="width: 23px; height: 23px; cursor: pointer;">';
             }
-            output += '<img src="/img/like.png" style="width: 23px; height: 23px; cursor: pointer;">';
+
             output += '<span class="ms-1">' + "좋아요" + '</span>';
             output += '<span class="ms-1 me-1" id="replyLike_' + replies[i].id + '">' + replies[i].likeCount + '</span>';
             output += '</span>';
@@ -598,6 +600,7 @@
 
   // 사용자가 게시글에 좋아요를 눌렀는지 확인 (색깔 변경 목적)
   const checkQnaLikeForColor = (id) => {
+
     $.ajax({
          type: "get",
          url: "/qna/checkQnaLikeForColor/" + id,
@@ -674,7 +677,7 @@
      });
   }
 
-  // 답변 좋아요
+  /* 답변 좋아요 */
   const toggleReplyLike = (id) => {
 
        $.ajax({
@@ -694,7 +697,7 @@
      });
   }
 
-  // 답변 좋아요 수 업데이트
+  /* 답변 좋아요 수 업데이트 */
   const updateReplyLikeCount = (id) => {
        const replyLikeBox = document.getElementById("replyLike_" + id);
        $.ajax({
@@ -710,17 +713,20 @@
   }
 
 
- // 사용자가 답변에 좋아요를 눌렀는지 확인 (색깔 변경 목적)
+  /* 사용자가 답변에 좋아요를 눌렀는지 확인 (색깔 변경 목적) */
   const checkReplyLikeForColor = (id) => {
     const replyLikeSpan = document.getElementById("replyLikeSpan_" + id);
+    const imgElement = replyLikeSpan.querySelector('img');
     $.ajax({
          type: "get",
          url: "/qnaReply/checkReplyLikeForColor/" + id,
          success: function(res) {
             if (res) {
                 replyLikeSpan.classList.add("text-black");
+                imgElement.src = "/img/thumbs-up-fill.png";
             } else {
--                replyLikeSpan.classList.remove("text-black");
+                replyLikeSpan.classList.remove("text-black");
+                imgElement.src = "/img/thumbs-up.png";
             }
          },
          error: function(err) {
@@ -730,10 +736,10 @@
   }
 
 
-   // 답글 작성 폼 열고 닫기
+ /* 답글 작성 폼 열고 닫기 */
  const toggleReplyInputBox = (id) => {
-    const replyBox = document.getElementById("toggleReplyInputBox_" + id);
-    const replyButton = document.getElementById("toggleReplyButton_" + id);
+    const replyBox = document.querySelector("#toggleReplyInputBox_" + id);
+    const replyButton = document.querySelector("#toggleReplyButton_" + id);
     if (replyBox.style.display == 'none') {
         replyBox.style.display = 'block';
     } else {
@@ -771,6 +777,7 @@
                 // 댓글 수 업데이트 함수
                 updateCommentCount(id);
                 content.value = "";
+
              }, error: function(err) {
                  return;
              }
