@@ -50,13 +50,13 @@
                     </div>
 
                     <div class="row mt-2">
-                        <div class="col-1 user-info-image" th:onclick="clickUserInfoModal([[${qna.userId}]])">
+                        <div class="col-auto user-info-image" th:onclick="clickUserInfoModal([[${qna.userId}]])">
                             <img class="rounded-circle mt-2" style="width: 60px; height: 60px;"
                                  src="/img/user.jpg" th:if="${qna.fileAttached == 0}" >
                             <img class="rounded-circle mt-2" style="width: 60px; height: 60px;"
                                  th:src="@{|/upload/${qna.storedFileName}|}" th:if="${qna.fileAttached == 1}">
                         </div>
-                        <div class="col ps-0">
+                        <div class="col ps-2">
                             <div class="row">
                                 <div class="col-auto fw-semibold fs-5 user-info-actButton" th:text="${qna.writer}"
                                      th:onclick="clickUserInfoModal([[${qna.userId}]])">
@@ -142,30 +142,30 @@
                     </div>
 
                     <div class="row mt-3 text-secondary fw-semibold fs-4">
-                        <div class="col-2 likeStatus" th:onclick="isYourQnaForLike([[${qna.id}]])" style="cursor: pointer;"
+                        <div class="col-auto likeStatus" th:onclick="isYourQnaForLike([[${qna.id}]])" style="cursor: pointer;"
                         th:if="${isLike == 0}">
                             ↑ 추천해요 <span class="ms-1" th:id="'qnaLike_' + ${qna.id}" th:text="${qna.likeCount}"></span>
                         </div>
-                        <div class="col-2 text-black likeStatus" th:onclick="isYourQnaForLike([[${qna.id}]])" style="cursor: pointer;"
+                        <div class="col-auto text-black likeStatus" th:onclick="isYourQnaForLike([[${qna.id}]])" style="cursor: pointer;"
                         th:if="${isLike == 1}">
                             ↑ 추천해요 <span class="ms-1" th:id="'qnaLike_' + ${qna.id}" th:text="${qna.likeCount}"></span>
                         </div>
-                        <div class="col px-0 disLikeStatus" th:onclick="isYourQnaForDisLike([[${qna.id}]])" style="cursor: pointer;"
+                        <div class="col ps-2 disLikeStatus" th:onclick="isYourQnaForDisLike([[${qna.id}]])" style="cursor: pointer;"
                              th:if="${isDisLike == 0}">
                             ↓ 보충이 필요해요 <span class="ms-1" th:id="'qnaDisLike_' + ${qna.id}" th:text="${qna.dislikeCount}"></span>
                         </div>
-                        <div class="col px-0 text-black disLikeStatus" th:onclick="isYourQnaForDisLike([[${qna.id}]])" style="cursor: pointer;"
+                        <div class="col ps-2 text-black disLikeStatus" th:onclick="isYourQnaForDisLike([[${qna.id}]])" style="cursor: pointer;"
                              th:if="${isDisLike == 1}">
                             ↓ 보충이 필요해요 <span class="ms-1" th:id="'qnaDisLike_' + ${qna.id}" th:text="${qna.dislikeCount}"></span>
                         </div>
 
-                        <div class="col-6"></div>
+<!--                        <div class="col-6"></div>-->
                     </div>
 
                     <div class="row mt-4">
                         <div class="col border border-1 ms-3">
                             <div class="row mt-3 ms-1">
-                                <div class="col-1">
+                                <div class="col-auto">
                                     <img class="rounded-circle mt-1" style="width: 60px; height: 60px;"
                                          src="/img/user.jpg" th:if="${session.userDTO == null}">
                                     <img class="rounded-circle mt-1" style="width: 60px; height: 60px;"
@@ -174,7 +174,7 @@
                                          th:src="@{|/upload/${session.userDTO.storedFileName}|}" th:if="${session.userDTO != null && session.userDTO.fileAttached == 1}">
 
                                 </div>
-                                <div class="col">
+                                <div class="col ps-3">
                                     <div class="row">
                                         <div class="col fw-semibold fs-22">답변하기</div>
                                     </div>
@@ -261,7 +261,7 @@
                                     </div>
                                 </div>
                                 <div class="row mt-4 ms-1">
-                                    <div class="col-1 mt-2 user-info-image" th:onclick="clickUserInfoModal([[${reply.userId}]])">
+                                    <div class="col-auto mt-2 user-info-image" th:onclick="clickUserInfoModal([[${reply.userId}]])">
                                         <img class="rounded-circle" style="width: 65px; height: 65px;"
                                              src="/img/user.jpg" th:if="${reply.fileAttached == 0}">
                                         <img class="rounded-circle" style="width: 65px; height: 65px;"
@@ -399,13 +399,13 @@
                                 <div class="row mt-4 border-top" th:each="comment : ${reply.commentList}" th:id="'comment_' + ${comment.id}">
                                     <div class="col ms-5">
                                         <div class="row mt-3">
-                                            <div class="col-1 user-info-image" th:onclick="clickUserInfoModal([[${comment.userId}]])">
+                                            <div class="col-auto user-info-image" th:onclick="clickUserInfoModal([[${comment.userId}]])">
                                                 <img src="/img/user.jpg" class="rounded-circle" style="width: 55px; height: 55px; position: relative; top: 2px;"
                                                 th:if="${comment.fileAttached == 0}">
                                                 <img th:src="@{|/upload/${comment.storedFileName}|}" class="rounded-circle" style="width: 55px; height: 55px; position: relative; top: 2px;"
                                                      th:if="${comment.fileAttached == 1}">
                                             </div>
-                                            <div class="col px-0" th:id="'commentUserInfo_' + ${comment.id}" >
+                                            <div class="col ps-2" th:id="'commentUserInfo_' + ${comment.id}" >
                                                 <div class="row">
                                                     <div class="col fw-semibold user-info-actButton" th:text="${comment.writer}"
                                                          th:onclick="clickUserInfoModal([[${comment.userId}]])">
@@ -426,7 +426,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col px-0" th:id="'commentUpdateForm_' + ${comment.id}"
+                                            <div class="col ps-2" th:id="'commentUpdateForm_' + ${comment.id}"
                                                  th:if="${session.userDTO != null && session.userDTO.id == comment.userId}"
                                                  style="display: none;">
                                                 <div class="row">

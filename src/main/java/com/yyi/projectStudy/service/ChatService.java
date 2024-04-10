@@ -133,7 +133,7 @@ public class ChatService {
             UserEntity receiver = chatRoomEntity.getReceiver();
 
             /* 날짜 변환하기 */
-            String formatDateTime = StringToDate.formatDateTime(String.valueOf(chatDTO.getRegDate()));
+            String formatDateTime = StringToDate.formatChatTime(String.valueOf(chatDTO.getRegDate()));
             chatDTO.setFormattedDate(formatDateTime);
 
             /* 채팅 안 읽은 개수 */
@@ -201,6 +201,7 @@ public class ChatService {
     }
 
     /* 채팅방 접속 - 채팅읽기 */
+    @Transactional
     public void readChat(Long roomId, Long sessionId) {
         ChatRoomEntity chatRoomEntity = chatRoomRepository.findById(roomId).get();
         UserEntity userEntity = userRepository.findById(sessionId).get();

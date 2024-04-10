@@ -93,6 +93,8 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
     private List<ProjectClipEntity> projectClipEntityList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
+    private List<LoungeEntity> loungeEntityList = new ArrayList<>();
 
 
     // DTO -> Entity

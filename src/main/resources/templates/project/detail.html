@@ -89,13 +89,13 @@
                                     <div class="row mt-2">
                                         <div class="col-8">
                                             <div class="row">
-                                                <div class="col-1">
+                                                <div class="col-auto">
                                                     <img class="rounded-circle mt-2" style="width: 70px; height: 70px;"
                                                          src="/img/user.jpg" th:if="${writerInfo.fileAttached == 0}">
                                                     <img class="rounded-circle mt-2" style="width: 70px; height: 70px;"
                                                          th:src="@{|/upload/${writerInfo.storedFileName}|}" th:if="${writerInfo.fileAttached == 1}">
                                                 </div>
-                                                <div class="col ms-4">
+                                                <div class="col ps-2">
                                                     <div class="row">
                                                         <div class="col fw-semibold fs-22" th:text="${project.writer}">
 
@@ -337,7 +337,7 @@
 
                                     <!-- 댓글 입력 폼 -->
                                     <div class="row mt-4">
-                                        <div class="col-1 ms-1">
+                                        <div class="col-auto ms-1">
                                             <img class="rounded-circle" style="width: 55px; height: 55px;"
                                                  src="/img/user.jpg" th:if="${session.userDTO == null}">
                                             <img class="rounded-circle" style="width: 55px; height: 55px;"
@@ -345,7 +345,7 @@
                                             <img class="rounded-circle" style="width: 55px; height: 55px;"
                                                  th:src="@{|/upload/${session.userDTO.storedFileName}|}" th:if="${session.userDTO != null && session.userDTO.fileAttached == 1}">
                                         </div>
-                                        <div class="col ps-0">
+                                        <div class="col ps-2">
                                             <textarea name="" id="commentContent" cols="10" rows="4"
                                                       class="form-control fs-5"  style="resize:none;"
                                                       th:if="${session.userDTO != null}"
@@ -375,14 +375,14 @@
                                                 <div class="row">
                                                     <div class="col">
                                                         <div class="row">
-                                                            <div class="col-2 user-info-image" th:id="'commentUserImage_' + ${comment.id}"
+                                                            <div class="col-auto user-info-image" th:id="'commentUserImage_' + ${comment.id}"
                                                                  th:onclick="clickUserInfoModal([[${comment.userId}]])">
                                                                 <img class="rounded-circle ms-2" style="width: 55px; height:55px;"
                                                                      src="/img/user.jpg" th:if="${comment.fileAttached == 0}">
                                                                 <img class="rounded-circle ms-2" style="width: 55px; height:55px;"
                                                                      th:src="@{|/upload/${comment.storedFileName}|}" th:if="${comment.fileAttached == 1}">
                                                             </div>
-                                                            <div class="col" th:id="'commentUpdateForm_' + ${comment.id}" style="display: none;"
+                                                            <div class="col ps-2" th:id="'commentUpdateForm_' + ${comment.id}" style="display: none;"
                                                             th:if="${session.userDTO != null && session.userDTO.id == comment.userId}">
                                                                 <div class="row">
                                                                     <div class="col me-3">
@@ -406,13 +406,13 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col" th:id="'commentUserInfo_' + ${comment.id}">
+                                                            <div class="col ps-2" th:id="'commentUserInfo_' + ${comment.id}">
                                                                 <div class="row">
-                                                                    <div class="col-auto px-0 fw-semibold fs-5" th:text="${comment.writer}">
+                                                                    <div class="col-auto fw-semibold fs-5" th:text="${comment.writer}">
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
-                                                                    <div class="col px-0 text-secondary fs-18">
+                                                                    <div class="col-auto text-secondary fs-18">
                                                                         <span th:text="${comment.jobName}"></span>
                                                                         <span>·</span>
                                                                         <span th:text="${comment.formattedDate}"></span>

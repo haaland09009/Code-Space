@@ -116,13 +116,14 @@
      return formattedDateTime;
    }
 
+   /* 어제인지의 여부 확인 */
    const isYesterday = (date, now) => {
        const yesterday = new Date(now);
        yesterday.setDate(now.getDate() - 1);
 
-       return date.getFullYear() === yesterday.getFullYear() &&
-              date.getMonth() === yesterday.getMonth() &&
-              date.getDate() === yesterday.getDate();
+       return date.getFullYear() == yesterday.getFullYear() &&
+              date.getMonth() == yesterday.getMonth() &&
+              date.getDate() == yesterday.getDate();
    }
 
    /* 일 단위로 변환하는 함수 (메시지 전용) */
@@ -275,8 +276,8 @@
          document.querySelector('#qnaLink').classList.add('text-black');
      } else if (path.startsWith('/project')) {
          document.querySelector('#projectLink').classList.add('text-black');
-     } else if (path.startsWith('/notice')) {
-        document.querySelector('#noticeLink').classList.add('text-black');
+     } else if (path.startsWith('/lounge')) {
+        document.querySelector('#loungeLink').classList.add('text-black');
     }
 
 

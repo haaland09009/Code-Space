@@ -104,7 +104,7 @@
 
             output += '<div class="row mt-4 ms-1">';
 
-            output += '<div class="col-1 mt-2 user-info-image" onclick="clickUserInfoModal('+ replies[i].userId  +')">';
+            output += '<div class="col-auto mt-2 user-info-image" onclick="clickUserInfoModal('+ replies[i].userId  +')">';
             if (replies[i].fileAttached == 0) {
                 output += '<img class="rounded-circle" style="width: 65px; height: 65px;" src="/img/user.jpg">';
             } else if (replies[i].fileAttached == 1) {
@@ -235,7 +235,7 @@
                 output += '<div class="row mt-4 border-top" id="comment_' + replies[i].commentList[c].id + '">';
                 output += '<div class="col ms-5">';
                 output += '<div class="row mt-3">';
-                output += '<div class="col-1 user-info-image" onclick="clickUserInfoModal('+ replies[i].commentList[c].userId  +')">';
+                output += '<div class="col-auto user-info-image" onclick="clickUserInfoModal('+ replies[i].commentList[c].userId  +')">';
                 if (replies[i].commentList[c].fileAttached == 0) {
                     output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 55px; height: 55px; position: relative; top: 2px;">';
                 } else {
@@ -244,7 +244,7 @@
 
 
                 output += '</div>';
-                output += '<div class="col px-0" id="commentUserInfo_' + replies[i].commentList[c].id + '">';
+                output += '<div class="col ps-2" id="commentUserInfo_' + replies[i].commentList[c].id + '">';
                 output += '<div class="row">';
                 output += '<div class="col fw-semibold user-info-actButton" onclick="clickUserInfoModal('+ replies[i].commentList[c].userId  +')">' + replies[i].commentList[c].writer + '</div>';
                 output += '</div>';
@@ -266,7 +266,7 @@
                 output += '</div>';
 
                 if (sessionId == replies[i].commentList[c].userId) {
-                    output += '<div class="col px-0" id="commentUpdateForm_' + replies[i].commentList[c].id + '" style="display: none;">';
+                    output += '<div class="col ps-2" id="commentUpdateForm_' + replies[i].commentList[c].id + '" style="display: none;">';
                     output += '<div class="row">';
                     output += '<div class="col me-3">';
                     output += '<textarea id="commentUpdateContent_' + replies[i].commentList[c].id + '" cols="10" rows="3"  class="form-control fs-18"  style="resize:none;" placeholder="여러분의 소중한 댓글을 남겨주세요" onkeydown="resize(this)" onkeyup="resize(this)">' + replies[i].commentList[c].content + '</textarea>';
@@ -843,7 +843,7 @@
             output += '<div class="row mt-4 border-top" id="comment_' + comments[i].id + '">';
             output += '<div class="col ms-5">';
             output += '<div class="row mt-3">';
-            output += '<div class="col-1  user-info-image" onclick="clickUserInfoModal('+ comments[i].userId  +')">';
+            output += '<div class="col-auto  user-info-image" onclick="clickUserInfoModal('+ comments[i].userId  +')">';
             if (comments[i].fileAttached == 0) {
                 output += '<img src="/img/user.jpg" class="rounded-circle" style="width: 55px; height: 55px; position: relative; top: 2px;">';
             } else {
@@ -851,7 +851,7 @@
             }
 
             output += '</div>';
-            output += '<div class="col px-0" id="commentUserInfo_' +  comments[i].id + '">';
+            output += '<div class="col ps-2" id="commentUserInfo_' +  comments[i].id + '">';
             output += '<div class="row">';
             output += '<div class="col fw-semibold user-info-actButton" onclick="clickUserInfoModal('+ comments[i].userId  +')">' + comments[i].writer + '</div>';
             output += '</div>';
@@ -872,7 +872,7 @@
             output += '</div>';
             output += '</div>';
             if (sessionId == comments[i].userId) {
-                output += '<div class="col px-0" id="commentUpdateForm_' + comments[i].id + '" style="display: none;">';
+                output += '<div class="col ps-2" id="commentUpdateForm_' + comments[i].id + '" style="display: none;">';
                 output += '<div class="row">';
                 output += '<div class="col me-3">';
                 output += '<textarea id="commentUpdateContent_' +comments[i].id + '" cols="10" rows="3"  class="form-control fs-18"  style="resize:none;" placeholder="여러분의 소중한 댓글을 남겨주세요" onkeydown="resize(this)" onkeyup="resize(this)">' + comments[i].content + '</textarea>';
@@ -1120,6 +1120,9 @@
 
                     const sendSuccessModal = bootstrap.Modal.getOrCreateInstance("#sendSuccessModal");
                     sendSuccessModal.show();
+
+                    const sendMessageModal = bootstrap.Modal.getOrCreateInstance("#sendMessageModal");
+                    sendMessageModal.hide();
 
                      setTimeout(function() {
                         sendSuccessModal.hide();

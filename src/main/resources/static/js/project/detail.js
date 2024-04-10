@@ -113,123 +113,123 @@
  /* 댓글 목록 조회 */
  const loadComments = (projectId) => {
      $.ajax({
-     type: "get",
-     url: "/projectComment/getCommentList/" + projectId,
-     success: function(comments) {
-         let output = "";
-         for (let i in comments) {
-             output += '<div class="row mb-2" id="comment_' + comments[i].id + '">';
-             output += '<div class="col ms-1">';
-             output += '<div class="row">';
-             output += '<div class="col">';
-             output += '<div class="row">';
-             output += '<div class="col-2 user-info-image" id="commentUserImage_' + comments[i].id + '" onclick="clickUserInfoModal(' + comments[i].userId + ')">';
+         type: "get",
+         url: "/projectComment/getCommentList/" + projectId,
+         success: function(comments) {
+             let output = "";
+             for (let i in comments) {
+                 output += '<div class="row mb-2" id="comment_' + comments[i].id + '">';
+                 output += '<div class="col ms-1">';
+                 output += '<div class="row">';
+                 output += '<div class="col">';
+                 output += '<div class="row">';
+                 output += '<div class="col-auto user-info-image" id="commentUserImage_' + comments[i].id + '" onclick="clickUserInfoModal(' + comments[i].userId + ')">';
 
-             if (comments[i].fileAttached == 0) {
-                 output += '<img class="rounded-circle ms-2" style="width: 55px; height: 55px;" src="/img/user.jpg">';
-             } else if (comments[i].fileAttached == 1) {
-                 output += '<img class="rounded-circle ms-2" style="width: 55px; height: 55px;" src="/upload/' + comments[i].storedFileName + '">';
-             }
-             output += '</div>';
+                 if (comments[i].fileAttached == 0) {
+                     output += '<img class="rounded-circle ms-2" style="width: 55px; height: 55px;" src="/img/user.jpg">';
+                 } else if (comments[i].fileAttached == 1) {
+                     output += '<img class="rounded-circle ms-2" style="width: 55px; height: 55px;" src="/upload/' + comments[i].storedFileName + '">';
+                 }
+                 output += '</div>';
 
-             if (sessionId != 0 && sessionId == comments[i].userId) {
-                output += '<div class="col" id="commentUpdateForm_' + comments[i].id + '" style="display: none;">';
-                output += '<div class="row">';
-                output += '<div class="col me-3">';
-                output += '<textarea name="" id="commentUpdateContent_' + comments[i].id + '" cols="10" rows="3" class="form-control fs-5"  style="resize:none;" placeholder="댓글을 작성하여 프로젝트와 스터디에 참여해보세요 !" onkeydown="resize(this)" onkeyup="resize(this)">' + comments[i].content +  '</textarea>';
-                output += '</div>';
-                output += '</div>';
+                 if (sessionId != 0 && sessionId == comments[i].userId) {
+                    output += '<div class="col ps-2" id="commentUpdateForm_' + comments[i].id + '" style="display: none;">';
+                    output += '<div class="row">';
+                    output += '<div class="col me-3">';
+                    output += '<textarea name="" id="commentUpdateContent_' + comments[i].id + '" cols="10" rows="3" class="form-control fs-5"  style="resize:none;" placeholder="댓글을 작성하여 프로젝트와 스터디에 참여해보세요 !" onkeydown="resize(this)" onkeyup="resize(this)">' + comments[i].content +  '</textarea>';
+                    output += '</div>';
+                    output += '</div>';
 
-                output += '<div class="row mt-3">';
-                output += '<div class="col text-danger" style="display: none;" id="noContentAlert_' + comments[i].id + '">';
-                output += '<i class="bi bi-exclamation-circle">' + '</i>';
-                output += '<span class="ms-2">' + "내용을 최소 1자 이상 입력해주세요." + '</span>';
-                output += '</div>';
-                output += '<div class="col text-end me-3">';
-                output += '<button class="btn btn-outline-dark fs-18 rounded-1" onclick="toggleUpdateCommentPage(' + comments[i].id + ')">' + "취소" + '</button>';
-                output += '<button class="btn mainButton ms-2 fs-18 rounded-1" onclick="updateComment(' + comments[i].id + ')">' + "댓글 수정하기" + '</button>';
-                output += '</div>';
-                output += '</div>';
-                output += '</div>';
-             }
-             output += '<div class="col" id="commentUserInfo_' + comments[i].id + '">';
-             output += '<div class="row">';
-             output += '<div class="col fw-semibold px-0 fs-5">' + comments[i].writer + '</div>';
-             output += '</div>';
-             output += '<div class="row">';
-             output += '<div class="col px-0 text-secondary fs-18">';
-             output += '<span>'  + comments[i].jobName + '</span>';
-             output += '<span class="ms-1">' + "·" + '</span>';
-             output += '<span class="date-element ms-1">' +  formatDateTime(comments[i].regDate) + '</span>';
-             if (comments[i].updDate != null) {
-                output += '<span style="position: relative; white-space: nowrap;">';
-                output += '<span class="ms-2 updatedFont updated-project">' + "수정됨" + '</span>';
-                output += '<span class="updated-text" style="position: absolute; left: 12px">' + "수정일시 : ";
-                output += '<span>' + formatDate(comments[i].updDate) + '</span>'
-                output += '</span>';
-                output += '</span>';
-             }
-             output += '</div>';
-             output += '</div>';
-             output += '</div>';
-             output += '</div>';
-             output += '</div>';
-             output += '<div class="col text-end" id="commentUserLikeInfo_' + comments[i].id + '">';
-             output += '<span id="commentLike_' + comments[i].id + '">';
-             if (comments[i].likeYn == 0) {
-                output += '<img src="/img/thumbs-up.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForLike(' + comments[i].id + ')">';
-             } else if (comments[i].likeYn == 1) {
-                output += '<img src="/img/thumbs-up-fill.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForLike(' + comments[i].id + ')">';
-             }
-             output += '<span class="me-1" id="cmtLike_' + comments[i].id + '">' + comments[i].likeCount + '</span>';
-             output += '</span>';
-             output += '<span id="commentDisLike_' + comments[i].id + '" class="ms-2">';
-             if (comments[i].disLikeYn == 0) {
-                output += '<img src="/img/thumbs-down.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForDisLike(' + comments[i].id + ')" >';
-             } else if (comments[i].disLikeYn == 1) {
-                output += '<img src="/img/thumbs-down-fill.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForDisLike(' + comments[i].id + ')" >';
-             }
-             output += '<span class="me-1" id="cmtDisLike_' + comments[i].id + '">' + comments[i].disLikeCount + '</span>';
-             output += '</span>';
-
-             if (sessionId == comments[i].userId) {
-                 output += '<span class="text-end ps-0 dropdown" style="cursor: pointer;" id="dropdownComment_' + comments[i].id + '">';
-                 output += '<i class="bi bi-three-dots-vertical" style="height: 10px" id="dropButtonComment" data-bs-toggle="dropdown" aria-expanded="false"></i>';
-                 output += '<ul class="dropdown-menu" aria-labelledby="dropButtonComment">';
-                 output += '<li>';
-                 output += '<a class="dropdown-item fs-5" onclick="toggleUpdateCommentPage(' + comments[i].id + ')">';
-                 output += '<i class="bi bi-pencil-square"></i>';
-                 output += '<span class="ms-2">' + "수정하기" + '</span>';
-                 output += '</a>';
-                 output += '</li>';
-                 output += '<li>';
-                 output += '<a class="dropdown-item fs-5" onclick="deleteCommentPage(' + comments[i].id + ')">';
-                 output += '<i class="bi bi-trash3"></i>';
-                 output += '<span class="ms-2">' +  "삭제하기" + '</span>';
-
-                 output += '</a>';
-                 output += '</li>';
-                 output += '</ul>';
+                    output += '<div class="row mt-3">';
+                    output += '<div class="col text-danger" style="display: none;" id="noContentAlert_' + comments[i].id + '">';
+                    output += '<i class="bi bi-exclamation-circle">' + '</i>';
+                    output += '<span class="ms-2">' + "내용을 최소 1자 이상 입력해주세요." + '</span>';
+                    output += '</div>';
+                    output += '<div class="col text-end me-3">';
+                    output += '<button class="btn btn-outline-dark fs-18 rounded-1" onclick="toggleUpdateCommentPage(' + comments[i].id + ')">' + "취소" + '</button>';
+                    output += '<button class="btn mainButton ms-2 fs-18 rounded-1" onclick="updateComment(' + comments[i].id + ')">' + "댓글 수정하기" + '</button>';
+                    output += '</div>';
+                    output += '</div>';
+                    output += '</div>';
+                 }
+                 output += '<div class="col ps-2" id="commentUserInfo_' + comments[i].id + '">';
+                 output += '<div class="row">';
+                 output += '<div class="col-auto fw-semibold fs-5">' + comments[i].writer + '</div>';
+                 output += '</div>';
+                 output += '<div class="row">';
+                 output += '<div class="col-auto text-secondary fs-18">';
+                 output += '<span>'  + comments[i].jobName + '</span>';
+                 output += '<span class="ms-1">' + "·" + '</span>';
+                 output += '<span class="date-element ms-1">' +  formatDateTime(comments[i].regDate) + '</span>';
+                 if (comments[i].updDate != null) {
+                    output += '<span style="position: relative; white-space: nowrap;">';
+                    output += '<span class="ms-2 updatedFont updated-project">' + "수정됨" + '</span>';
+                    output += '<span class="updated-text" style="position: absolute; left: 12px">' + "수정일시 : ";
+                    output += '<span>' + formatDate(comments[i].updDate) + '</span>'
+                    output += '</span>';
+                    output += '</span>';
+                 }
+                 output += '</div>';
+                 output += '</div>';
+                 output += '</div>';
+                 output += '</div>';
+                 output += '</div>';
+                 output += '<div class="col text-end" id="commentUserLikeInfo_' + comments[i].id + '">';
+                 output += '<span id="commentLike_' + comments[i].id + '">';
+                 if (comments[i].likeYn == 0) {
+                    output += '<img src="/img/thumbs-up.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForLike(' + comments[i].id + ')">';
+                 } else if (comments[i].likeYn == 1) {
+                    output += '<img src="/img/thumbs-up-fill.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForLike(' + comments[i].id + ')">';
+                 }
+                 output += '<span class="me-1" id="cmtLike_' + comments[i].id + '">' + comments[i].likeCount + '</span>';
                  output += '</span>';
+                 output += '<span id="commentDisLike_' + comments[i].id + '" class="ms-2">';
+                 if (comments[i].disLikeYn == 0) {
+                    output += '<img src="/img/thumbs-down.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForDisLike(' + comments[i].id + ')" >';
+                 } else if (comments[i].disLikeYn == 1) {
+                    output += '<img src="/img/thumbs-down-fill.png" style="width: 30px; height: 30px; cursor: pointer;" class="me-1" onclick="isYourCommentForDisLike(' + comments[i].id + ')" >';
+                 }
+                 output += '<span class="me-1" id="cmtDisLike_' + comments[i].id + '">' + comments[i].disLikeCount + '</span>';
+                 output += '</span>';
+
+                 if (sessionId == comments[i].userId) {
+                     output += '<span class="text-end ps-0 dropdown" style="cursor: pointer;" id="dropdownComment_' + comments[i].id + '">';
+                     output += '<i class="bi bi-three-dots-vertical" style="height: 10px" id="dropButtonComment" data-bs-toggle="dropdown" aria-expanded="false"></i>';
+                     output += '<ul class="dropdown-menu" aria-labelledby="dropButtonComment">';
+                     output += '<li>';
+                     output += '<a class="dropdown-item fs-5" onclick="toggleUpdateCommentPage(' + comments[i].id + ')">';
+                     output += '<i class="bi bi-pencil-square"></i>';
+                     output += '<span class="ms-2">' + "수정하기" + '</span>';
+                     output += '</a>';
+                     output += '</li>';
+                     output += '<li>';
+                     output += '<a class="dropdown-item fs-5" onclick="deleteCommentPage(' + comments[i].id + ')">';
+                     output += '<i class="bi bi-trash3"></i>';
+                     output += '<span class="ms-2">' +  "삭제하기" + '</span>';
+
+                     output += '</a>';
+                     output += '</li>';
+                     output += '</ul>';
+                     output += '</span>';
+                 }
+                 output += '</div>';
+                 output += '</div>';
+                 output += '<div class="row mt-3" id="commentContent_' + comments[i].id + '">';
+                 output += '<div class="col ms-2">';
+                 output += '<span class="boardContent" id="commentSpan_' + comments[i].id + '">' + comments[i].content + '</span>';
+                 output += '</div>';
+                 output += '</div>';
+                 output += '<div class="row mt-2 mb-2">' + '</div>';
+                 output += '<div class="border-bottom mt-1 mb-3"></div>';
+                 output += '</div>';
+                 output += '</div>';
              }
-             output += '</div>';
-             output += '</div>';
-             output += '<div class="row mt-3" id="commentContent_' + comments[i].id + '">';
-             output += '<div class="col ms-2">';
-             output += '<span class="boardContent" id="commentSpan_' + comments[i].id + '">' + comments[i].content + '</span>';
-             output += '</div>';
-             output += '</div>';
-             output += '<div class="row mt-2 mb-2">' + '</div>';
-             output += '<div class="border-bottom mt-1 mb-3"></div>';
-             output += '</div>';
-             output += '</div>';
+             document.getElementById('comment-list').innerHTML = output;
+         },
+         error: function(err) {
+             return;
          }
-         document.getElementById('comment-list').innerHTML = output;
-     },
-     error: function(err) {
-         return;
-     }
-  });
+    });
  }
 
 
@@ -518,6 +518,9 @@
                      setTimeout(function() {
                         sendSuccessModal.hide();
                     }, 2000);
+
+                    const sendMessageModal = bootstrap.Modal.getOrCreateInstance("#sendMessageModal");
+                    sendMessageModal.hide();
 
                } else {
                   /* 만약 메시지를 보냈을 때 회원 탈퇴된 경우를 생각해야함 */
