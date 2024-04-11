@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -29,6 +32,10 @@ public class LoungeEntity extends BaseEntity {
 
     @Column(nullable = false, length = 4000)
     private String content;
+
+    @OneToMany(mappedBy = "loungeEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<LoungeLikeEntity> loungeLikeEntityList
+            = new ArrayList<>();
 
     public static LoungeEntity toLoungeEntity(LoungeDTO loungeDTO, UserEntity userEntity) {
         LoungeEntity loungeEntity = new LoungeEntity();

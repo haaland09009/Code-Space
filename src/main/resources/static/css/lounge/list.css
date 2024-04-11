@@ -1,0 +1,21 @@
+i {
+    cursor: pointer;
+}
+
+.alertCircle {
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    background-color: #42f581;
+    text-align: center;
+    line-height: 24px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+  @keyframes fadeInAndOut {
+        0% { opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { opacity: 0; }
+    }

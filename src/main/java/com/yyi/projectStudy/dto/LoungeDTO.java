@@ -22,6 +22,10 @@ public class LoungeDTO {
     private String storedFileName;
 
     private String formattedDate;
+    private int likeCount;
+
+    /* 게시글 좋아요 여부 */
+    private int likeYn;
 
     public static LoungeDTO toLoungeDTO(LoungeDTO loungeDTO, LoungeEntity loungeEntity) {
         loungeDTO.setId(loungeEntity.getId());
