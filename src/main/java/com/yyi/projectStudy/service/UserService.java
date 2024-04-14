@@ -11,6 +11,7 @@ import com.yyi.projectStudy.repository.JobRepository;
 import com.yyi.projectStudy.repository.UserImageFileRepository;
 import com.yyi.projectStudy.repository.UserJobRepository;
 import com.yyi.projectStudy.repository.UserRepository;
+import com.yyi.projectStudy.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,11 @@ public class UserService {
 
     /* 회원가입 프로세스 */
     public void save(UserDTO userDTO, UserJobDTO userJobDTO) throws IOException {
-        if (userDTO.getProfileImageFile().isEmpty()) {
+        if (userDTO.getProfileImageFile() == null || userDTO.getProfileImageFile().isEmpty()) {
+            // 비밀번호 암호화
+            String password = String.valueOf(userDTO.getPassword());
+            userDTO.setPassword(PasswordEncoder.encoding(password));
+
             Long savedUserId = userRepository.save(UserEntity.toUserEntity(userDTO)).getId();
 
             // 직군 데이터 추가
@@ -81,6 +86,8 @@ public class UserService {
     /* 로그인 프로세스 */
     @Transactional
     public UserDTO login(UserDTO userDTO) {
+        // 암호화된 비밀번호와 비교
+        userDTO.setPassword(PasswordEncoder.encoding(String.valueOf(userDTO.getPassword())));
         Optional<UserEntity> optionalUserEntity = userRepository.findByEmail(userDTO.getEmail());
         if (optionalUserEntity.isPresent()) {
             UserEntity userEntity = optionalUserEntity.get();
@@ -202,4 +209,15 @@ public class UserService {
             }
         }
     }
+
+    @Transactional
+    public UserDTO findByEmail(String email) {
+        Optional<UserEntity> optionalUserEntity = userRepository.findByEmail(email);
+        if (optionalUserEntity.isPresent()) {
+            return UserDTO.toUserDTO(optionalUserEntity.get());
+        } else {
+            return null;
+        }
+    }
+
 }

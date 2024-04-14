@@ -58,13 +58,14 @@
                         </div>
 
                         <div class="row mt-2">
-                            <div class="col d-grid">
-                                <img src="/img/kakaoLogin.png" class="img-fluid" style="cursor: pointer;">
+                            <div class="col d-grid" style="cursor: pointer;" onclick="kakaoLogin()">
+                                <img src="/img/kakaoLogin.png" class="img-fluid">
                             </div>
+
                         </div>
 
                         <div class="row mt-2">
-                            <div class="col d-grid">
+                            <div class="col d-grid" style="cursor: pointer;" onclick="naverLogin()">
                                 <img src="/img/naverLogin.png" class="img-fluid" style="cursor: pointer;">
                             </div>
                         </div>
@@ -87,6 +88,10 @@
     /*<![CDATA[*/
       let sessionId = [[${session.userDTO != null ? session.userDTO.id : 0}]];
   /*]]>*/
+
+    const kakaoApiKey = [[${kakaoApiKey}]];
+
+    const naverApiKey = [[${naverApiKey}]];
 
 </script>
 <script type="text/javascript" th:src="@{/js/user/loginPage.js}"></script>

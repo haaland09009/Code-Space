@@ -1,15 +1,18 @@
 package com.yyi.projectStudy.controller;
 
 import com.yyi.projectStudy.dto.*;
+
+import com.yyi.projectStudy.properties.KakaoProperties;
+import com.yyi.projectStudy.properties.NaverProperties;
 import com.yyi.projectStudy.service.*;
 import com.yyi.projectStudy.time.StringToDate;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -27,10 +30,14 @@ public class UserController {
     private final QnaReplyService qnaReplyService;
     private final QnaReplyCommentService qnaReplyCommentService;
 
+    private final NaverProperties naverProperties;
+    private final KakaoProperties kakaoProperties;
+
     /* 로그인 페이지 이동 */
     @GetMapping("/loginPage")
-    public String loginPage() {
-
+    public String loginPage(Model model) {
+        model.addAttribute("kakaoApiKey", kakaoProperties.getClientId());
+        model.addAttribute("naverApiKey", naverProperties.getClientId());
         return "user/loginPage";
     }
 
@@ -75,6 +82,9 @@ public class UserController {
             return "no";
         }
     }
+
+
+
 
     /* 로그아웃 */
     @GetMapping("/logout")

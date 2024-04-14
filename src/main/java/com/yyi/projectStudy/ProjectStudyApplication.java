@@ -1,12 +1,10 @@
 package com.yyi.projectStudy;
 
-import jakarta.servlet.http.HttpSessionListener;
-import org.apache.catalina.SessionListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class ProjectStudyApplication {
 
 	public static void main(String[] args) {

@@ -78,7 +78,7 @@
                                                 <span>🚨</span>
                                                 <span class="ms-1"> 마감</span>
                                                 <span th:text="${project.remainingDays} + '일전'" th:if="${project.remainingDays != 0}"></span>
-                                                <span th:if="${project.remainingDays == 0}" th:text="오늘 마감"></span>
+                                                <span th:if="${project.remainingDays < 0}" th:text="오늘 마감"></span>
 
 
                                             </button>

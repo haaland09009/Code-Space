@@ -29,7 +29,7 @@ public class UserEntity extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @Column(nullable = false)
@@ -37,6 +37,7 @@ public class UserEntity extends BaseEntity {
 
     @Column
     private int fileAttached; // 파일 존재할 경우 1, 아닐 경우 0
+
 
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =  FetchType.LAZY)
     private List<UserImageFileEntity> userImageFileEntityList = new ArrayList<>();
@@ -110,6 +111,7 @@ public class UserEntity extends BaseEntity {
         userEntity.setFileAttached(0); // 파일이 없을 경우
         return userEntity;
     }
+
 
     // DTO -> Entity
     public static UserEntity toSaveFileEntity(UserDTO userDTO) {

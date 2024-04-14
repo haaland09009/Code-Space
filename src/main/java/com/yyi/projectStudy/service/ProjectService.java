@@ -1,19 +1,13 @@
 package com.yyi.projectStudy.service;
 
-import com.yyi.projectStudy.ProjectStatus;
 import com.yyi.projectStudy.dto.*;
 import com.yyi.projectStudy.entity.*;
 import com.yyi.projectStudy.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.Position;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
