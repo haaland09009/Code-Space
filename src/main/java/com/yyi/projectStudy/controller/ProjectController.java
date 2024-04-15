@@ -144,19 +144,19 @@ public class ProjectController {
 
             /* 게시글 당 사용 언어 목록 조회 */
             List<TechCategoryDTO> techCategoryDTOList = projectService.findTechCategory(projectDTO.getId());
-            List<String> techList = new ArrayList<>();
+            List<String> techDTOList = new ArrayList<>();
             for (TechCategoryDTO techCategoryDTO : techCategoryDTOList) {
-                techList.add(techCategoryDTO.getName());
+                techDTOList.add(techCategoryDTO.getName());
             }
-            projectDTO.setTechList(techList);
+            projectDTO.setTechList(techDTOList);
 
             /* 모집 포지션 조회 */
             List<PositionCategoryDTO> positionCategoryDTOList = projectService.findPositionCategory(projectDTO.getId());
-            List<String> positionList = new ArrayList<>();
+            List<String> positionDTOList = new ArrayList<>();
             for (PositionCategoryDTO positionCategoryDTO : positionCategoryDTOList) {
-                positionList.add(positionCategoryDTO.getName());
+                positionDTOList.add(positionCategoryDTO.getName());
             }
-            projectDTO.setPositionList(positionList);
+            projectDTO.setPositionList(positionDTOList);
         }
 
 
@@ -440,72 +440,6 @@ public class ProjectController {
         }
     }
 
-    /* 게시글 목록 불러오기 ajax */
-   /* @GetMapping("/list")
-    public ResponseEntity getProjectList(@RequestParam(value = "techIdList[]", required = false) List<Long> techIdList,
-                                         @RequestParam(value = "positionId", required = false) Long positionId,
-                                         @RequestParam(value = "status", required = false) String status,
-                                         @RequestParam(value = "categoryId", required = false) Long categoryId,
-                                         @RequestParam(value = "clipYn", required = false) String clipYn,
-                                         HttpSession session) {
-
-        UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
-        List<ProjectDTO> projectDTOList;
-
-        if (sessionUser != null) {
-            Long userId = sessionUser.getId();
-            projectDTOList = projectService.findByCondition(techIdList, positionId, status, categoryId, clipYn, userId);
-
-        } else {
-            projectDTOList = projectService.findByCondition(techIdList, positionId, status, categoryId, clipYn, 0L);
-        }
-
-        *//* 게시글 목록 반복문 *//*
-        for (ProjectDTO projectDTO : projectDTOList) {
-
-            *//* 날짜 변환 *//*
-            String formatDateTime = StringToDate.formatDateTime(String.valueOf(projectDTO.getRegDate()));
-            projectDTO.setFormattedDate(formatDateTime);
-
-            String content = projectDTO.getContent().replace("<br>", "\n");
-
-            *//* 목록 조회 화면에 html 태그 제거 *//*
-            content = content.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "");
-            content = content.replaceAll("<[^>]*>", " ");
-            projectDTO.setContent(content);
-
-            *//* 게시글 당 댓글 수 조회 *//*
-            projectDTO.setCommentCount(projectCommentService.count(projectDTO.getId()));
-
-            *//* 게시글 당 프로젝트, 스터디 여부 조회 *//*
-            ProjectStudyCategoryDTO projectStudyCategoryDTO = projectService.findProjectStudyCategory(projectDTO.getId());
-            projectDTO.setProjectStudy(projectStudyCategoryDTO.getName());
-
-            *//* 게시글 당 스크랩 수 조회 *//*
-            int clipCount = projectService.clipCount(projectDTO.getId());
-            projectDTO.setClipCount(clipCount);
-
-
-            *//* 게시글 당 사용 언어 목록 조회 *//*
-            List<TechCategoryDTO> techCategoryDTOList = projectService.findTechCategory(projectDTO.getId());
-            List<String> techList = new ArrayList<>();
-            for (TechCategoryDTO techCategoryDTO : techCategoryDTOList) {
-                techList.add(techCategoryDTO.getName());
-            }
-            projectDTO.setTechList(techList);
-
-            *//* 모집 포지션 조회 *//*
-            List<PositionCategoryDTO> positionCategoryDTOList = projectService.findPositionCategory(projectDTO.getId());
-            List<String> positionList = new ArrayList<>();
-            for (PositionCategoryDTO positionCategoryDTO : positionCategoryDTOList) {
-                positionList.add(positionCategoryDTO.getName());
-            }
-            projectDTO.setPositionList(positionList);
-
-
-        }
-        return new ResponseEntity<>(projectDTOList, HttpStatus.OK);
-    }*/
 
     @GetMapping("/list")
     public ResponseEntity getProjectList(@ModelAttribute ProjectSearchDTO projectSearchDTO,
@@ -552,19 +486,19 @@ public class ProjectController {
 
             /* 게시글 당 사용 언어 목록 조회 */
             List<TechCategoryDTO> techCategoryDTOList = projectService.findTechCategory(projectDTO.getId());
-            List<String> techList = new ArrayList<>();
+            List<String> techDTOList = new ArrayList<>();
             for (TechCategoryDTO techCategoryDTO : techCategoryDTOList) {
-                techList.add(techCategoryDTO.getName());
+                techDTOList.add(techCategoryDTO.getName());
             }
-            projectDTO.setTechList(techList);
+            projectDTO.setTechList(techDTOList);
 
             /* 모집 포지션 조회 */
             List<PositionCategoryDTO> positionCategoryDTOList = projectService.findPositionCategory(projectDTO.getId());
-            List<String> positionList = new ArrayList<>();
+            List<String> positionDTOList = new ArrayList<>();
             for (PositionCategoryDTO positionCategoryDTO : positionCategoryDTOList) {
-                positionList.add(positionCategoryDTO.getName());
+                positionDTOList.add(positionCategoryDTO.getName());
             }
-            projectDTO.setPositionList(positionList);
+            projectDTO.setPositionList(positionDTOList);
 
 
         }

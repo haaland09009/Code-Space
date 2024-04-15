@@ -34,18 +34,18 @@ public class HomeController {
             projectDTO.setProjectStudy(projectStudyCategoryDTO.getName());
 
             List<TechCategoryDTO> techCategoryDTOList = projectService.findTechCategory(projectDTO.getId());
-            List<String> techList = new ArrayList<>();
+            List<String> techDTOList = new ArrayList<>();
             for (TechCategoryDTO techCategoryDTO : techCategoryDTOList) {
-                techList.add(techCategoryDTO.getName());
+                techDTOList.add(techCategoryDTO.getName());
             }
-            projectDTO.setTechList(techList);
+            projectDTO.setTechList(techDTOList);
 
             List<PositionCategoryDTO> positionCategoryDTOList = projectService.findPositionCategory(projectDTO.getId());
-            List<String> positionList = new ArrayList<>();
+            List<String> positionDTOList = new ArrayList<>();
             for (PositionCategoryDTO positionCategoryDTO : positionCategoryDTOList) {
-                positionList.add(positionCategoryDTO.getName());
+                positionDTOList.add(positionCategoryDTO.getName());
             }
-            projectDTO.setPositionList(positionList);
+            projectDTO.setPositionList(positionDTOList);
 
             Date startDate = projectDTO.getStartDate();
 

@@ -59,9 +59,9 @@ public class LoginController {
 
             userService.save(userDTO, userJobDTO);
 
-            loginUser = userService.login(userDTO);
+            loginUser = userService.socialLogin(userDTO);
         } else {
-            loginUser = userService.login(naverUser);
+            loginUser = userService.socialLogin(naverUser);
         }
 
         session.setAttribute("userDTO", loginUser);
@@ -224,9 +224,9 @@ public class LoginController {
             UserJobDTO userJobDTO = new UserJobDTO();
             userJobDTO.setJobId(10L);
             userService.save(userDTO, userJobDTO);
-            loginUser = userService.login(userDTO);
+            loginUser = userService.socialLogin(userDTO);
         } else {
-            loginUser = userService.login(kakaoUser);
+            loginUser = userService.socialLogin(kakaoUser);
         }
         session.setAttribute("userDTO", loginUser);
         return "redirect:/";

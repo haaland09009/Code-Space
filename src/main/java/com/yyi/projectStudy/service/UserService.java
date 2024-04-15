@@ -36,7 +36,7 @@ public class UserService {
     public void save(UserDTO userDTO, UserJobDTO userJobDTO) throws IOException {
         if (userDTO.getProfileImageFile() == null || userDTO.getProfileImageFile().isEmpty()) {
             // 비밀번호 암호화
-            String password = String.valueOf(userDTO.getPassword());
+            String password = userDTO.getPassword();
             userDTO.setPassword(PasswordEncoder.encoding(password));
 
             Long savedUserId = userRepository.save(UserEntity.toUserEntity(userDTO)).getId();
@@ -64,6 +64,10 @@ public class UserService {
             // 5. 해당 경로에 파일 저장
             profileImageFile.transferTo(new File(savePath));
 
+            // 비밀번호 암호화
+            String password = userDTO.getPassword();
+            userDTO.setPassword(PasswordEncoder.encoding(password));
+
             // 6. user_table에 해당 데이터 save 처리
             UserEntity userEntity = UserEntity.toSaveFileEntity(userDTO);
             // id 값을 얻어오는 이유: 자식 테이블 입장에서 부모가 어떤 id(pk)인지 필요해서
@@ -87,7 +91,7 @@ public class UserService {
     @Transactional
     public UserDTO login(UserDTO userDTO) {
         // 암호화된 비밀번호와 비교
-        userDTO.setPassword(PasswordEncoder.encoding(String.valueOf(userDTO.getPassword())));
+        userDTO.setPassword(PasswordEncoder.encoding(userDTO.getPassword()));
         Optional<UserEntity> optionalUserEntity = userRepository.findByEmail(userDTO.getEmail());
         if (optionalUserEntity.isPresent()) {
             UserEntity userEntity = optionalUserEntity.get();
@@ -100,6 +104,20 @@ public class UserService {
             return null;
         }
     }
+
+
+    /* 소셜 로그인 프로세스 */
+    @Transactional
+    public UserDTO socialLogin(UserDTO userDTO) {
+        Optional<UserEntity> optionalUserEntity = userRepository.findByEmail(userDTO.getEmail());
+        if (optionalUserEntity.isPresent()) {
+            UserEntity userEntity = optionalUserEntity.get();
+             return UserDTO.toUserDTO(userEntity);
+        } else {
+            return null;
+        }
+    }
+
 
     /* 마이페이지 - 회원정보 조회 */
     @Transactional

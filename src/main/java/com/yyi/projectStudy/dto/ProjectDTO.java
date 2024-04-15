@@ -33,8 +33,8 @@ public class ProjectDTO {
     private int fileAttached;
     private String storedFileName;
     private int commentCount;
-    private List<String> positionList = new ArrayList<>();
-    private List<String> techList = new ArrayList<>();
+    private List<String> positionList;
+    private List<String> techList;
     private String projectStudy;
     private Long projectStudyId;
     private int clipCount;
