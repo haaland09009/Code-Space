@@ -16,29 +16,8 @@ public interface ChatRepository extends JpaRepository<ChatEntity, Long> {
     List<ChatEntity> findByChatRoomEntityOrderByIdAsc(ChatRoomEntity chatRoomEntity);
 
     /* 채팅방 조회 */
-/*    SELECT room_id,
-    chat_id as id,
-    reg_date,
-    content,
-    read_date,
-    sender_id
-    FROM (
-            SELECT cr.id AS room_id,
-            c.id AS chat_id,
-            c.reg_date,
-            c.content,
-            c.read_date,
-            c.sender_id,
-            ROW_NUMBER() OVER (PARTITION BY cr.id ORDER BY c.reg_date DESC) AS row_num
-    FROM chat_room_table cr
-    JOIN chat_table c ON cr.id = c.room_id
-    WHERE cr.receiver_id = 43 OR cr.sender_id = 43
-            )
-    WHERE row_num = 1
-    ORDER BY reg_date DESC;*/
-    @Query(value =
-    "SELECT room_id,\n" +
-            "       chat_id as id,\n" +
+    @Query(value = "SELECT room_id,\n" +
+            "       chat_id AS id,\n" +
             "       reg_date,\n" +
             "       content,\n" +
             "       read_date,\n" +
@@ -50,74 +29,39 @@ public interface ChatRepository extends JpaRepository<ChatEntity, Long> {
             "           c.content,\n" +
             "           c.read_date,\n" +
             "           c.sender_id,\n" +
-            "           ROW_NUMBER() OVER (PARTITION BY cr.id ORDER BY c.reg_date DESC) AS row_num\n" +
+            "           (SELECT COUNT(*) FROM chat_table c2 WHERE c2.room_id = cr.id AND c2.reg_date >= c.reg_date) AS row_num\n" +
             "    FROM chat_room_table cr\n" +
             "    JOIN chat_table c ON cr.id = c.room_id\n" +
             "    WHERE cr.receiver_id = :userId OR cr.sender_id = :userId\n" +
-            ")\n" +
+            ") AS sub\n" +
             "WHERE row_num = 1\n" +
             "ORDER BY reg_date DESC", nativeQuery = true)
     List<ChatEntity> findRecentChats(@Param("userId") Long userId);
 
     /* 안 읽은 채팅이 있는 채팅방만 조회 */
-  /*   SELECT
-    room_id,
-    chat_id AS id,
-    reg_date,
-    content,
-    read_date,
-    sender_id
-FROM (
-    SELECT
-        cr.id AS room_id,
-        c.id AS chat_id,
-        c.reg_date,
-        c.content,
-        c.read_date,
-        c.sender_id,
-        ROW_NUMBER() OVER (PARTITION BY cr.id ORDER BY c.reg_date DESC) AS row_num
-    FROM
-        chat_room_table cr
-    JOIN
-        chat_table c ON cr.id = c.room_id
-    WHERE
-        (cr.sender_id = 123 OR cr.receiver_id = 123)
-        AND c.sender_id != 123
-        AND c.read_date IS NULL
-) subquery
-WHERE
-    row_num = 1
-ORDER BY
-    reg_date DESC */
-    @Query(value = "SELECT\n" +
-            "    room_id,\n" +
-            "    chat_id AS id,\n" +
-            "    reg_date,\n" +
-            "    content,\n" +
-            "    read_date,\n" +
-            "    sender_id\n" +
-            "FROM (\n" +
-            "    SELECT\n" +
-            "        cr.id AS room_id,\n" +
-            "        c.id AS chat_id,\n" +
-            "        c.reg_date,\n" +
-            "        c.content,\n" +
-            "        c.read_date,\n" +
-            "        c.sender_id,\n" +
-            "        ROW_NUMBER() OVER (PARTITION BY cr.id ORDER BY c.reg_date DESC) AS row_num\n" +
-            "    FROM\n" +
-            "        chat_room_table cr\n" +
-            "    JOIN\n" +
-            "        chat_table c ON cr.id = c.room_id\n" +
-            "    WHERE\n" +
-            "        (cr.sender_id = :userId OR cr.receiver_id = :userId)\n" +
-            "        AND c.sender_id != :userId\n" +
-            "        AND c.read_date IS NULL\n" +
-            ") subquery\n" +
-            "WHERE\n" +
-            "    row_num = 1\n" +
-            "ORDER BY\n" +
-            "    reg_date DESC", nativeQuery = true)
+        @Query(value = "SELECT \n" +
+                "    cr.id AS room_id,\n" +
+                "    c.id AS id,\n" +
+                "    c.reg_date,\n" +
+                "    c.content,\n" +
+                "    c.read_date,\n" +
+                "    c.sender_id\n" +
+                "FROM \n" +
+                "    chat_room_table cr\n" +
+                "JOIN \n" +
+                "    chat_table c ON cr.id = c.room_id\n" +
+                "WHERE \n" +
+                "    (cr.sender_id = :userId OR cr.receiver_id = :userId)\n" +
+                "    AND c.sender_id != :userId\n" +
+                "    AND c.read_date IS NULL\n" +
+                "    AND NOT EXISTS (\n" +
+                "        SELECT 1 \n" +
+                "        FROM chat_table c2 \n" +
+                "        WHERE c2.room_id = cr.id \n" +
+                "        AND c2.reg_date > c.reg_date\n" +
+                "    )\n" +
+                "ORDER BY \n" +
+                "    c.reg_date DESC", nativeQuery = true)
     List<ChatEntity> unreadChatList(@Param("userId") Long userId);
 
 

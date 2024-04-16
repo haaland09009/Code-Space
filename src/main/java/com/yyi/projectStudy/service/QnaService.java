@@ -329,7 +329,7 @@ public class QnaService {
 
 
     /* 활동내역 */
-    @Transactional
+    /*@Transactional
     public List<QnaArticleDTO> findArticleList(Long userId) {
         List<Object[]> qnaArticleList = qnaRepository.getQnaArticles(userId);
         List<QnaArticleDTO> qnaArticleDTOList = new ArrayList<>();
@@ -389,7 +389,7 @@ public class QnaService {
             qnaArticleDTOList.add(qnaArticleDTO);
         }
         return qnaArticleDTOList;
-    }
+    }*/
 
 
     /* 게시물 스크랩 */

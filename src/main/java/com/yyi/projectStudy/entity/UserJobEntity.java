@@ -8,19 +8,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "user_job_seq_generator"
-        , sequenceName = "user_job_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "user_job_table")
 public class UserJobEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "user_job_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

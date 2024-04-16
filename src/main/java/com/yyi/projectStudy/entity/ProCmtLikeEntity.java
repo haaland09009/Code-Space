@@ -7,19 +7,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "pro_cmt_like_seq_generator"
-        , sequenceName = "pro_cmt_like_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "pro_cmt_like_table")
 public class ProCmtLikeEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "pro_cmt_like_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -23,7 +23,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long>, P
     @Modifying
     @Query(value = "update ProjectEntity p set p.title = :title, " +
                     "p.content = :content, p.startDate = :startDate, " +
-                    "p.headCount = :headCount, p.updDate = sysdate where p.id = :id")
+                    "p.headCount = :headCount, p.updDate = current_timestamp where p.id = :id")
     void updateProject(@Param("title") String title, @Param("content") String content,
                        @Param("startDate") Date startDate, @Param("headCount") int headCount,
                        @Param("id") Long id);
@@ -31,8 +31,9 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long>, P
 
 
    /* 메인 페이지 HOT 프로젝트 / 스터디 조회 (일단 조회수 순, 나중에 수정해야함!!!) */
-    @Query(value = "select * from (select * from project_table where status = '모집중'" +
-                    " order by read_count desc) where rownum <= 6", nativeQuery = true)
+    @Query(value = "select * from (select * from project_table where status = '모집중' COLLATE utf8mb4_general_ci \n" +
+            "order by read_count desc) as subquery \n" +
+            "limit 6", nativeQuery = true)
     List<ProjectEntity> findAllByOrderByReadCountDesc();
 
 
@@ -44,13 +45,14 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long>, P
             SELECT id, NULL AS title, content, reg_date FROM project_comment_table WHERE user_id = 43
     )
     ORDER BY reg_date DESC*/
-    @Query(value = "SELECT * FROM (\n" +
-            "    SELECT id, title, content, reg_date FROM project_table WHERE user_id = :userId\n" +
-            "    UNION ALL\n" +
-            "    SELECT id, NULL AS title, content, reg_date FROM project_comment_table WHERE user_id = :userId\n" +
-            ")\n" +
-            "ORDER BY reg_date DESC", nativeQuery = true)
-    List<Object[]> getProjectArticles(@Param("userId") Long userId);
+//    @Query(value = "select * from (\n" +
+//            "    select id, title, content, reg_date from project_table where user_id = :userId\n" +
+//            "    union all\n" +
+//            "    select id, null as title, content, reg_date from project_comment_table where user_id = :userId\n" +
+//            ") as subquery\n" +
+//            "order by reg_date desc\n", nativeQuery = true)
+//
+//    List<Object[]> getProjectArticles(@Param("userId") Long userId);
 
 
     /* Top writers */
@@ -63,7 +65,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long>, P
             "    SELECT user_id, COUNT(*) AS count\n" +
             "    FROM qna_table\n" +
             "    GROUP BY user_id\n" +
-            ")\n" +
+            ") AS subquery\n" +
             "GROUP BY user_id\n" +
             "ORDER BY total_count DESC", nativeQuery = true)
     List<Object[]> getTopWriters();

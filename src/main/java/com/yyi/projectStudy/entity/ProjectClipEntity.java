@@ -7,19 +7,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "project_clip_seq_generator"
-        , sequenceName = "project_clip_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "project_clip_table")
 public class ProjectClipEntity extends BaseEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "project_clip_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

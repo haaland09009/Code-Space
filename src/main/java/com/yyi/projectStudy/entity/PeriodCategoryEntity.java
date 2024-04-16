@@ -10,19 +10,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "period_category_seq_generator"
-        , sequenceName = "period_category_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "period_category_table")
 public class PeriodCategoryEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "period_category_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

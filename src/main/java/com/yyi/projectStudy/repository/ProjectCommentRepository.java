@@ -19,6 +19,6 @@ public interface ProjectCommentRepository extends JpaRepository<ProjectCommentEn
 
     /* 댓글 수정하기 */
     @Modifying
-    @Query(value = "update ProjectCommentEntity p set p.content = :content, p.updDate = sysdate where p.id = :id")
+    @Query(value = "update ProjectCommentEntity p set p.content = :content, p.updDate = current_timestamp where p.id = :id")
     void updateComment(@Param("content") String content, @Param("id") Long id);
 }

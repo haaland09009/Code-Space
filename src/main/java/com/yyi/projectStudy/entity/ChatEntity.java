@@ -10,19 +10,10 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "chat_seq_generator"
-        , sequenceName = "chat_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "chat_table")
 public class ChatEntity extends BaseEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "chat_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

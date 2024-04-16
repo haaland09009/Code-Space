@@ -11,19 +11,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "user_seq_generator"
-        , sequenceName = "user_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "user_table")
 public class UserEntity extends BaseEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "user_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

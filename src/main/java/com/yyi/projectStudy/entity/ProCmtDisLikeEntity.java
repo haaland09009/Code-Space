@@ -7,19 +7,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "pro_cmt_dislike_seq_generator"
-        , sequenceName = "pro_cmt_dislike_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "pro_cmt_dislike_table")
 public class ProCmtDisLikeEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "pro_cmt_dislike_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

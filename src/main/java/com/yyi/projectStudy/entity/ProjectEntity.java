@@ -13,19 +13,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "project_seq_generator"
-        , sequenceName = "project_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "project_table")
 public class ProjectEntity extends BaseEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "project_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

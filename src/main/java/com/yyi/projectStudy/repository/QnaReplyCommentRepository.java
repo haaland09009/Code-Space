@@ -20,7 +20,7 @@ public interface QnaReplyCommentRepository extends JpaRepository<QnaReplyComment
 
     /* 댓글 수정 처리 */
     @Modifying
-    @Query(value = "update QnaReplyCommentEntity set content = :content, updDate = sysdate where id = :id")
+    @Query(value = "update QnaReplyCommentEntity set content = :content, updDate = current_timestamp where id = :id")
     void updateComment(@Param("content") String content, @Param("id") Long id);
 
 

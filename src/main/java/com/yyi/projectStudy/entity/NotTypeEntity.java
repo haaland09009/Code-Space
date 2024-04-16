@@ -10,19 +10,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "not_type_seq_generator"
-        , sequenceName = "not_type_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "not_type_table")
 public class NotTypeEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "not_type_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

@@ -59,7 +59,7 @@ public class UserService {
             String storedFileName = System.currentTimeMillis() + "_" + originalFilename;
 
             // 4. 저장 경로 설정 (해당 폴더는 미리 만들어진 상태여야 한다.)
-            String savePath = "C:/toyProject_img/" + storedFileName;
+            String savePath = "C:/projectStudy_img/" + storedFileName;
 
             // 5. 해당 경로에 파일 저장
             profileImageFile.transferTo(new File(savePath));
@@ -184,12 +184,10 @@ public class UserService {
     public void updateUserImg(UserDTO userDTO) throws IOException {
         UserEntity userEntity = userRepository.findById(userDTO.getId()).get();
         if (userDTO.getProfileImageFile() == null) {
-            System.out.println("새로 들어온 이미지가 없어요");
             // 1. 기존 이미지가 존재한다면 삭제
             Optional<UserImageFileEntity> optionalUserImageFileEntity
                     = userImageFileRepository.findByUserEntity(userEntity);
             if (optionalUserImageFileEntity.isPresent()) {
-                System.out.println("기존에 이미지가 잇씁니다.");
                 UserImageFileEntity userImageFileEntity = optionalUserImageFileEntity.get();
                 userImageFileRepository.deleteById(userImageFileEntity.getId());
             }
@@ -206,7 +204,7 @@ public class UserService {
             String storedFileName = System.currentTimeMillis() + "_" + originalFilename;
 
             // 4. 저장 경로 설정 (해당 폴더는 미리 만들어진 상태여야 한다.)
-            String savePath = "C:/toyProject_img/" + storedFileName;
+            String savePath = "C:/projectStudy_img/" + storedFileName;
 
             // 5. 해당 경로에 파일 저장
             profileImageFile.transferTo(new File(savePath));

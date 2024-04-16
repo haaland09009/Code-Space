@@ -8,19 +8,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "project_period_category_link_seq_generator"
-        , sequenceName = "project_period_category_link_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "project_period_category_link_table")
 public class ProjectPeriodCategoryLinkEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "project_period_category_link_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

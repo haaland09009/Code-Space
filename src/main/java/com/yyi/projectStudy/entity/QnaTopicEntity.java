@@ -7,19 +7,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "qna_topic_seq_generator"
-        , sequenceName = "qna_topic_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "qna_topic_table")
 public class QnaTopicEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "qna_topic_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

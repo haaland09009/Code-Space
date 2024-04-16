@@ -148,7 +148,7 @@ public class UserController {
     }
 
     /* 작성 게시물 조회 */
-    @GetMapping("/articles")
+    /*@GetMapping("/articles")
     public String boardList(Model model, HttpSession session) {
         UserDTO sessionUser = (UserDTO) session.getAttribute("userDTO");
         if (sessionUser == null) {
@@ -163,7 +163,7 @@ public class UserController {
 
             return "user/articles";
         }
-    }
+    }*/
 
     /* 스크랩 목록 조회 */
     @GetMapping("/clip")

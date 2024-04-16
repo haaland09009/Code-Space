@@ -11,19 +11,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "lounge_seq_generator"
-        , sequenceName = "lounge_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "lounge_table")
 public class LoungeEntity extends BaseEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "lounge_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

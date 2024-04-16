@@ -10,19 +10,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "job_seq_generator"
-        , sequenceName = "job_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "job_table")
 public class JobEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "job_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

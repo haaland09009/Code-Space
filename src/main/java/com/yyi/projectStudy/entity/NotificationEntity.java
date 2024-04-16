@@ -11,19 +11,10 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "not_seq_generator"
-        , sequenceName = "not_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "notification_table")
 public class NotificationEntity extends BaseEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "not_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

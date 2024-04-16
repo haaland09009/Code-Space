@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CodeSpace | 개발자들의 공간</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/project/list.css}">
+
+
+
+</head>
+<style>
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+<body>
+<div class="container-fluid">
+    <div th:include="common/header :: header"></div>
+
+    <div class="row mt-3">
+
+        <div class="col">
+            <img src="/img/tempBanner.png" class="img-fluid" alt="">
+        </div>
+
+    </div>
+
+    <div class="mt-5 mb-4"></div>
+    <div class="row">
+        <div class="col"></div>
+
+
+        <!-- 가운데 바 -->
+        <div class="col-11">
+        <div class="row">
+        <!-- 왼쪽 바 시작 -->
+        <div class="col">
+
+            <div class="sticky-top mt-3">
+
+                <!-- 기술 스택 -->
+                <div class="row">
+                    <div class="col-10">
+                        <div class="row border border-2 rounded-5 fs-5 p-2 me-2 fw-semibold" id="toggleTechBox">
+                            <div class="col ms-2 text-secondary overflow" id="techNameBox">
+                                기술 스택
+                            </div>
+                            <div class="col-3 text-end text-secondary fw-semibold">
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3 bg-white" id="techListBox" style="display: none;">
+                            <div class="col rounded-5 border border-3">
+                                <div class="row">
+                                    <div class="col ms-4 p-3" >
+                                        <button class="bg-white btn rounded-4 fs-5 border border-2 me-3 mt-3 languageBar" th:each="option: ${techCategoryList}"
+                                                th:id="'tech_' + ${option.id}" th:onclick="toggleTech([[${option.id}]])">
+                                            <img src="/img/language/java.svg" class="techLogo me-2" th:if="${option.name == 'Java'}">
+                                            <img src="/img/language/spring.svg" class="techLogo me-2" th:if="${option.name == 'Spring'}">
+                                            <img src="/img/language/springboot.png" class="techLogo me-2" th:if="${option.name == 'Spring Boot'}">
+                                            <img src="/img/language/aws.svg" class="techLogo me-2" th:if="${option.name == 'AWS'}">
+                                            <img src="/img/language/c.svg" class="techLogo me-2" th:if="${option.name == 'C'}">
+                                            <img src="/img/language/docker.svg" class="techLogo me-2" th:if="${option.name == 'Docker'}">
+                                            <img src="/img/language/git.svg" class="techLogo me-2" th:if="${option.name == 'Git'}">
+                                            <img src="/img/language/javascript.svg" class="techLogo me-2" th:if="${option.name == 'JavaScript'}">
+                                            <img src="/img/language/kotlin.png" class="techLogo me-2" th:if="${option.name == 'Kotlin'}">
+                                            <img src="/img/language/mysql.svg" class="techLogo me-2" th:if="${option.name == 'MySQL'}">
+                                            <img src="/img/language/nodejs.svg" class="techLogo me-2" th:if="${option.name == 'NodeJS'}">
+                                            <img src="/img/language/python.svg" class="techLogo me-2" th:if="${option.name == 'Python'}">
+                                            <img src="/img/language/swift.svg" class="techLogo me-2" th:if="${option.name == 'Swift'}">
+                                            <img src="/img/language/typescript.png" class="techLogo me-2" th:if="${option.name == 'TypeScript'}">
+                                            <img src="/img/language/vue.svg" class="techLogo me-2" th:if="${option.name == 'Vue'}">
+                                            <img src="/img/language/react.svg" class="techLogo me-2" th:if="${option.name == 'React'}">
+                                            <img src="/img/language/flutter.svg" class="techLogo me-2" th:if="${option.name == 'Flutter'}">
+                                            <img src="/img/language/oracle.svg" class="techLogo me-2" th:if="${option.name == 'Oracle'}">
+                                            <span th:text="${option.name}" ></span>
+                                        </button>
+
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col ms-4" id="selectedTechList">
+
+                                    </div>
+                                </div>
+                                <div class="mt-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 포지션 선택 -->
+                <div class="row mt-4">
+                    <div class="col-10">
+                        <div class="row border border-2 rounded-5 fs-5 p-2 me-2 fw-semibold" id="togglePositionBox">
+                            <div class="col ms-2 text-secondary" id="positionNameBox">
+                                모집 포지션
+
+                            </div>
+                            <div class="col-3 text-end text-secondary fw-semibold">
+                                <i class="bi bi-chevron-down" ></i>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3 bg-white" id="positionListBox" style="display: none;">
+                            <div class="col rounded-5 border border-3">
+                                <div class="row mt-1 p-1 fs-5 positionElement">
+                                    <div class="col ms-2" onclick="selectPosition(0)" id="position_0"> 전체 </div>
+                                </div>
+                                <div class="row mt-1 p-1 fs-5 positionElement" th:each="option: ${positionCategoryList}">
+                                    <div class="col ms-2" th:text="${option.name}" th:id="'position_' + ${option.id}"
+                                         th:onclick="selectPosition([[${option.id}]])">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 내 북마크 보기 -->
+                <div class="row mt-4">
+                    <div class="col-10">
+                        <div class="row border border-2 rounded-5 fs-5 p-2 me-2">
+                            <div class="col">
+                                <i class="bi bi-bookmark-fill" style="color: #FFD700"></i>
+                                <span class="ms-1 text-secondary fw-semibold"> 내 북마크 보기 </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 모집중만 보기 -->
+                <div class="row mt-4">
+                    <div class="col-10">
+                        <div class="row border border-2 rounded-5 fs-5 p-2 me-2">
+                            <div class="col text-secondary fw-semibold">
+                                👀 모집중만 보기
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- 왼쪽 바 끝 -->
+
+        <!-- 가운데 바 시작 -->
+        <div class="col-7">
+
+            <div class="mt-2 mb-3"></div>
+
+            <!-- 목록 -->
+            <div class="row border-top border-2"></div>
+            <!-- loop -->
+            <div id="project-list">
+            <div class="row contentDiv" th:each="project: ${projectList}">
+                <a th:href="@{|/project/${project.id}}">
+                <div class="col" style="min-height: 180px">
+                    <div class="mt-3"></div>
+                    <div class="row mt-2">
+                        <div class="col-auto">
+                            <button class="btn recruitButton rounded-4 btn-sm fs-16"
+                            th:if="${project.status == '모집중'}">
+                                모집중
+                            </button>
+                            <button class="btn unRecruitButton rounded-4 btn-sm fs-16"
+                                    th:if="${project.status == '모집완료'}">
+                                모집완료
+                            </button>
+                        </div>
+
+                        <div class="col-auto fw-semibold ps-0 fs-22" th:text="${project.title}">
+
+                        </div>
+                        <div class="col fs-16 text-end">
+                                <span class="ms-1 text-secondary">마감일 |</span>
+                                <span class="ms-1 text-secondary" th:text="${#dates.format(project.startDate, 'yyyy.MM.dd')}"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col overflow-board fs-18 text-secondary" th:text="${project.content}">
+
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-auto">
+                            <button class="btn btn-sm cateButton fs-18 me-1 text-primary">
+                                <span th:text="${project.projectStudy}"></span>
+                            </button>
+                            <span th:each="position : ${project.positionList}">
+                                <button class="btn btn-sm cateButton fs-18 me-1 fw-medium" th:text="${position}"></button>
+                            </span>
+                            <button class="btn btn-sm cateButton fw-medium me-2 fs-18" th:each="tech: ${project.techList}">
+                                <span th:if="${tech == 'Java'}" class="text-danger">•</span>
+                                <span th:if="${tech == 'Spring'}" class="text-success">•</span>
+                                <span th:if="${tech == 'Spring Boot'}" class="text-success">•</span>
+                                <span th:if="${tech == 'C'}" style="color: #007aff;">•</span>
+                                <span th:if="${tech == 'Python'}" class="text-primary">•</span>
+                                <span th:if="${tech == 'React'}" style="color: #14D3FF;">•</span>
+                                <span th:if="${tech == 'Vue'}" style="color: #4caf50;">•</span>
+                                <span th:if="${tech == 'NodeJS'}" style="color: #9c27b0;">•</span>
+                                <span th:if="${tech == 'Swift'}" style="color: #b71c1c;">•</span>
+                                <span th:if="${tech == 'Kotlin'}" style="color: #712cf9;">•</span>
+                                <span th:if="${tech == 'Git'}" style="color: #FF9100">•</span>
+                                <span th:if="${tech == 'AWS'}" style="color: #FF9100">•</span>
+                                <span th:if="${tech == 'Flutter'}">•</span>
+                                <span th:if="${tech == 'Docker'}">•</span>
+                                <span th:if="${tech == 'JavaScript'}" style="color: #712cf9;">•</span>
+                                <span th:if="${tech == 'TypeScript'}" class="text-primary">•</span>
+                                <span th:if="${tech == 'Django'}">•</span>
+                                <span th:if="${tech == 'PHP'}" class="text-secondary">•</span>
+                                <span th:if="${tech == 'MySQL'}" style="color: #ff6f0f">•</span>
+                                <span th:if="${tech == 'Oracle'}" class="text-danger">•</span>
+                                <span class="ms-1" th:text="${tech}"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col fs-18 text-secondary">
+                            <span th:text="${project.writer}"></span>
+                            <span class="ms-1">•</span>
+                            <span class="ms-1" th:text="${project.formattedDate}"></span>
+                        </div>
+                        <div class="col fs-18 text-secondary text-end">
+                            <span class="me-2">
+                                <i class="bi bi-bookmark"></i>
+                                <span th:text="${project.clipCount}"></span>
+                            </span>
+                            <span class="me-2">
+                                <i class="bi bi-eye"></i>
+                                <span th:text="${project.readCount}"></span>
+                            </span>
+                            <span>
+                                <i class="bi bi-chat"></i>
+                                 <span th:text="${project.commentCount}"></span>
+                           </span>
+                        </div>
+                    </div>
+                    <div class="mt-3"></div>
+                </div>
+                </a>
+                <div class="border-bottom border-2"></div>
+            </div>
+            <!-- loop -->
+            </div>
+
+
+
+           <!-- <div class="row mt-5">
+                <div class="col text-center">
+
+                    <a th:href="${projectList.first} ? '#' : @{/project(page=${projectList.number})}">
+                        <button class="btn btn-outline-dark me-4"><</button>
+                    </a>
+
+                    <span th:if="${endPage == 0}">
+                            <button class="btn mainButton me-2">1</button>
+                        </span>
+
+                    <span th:each="page: ${#numbers.sequence(startPage, endPage)}" th:if="${endPage != 0}">
+
+                        <span th:if="${page == projectList.number + 1}">
+                            <button class="btn mainButton me-2" th:text="${page}"></button>
+                        </span>
+
+                        <span th:unless="${page == projectList.number + 1}">
+                            <a th:href="@{|/project?page=${page}|}" th:if="${category == null && status == null && order == null}">
+                                <button class="btn btn-outline-dark me-2" th:text="${page}"></button>
+                            </a>
+                             <a th:href="@{|/project/category/${category}?page=${page}|}" th:if="${category != null && status == null && order == null}">
+                                <button class="btn btn-outline-dark me-2" th:text="${page}"></button>
+                            </a>
+                             <a th:href="@{|/project?status=${status}&page=${page}|}" th:if="${category == null && status != null && order == null}">
+                                <button class="btn btn-outline-dark me-2" th:text="${page}"></button>
+                            </a>
+                            <a th:href="@{|/project?order=${order}&page=${page}|}" th:if="${category == null && status == null && order != null}">
+                                <button class="btn btn-outline-dark me-2" th:text="${page}"></button>
+                            </a>
+                              <a th:href="@{|/project/category/${category}?status=${status}&page=${page}|}" th:if="${category != null && status != null && order == null}">
+                                <button class="btn btn-outline-dark me-2" th:text="${page}"></button>
+                            </a>
+                              <a th:href="@{|/project?order=${order}&status=${status}&page=${page}|}" th:if="${category == null && status != null && order != null}">
+                                <button class="btn btn-outline-dark me-2" th:text="${page}"></button>
+                            </a>
+                                <a th:href="@{|/project/category/${category}?order=${order}&page=${page}|}" th:if="${category != null && status == null && order != null}">
+                                <button class="btn btn-outline-dark me-2" th:text="${page}"></button>
+                            </a>
+                            <a th:href="@{|/project/category/${category}?status=${status}&order=${order}&page=${page}|}" th:if="${category != null && status != null && order != null}">
+                                <button class="btn btn-outline-dark me-2" th:text="${page}"></button>
+                            </a>
+                        </span>
+                    </span>
+
+                    <a th:href="${projectList.last} ? '#' : @{/project(page=${projectList.number + 2})}">
+                        <button class="btn btn-outline-dark ms-3"> > </button>
+                    </a>
+
+
+                </div>
+            </div>-->
+
+            <!-- 목록 -->
+
+
+
+        </div>
+        <!-- 가운데 바 끝 -->
+
+        <!-- 오른쪽 바 시작 -->
+        <div class="col">
+
+            <!-- 최신 인기글 -->
+            <div class="row mt-2">
+                <div class="col-10 ms-5 border rounded rounded-1">
+
+                    <div class="row mt-2">
+                        <div class="col ms-2">
+
+                            <div class="row mt-2">
+                                <div class="col fs-18 fw-semibold">
+                                    최신 인기글 🔥
+                                </div>
+                            </div>
+
+                            <div class="mt-4 mb-2"></div>
+
+                            <!-- 인기글 반복문 -->
+                            <div class="row mt-2" th:each="topProject : ${topProjectList}">
+                                <a th:href="@{|/project/${topProject.id}|}">
+                                <div class="col contentDiv py-2">
+                                    <div class="row">
+                                        <div class="col overflow-list fs-16 fw-semibold" th:text="${topProject.title}">
+
+                                        </div>
+                                    </div>
+                                    <div class="row fs-16 mt-1">
+                                        <div class="col-1">
+                                            <img src="/img/user.jpg" style="width: 26px; height: 26px" class="rounded-circle" alt=""
+                                            th:if="${topProject.fileAttached == 0}">
+                                            <img th:src="@{|/upload/${topProject.storedFileName}|}" style="width: 26px; height: 26px" class="rounded-circle" alt=""
+                                                 th:if="${topProject.fileAttached == 1}">
+                                        </div>
+                                        <div class="col ms-2 " th:text="${topProject.writer}">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                </a>
+                            </div>
+                            <!-- 인기글 반복문 -->
+
+                            <div class="mt-3 mb-3"></div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- 최신 인기글 -->
+
+
+        </div>
+        <!-- 오른쪽 바 끝 -->
+
+        </div>
+
+
+
+
+        </div>
+        <!-- --->
+        <div class="col">
+
+        </div>
+    </div>
+    <div class="mt-5 mb-5"></div>
+</div>
+
+<script th:inline="javascript">
+
+    /*<![CDATA[*/
+      let sessionId = [[${session.userDTO != null ? session.userDTO.id : 0}]];
+    /*]]>*/
+
+     /*<![CDATA[*/
+        let selectedPosId = null;
+     /*]]>*/
+
+    var techIdList = new Array();
+
+</script>
+<script type="text/javascript" th:src="@{/js/common.js}"></script>
+<script type="text/javascript" th:src="@{/js/project/list.js}"></script>
+
+</body>
+</html>

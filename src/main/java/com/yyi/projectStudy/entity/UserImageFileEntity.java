@@ -7,19 +7,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "user_image_file_seq_generator"
-        , sequenceName = "user_image_file_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "user_image_file_table")
 public class UserImageFileEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "user_image_file_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column

@@ -7,19 +7,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "lounge_like_seq_generator"
-        , sequenceName = "lounge_like_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "lounge_like_table")
 public class LoungeLikeEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "lounge_like_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

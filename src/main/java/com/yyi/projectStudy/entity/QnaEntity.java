@@ -12,19 +12,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@SequenceGenerator(
-        name = "qna_seq_generator"
-        , sequenceName = "qna_seq"
-        , initialValue = 1
-        , allocationSize = 1
-)
 @Table(name = "qna_table")
 public class QnaEntity extends BaseEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE
-            , generator = "qna_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
