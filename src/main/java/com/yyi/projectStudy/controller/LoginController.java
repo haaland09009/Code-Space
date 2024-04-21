@@ -65,6 +65,7 @@ public class LoginController {
         }
 
         session.setAttribute("userDTO", loginUser);
+        session.setAttribute("loginType", "naver");
         return "redirect:/";
     }
 
@@ -229,6 +230,7 @@ public class LoginController {
             loginUser = userService.socialLogin(kakaoUser);
         }
         session.setAttribute("userDTO", loginUser);
+        session.setAttribute("loginType", "kakao");
         return "redirect:/";
     }
 

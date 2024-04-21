@@ -60,11 +60,19 @@
 
                  </div>
                </div>
-               <div class="row mt-3">
-                 <div class="col-auto mt-2">
-                   <i class="bi bi-chat-fill"></i>
-                   <span class="ms-1">사이트 계정으로 로그인 중</span>
-                 </div>
+               <div class="col-auto mt-2" th:if="${session.loginType == null}">
+                 <i class="bi bi-chat-fill"></i>
+                 <span class="ms-1">사이트 계정으로 로그인 중</span>
+               </div>
+               <div class="col-auto mt-2" th:if="${session.loginType != null && session.loginType == 'naver'}">
+                 <img class="rounded-circle" src="/img/naver-circle.png" style="width: 25px; height: 25px; position: relative; bottom : 2px;">
+                 <span class="ms-1">네이버 계정으로 로그인 중</span>
+               </div>
+               <div class="col-auto mt-2" th:if="${session.loginType != null && session.loginType == 'kakao'}">
+                 <img class="rounded-circle" src="/img/kakao-circle.png" style="width: 25px; height: 25px; position: relative; bottom : 2px;">
+                 <span class="ms-1">카카오 계정으로 로그인 중</span>
+               </div>       <div class="row mt-3">
+
                  <div class="col text-end pe-0">
 
                  </div>
