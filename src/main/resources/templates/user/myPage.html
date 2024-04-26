@@ -60,18 +60,19 @@
 
                  </div>
                </div>
-               <div class="col-auto mt-2" th:if="${session.loginType == null}">
+               <div class="col-auto mt-3" th:if="${session.loginType == null}">
                  <i class="bi bi-chat-fill"></i>
                  <span class="ms-1">사이트 계정으로 로그인 중</span>
                </div>
-               <div class="col-auto mt-2" th:if="${session.loginType != null && session.loginType == 'naver'}">
+               <div class="col-auto mt-3" th:if="${session.loginType != null && session.loginType == 'naver'}">
                  <img class="rounded-circle" src="/img/naver-circle.png" style="width: 25px; height: 25px; position: relative; bottom : 2px;">
                  <span class="ms-1">네이버 계정으로 로그인 중</span>
                </div>
-               <div class="col-auto mt-2" th:if="${session.loginType != null && session.loginType == 'kakao'}">
+               <div class="col-auto mt-3" th:if="${session.loginType != null && session.loginType == 'kakao'}">
                  <img class="rounded-circle" src="/img/kakao-circle.png" style="width: 25px; height: 25px; position: relative; bottom : 2px;">
                  <span class="ms-1">카카오 계정으로 로그인 중</span>
-               </div>       <div class="row mt-3">
+               </div>
+               <div class="row mt-3">
 
                  <div class="col text-end pe-0">
 
@@ -104,8 +105,23 @@
               </div>
 
               <div class="row mt-2" id="nicknameError" style="display: none;">
-                <div class="col ms-1 text-primary">
-                  닉네임을 입력해주세요.
+                <div class="col ms-1 text-danger fs-18">
+                    <i class="bi bi-exclamation-circle"></i>
+                    닉네임을 입력해주세요.
+                </div>
+              </div>
+
+              <div class="row mt-2" id="nick_duplicated_error" style="display: none;">
+                <div class="col ms-1 text-danger fs-18">
+                  <i class="bi bi-exclamation-circle"></i>
+                    이미 존재하는 닉네임입니다.
+                </div>
+              </div>
+
+              <div class="row mt-2" style="display: none;" id="possibleNickBox">
+                <div class="col text-success fs-18">
+                  <i class="bi bi-check-circle"></i>
+                  사용 가능한 닉네임입니다.
                 </div>
               </div>
 
@@ -123,8 +139,23 @@
               </div>
 
               <div class="row mt-2" id="emailError" style="display: none;">
-                <div class="col ms-1 text-primary">
-                  이메일을 입력해주세요.
+                <div class="col ms-1 text-danger fs-18">
+                  <i class="bi bi-exclamation-circle"></i>
+                    아이디를 입력해주세요.
+                </div>
+              </div>
+
+              <div class="row mt-2" id="email_duplicated_error" style="display: none;">
+                <div class="col ms-1 text-danger fs-18">
+                  <i class="bi bi-exclamation-circle"></i>
+                    이미 존재하는 아이디입니다.
+                </div>
+              </div>
+
+              <div class="row mt-2" style="display: none;" id="possibleEmailBox">
+                <div class="col text-success fs-18">
+                  <i class="bi bi-check-circle"></i>
+                  사용 가능한 아이디입니다.
                 </div>
               </div>
 

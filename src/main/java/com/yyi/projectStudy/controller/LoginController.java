@@ -150,7 +150,7 @@ public class LoginController {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", kakaoProperties.getClientId());
-        params.add("redirect_uri", "http://localhost:8081/kakao/login");
+        params.add("redirect_uri", "http://localhost:8083/kakao/login");
         params.add("code", code);
 
         // httpheader와 httpbody를 하나의 오브젝트에 담기

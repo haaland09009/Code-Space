@@ -17,7 +17,7 @@
        /* 정규식 */
        const idRegEx = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 
-       if (!idRegEx.test(userIdValue)) {
+    /*   if (!idRegEx.test(userIdValue)) {
            idChecked = false;
            incorrectIdBox.style.display = "block";
            possibleIdBox.style.display = "none";
@@ -32,7 +32,7 @@
                idChecked = false;
                return;
            }
-       }
+       }*/
        $.ajax({
             type: "get",
             url: "/user/existsUserId?email=" + userIdValue,
@@ -78,13 +78,13 @@
         const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%^&!*])[A-Za-z\d@#$%^&!*]{8,20}$/;
 
 
-       if (!passwordRegEx.test(userPwBox.value)) {
+     /*  if (!passwordRegEx.test(userPwBox.value)) {
            pwChecked = false;
            pwRegNotMatchBox.style.display = "block";
            return;
        } else {
           pwRegNotMatchBox.style.display = "none";
-       }
+       }*/
 
         if (userPwBox.value != userPwCheckBox.value) {
             pwMatchBox.style.display = "none";

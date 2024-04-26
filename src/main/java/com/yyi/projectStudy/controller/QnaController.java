@@ -224,7 +224,8 @@ public class QnaController {
         qnaDTO.setFormattedDate(formatDateTime);
 
         /* 클릭 시 조회수 증가 */
-        cookieService.checkCookieForReadCount(request, response, "qna", id);
+//        cookieService.checkCookieForReadCount(request, response, "qna", id);
+        qnaService.updateReadCount(id);
 
 
         /* 회원 직업 조회 */

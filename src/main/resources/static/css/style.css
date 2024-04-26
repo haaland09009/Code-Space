@@ -13,6 +13,16 @@
    box-shadow: 0 0 0 0.1rem rgba(0, 0, 0, 1); /* 검은색으로 변경 */
 }
 
+.redFocus {
+    border-color: red;
+    box-shadow: 0 0 0 0.02rem rgba(255, 0, 0, 1);
+}
+
+.greenFocus {
+    border-color: green;
+    box-shadow: 0 0 0 0.02rem rgba(0, 255, 0, 1); /* 초록색으로 변경 */
+}
+
 .form-control-no-border {
     resize: none;
     border: none;

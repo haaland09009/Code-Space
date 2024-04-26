@@ -1,4 +1,124 @@
 
+  /* 회원수정 가능 여부 확인 */
+  let idChecked = true;
+  let pwChecked = true;
+  let nickChecked = true;
+
+
+
+  /* 이메일 중복 체크, 정규식 검사 */
+  const existsUserId = () => {
+     const userEmailBox = document.querySelector("#userEmail");
+     const emailError = document.querySelector("#emailError");
+     const email_duplicated_error = document.querySelector("#email_duplicated_error");
+     const possibleEmailBox = document.querySelector("#possibleEmailBox");
+
+     /* 정규식 */
+     const idRegEx = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+
+  /*   if (!idRegEx.test(userIdValue)) {
+         idChecked = false;
+         incorrectIdBox.style.display = "block";
+         possibleIdBox.style.display = "none";
+         return;
+     } else {
+         idChecked = true;
+         incorrectIdBox.style.display = "none";
+
+         if (userIdValue == "") {
+             existsIdBox.style.display = "none";
+             possibleIdBox.style.display = "none";
+             idChecked = false;
+             return;
+         }
+     }*/
+     $.ajax({
+          type: "get",
+          url: "/user/existsUserId?email=" + userEmailBox.value,
+          success: function(res) {
+              if (res == true) {
+                  idChecked = false;
+                  email_duplicated_error.style.display = "block";
+                  possibleEmailBox.style.display = "none";
+                  emailError.style.display = "none";
+                  userEmailBox.classList.remove("greenFocus");
+                  userEmailBox.classList.add("redFocus");
+              } else {
+                  if (userEmailBox.value == "") {
+                      idChecked = false;
+                      userEmailBox.classList.add("redFocus");
+                      userEmailBox.classList.remove("greenFocus");
+                      possibleEmailBox.style.display = "none";
+                      email_duplicated_error.style.display = "none";
+                      emailError.style.display = "block";
+                  } else {
+                    idChecked = true;
+                    userEmailBox.classList.remove("redFocus");
+                    userEmailBox.classList.add("greenFocus");
+                    emailError.style.display = "none";
+                    email_duplicated_error.style.display = "none";
+                    possibleEmailBox.style.display = "block";
+                  }
+              }
+          },
+          error: function(err) {
+              return;
+          }
+      });
+    }
+
+  document.querySelector("#userEmail").addEventListener("blur", existsUserId);
+
+  /* 닉네임 중복 체크 */
+  const checkNicknameValue = () => {
+      const userNicknameBox = document.querySelector("#userNickname");
+      const nicknameError = document.querySelector("#nicknameError");
+      const nick_duplicated_error = document.querySelector("#nick_duplicated_error");
+      const possibleNickBox = document.querySelector("#possibleNickBox");
+
+      $.ajax({
+          type: "get",
+          url: "/user/existsNickname?nickname=" + userNicknameBox.value,
+          success: function(res) {
+              if (res == true) {
+                  nickChecked = false;
+                  possibleNickBox.style.display = "none";
+                  nicknameError.style.display = "none";
+                  nick_duplicated_error.style.display = "block";
+                  userNicknameBox.classList.remove("greenFocus");
+                  userNicknameBox.classList.add("redFocus");
+              } else {
+                   if (userNicknameBox.value == "") {
+                       nickChecked = false;
+                       userNicknameBox.classList.remove("greenFocus");
+                       userNicknameBox.classList.add("redFocus");
+                       possibleNickBox.style.display = "none";
+                       nick_duplicated_error.style.display = "none";
+                       nicknameError.style.display = "block";
+                    } else {
+                      nickChecked = true;
+                      userNicknameBox.classList.remove("redFocus");
+                      userNicknameBox.classList.add("greenFocus");
+                      nick_duplicated_error.style.display = "none";
+                      nicknameError.style.display = "none";
+                      possibleNickBox.style.display = "block";
+                  }
+              }
+
+          },
+          error: function(err) {
+              return;
+          }
+      });
+  }
+
+  document.querySelector("#userNickname").addEventListener("keyup", checkNicknameValue);
+
+
+
+
+
+
   /* 회원정보 수정 */
   const checkValueAndSubmit = () => {
       const nickname = document.querySelector("#userNickname");
@@ -8,6 +128,9 @@
       const nicknameError = document.querySelector("#nicknameError");
       const emailError = document.querySelector("#emailError");
       const jobError = document.querySelector("#jobError");
+
+      const nick_duplicated_error = document.querySelector("#nick_duplicated_error");
+      const email_duplicated_error = document.querySelector("#email_duplicated_error");
 
       email.addEventListener("input", () => {
           if (email.value.trim() !== "") {
@@ -26,6 +149,18 @@
               jobError.style.display = "none";
           }
       });
+
+      if (nickChecked == false) {
+         nickname.focus();
+         nickname.classList.add("redFocus");
+         return;
+      }
+
+      if (idChecked == false) {
+         email.focus();
+         email.classList.add("redFocus");
+         return;
+      }
 
       if (email.value.trim() == "") {
          emailError.style.display = "block";

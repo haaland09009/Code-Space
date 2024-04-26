@@ -46,7 +46,7 @@
 
     /* 카카오 로그인 */
     const kakaoLogin = () => {
-        const redirect_uri = "http://localhost:8081/kakao/login";
+        const redirect_uri = "http://localhost:8083/kakao/login";
         const kakao_auth_url
             = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=" + kakaoApiKey +
                "&redirect_uri=" + redirect_uri;
@@ -56,7 +56,7 @@
 
     /* 네이버 로그인 */
     const naverLogin = () => {
-        const redirect_uri = "http://localhost:8081/naver/login";
+        const redirect_uri = "http://localhost:8083/naver/login";
         const naver_auth_url
             = "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=" + naverApiKey +
                "&state=STATE_STRING&redirect_uri=" + redirect_uri;

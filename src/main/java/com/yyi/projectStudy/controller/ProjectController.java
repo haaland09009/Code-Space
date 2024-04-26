@@ -197,7 +197,8 @@ public class ProjectController {
         model.addAttribute("job", job);
 
         /* 클릭 시 조회수 증가 */
-        cookieService.checkCookieForReadCount(request, response, "project", id);
+//        cookieService.checkCookieForReadCount(request, response, "project", id);
+        projectService.updateReadCount(id);
 
         /* enter 처리 */
         ProjectDTO projectDTO = projectService.findById(id);

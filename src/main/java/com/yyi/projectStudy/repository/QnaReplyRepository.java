@@ -45,7 +45,7 @@ public interface QnaReplyRepository extends JpaRepository<QnaReplyEntity, Long> 
             "            SELECT COUNT(ql2.id)\n" +
             "            FROM qna_reply_like_table ql2\n" +
             "            WHERE qr.id = ql2.reply_id\n" +
-            "        ) AS rank\n" +
+            "        ) AS `rank`\n" +
             "    FROM\n" +
             "        qna_table qt\n" +
             "        JOIN qna_reply_table qr ON qt.id = qr.qna_id\n" +
@@ -56,7 +56,7 @@ public interface QnaReplyRepository extends JpaRepository<QnaReplyEntity, Long> 
             "        COUNT(ql.reply_id) >= 8\n" +
             ") AS ranked\n" +
             "WHERE\n" +
-            "    rank = 1", nativeQuery = true)
+            "  `rank` = 1", nativeQuery = true)
     List<Long> bestReplyPkList();
 
     /* 답변 수정하기 */
